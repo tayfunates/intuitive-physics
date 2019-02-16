@@ -1,9 +1,11 @@
 # intuitive-physics
 Includes models/dataset/literature overview for question answering in physical scene understanding tasks.
 
-## literature
+## Literature
 
-### papers by year
+This section includes literature overview for different methods developed for different intiutive physics task. You can filter these works by [year](#papers-by-year), [task](#papers-by-task), [dataset](#papers-by-dataset) or [conference or journal](#papers-by-conference-or-journal). [Read queue](#read-queue) is sort of a to do for this section and expected to be empty for most of the time.
+
+### Papers by Year
 
 #### 2019
 
@@ -17,13 +19,33 @@ Includes models/dataset/literature overview for question answering in physical s
 
 - [Simulation as an engine of physical scene understanding](#simulation-as-an-engine-of-physical-scene-understanding)
 
-### papers by task
+### Papers by Task
 
-### papers by datasets
+#### Next Frame Prediction
 
-### papers by conference/journal
+##### Object Dropped to a Scene
 
-### references
+- [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+#### Planning Physical Actions
+
+##### Building Towers
+
+- [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+### Papers by Dataset
+
+#### Custom (either not being available or used extensively)
+
+- [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+### Papers by Conference or Journal
+
+#### ICLR
+
+- [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+### References
 
 #### Reasoning about physical interactions with object oriented prediction and planning
 
@@ -31,6 +53,6 @@ The main problem which is tried to be solved is to learn object representations 
 
 #### Simulation as an engine of physical scene understanding
 
-### read queue
+### Read Queue
 
 

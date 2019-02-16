@@ -27,7 +27,7 @@ This section includes literature overview for different methods developed for di
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
 
-#### Is this stable?
+##### Is this stable?
 
 - [Simulation as an engine of physical scene understanding](#simulation-as-an-engine-of-physical-scene-understanding)
 

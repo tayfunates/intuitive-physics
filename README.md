@@ -5,13 +5,23 @@ Includes models/dataset/literature overview for question answering in physical s
 
 ### papers by year
 
-### papers by task
+#### 2019
 
-### papers by methods used
+- [Reasoning about physical interactions with object oriented prediction and planning](####Reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+#### 2018
+
+#### 2017
+
+### papers by task
 
 ### papers by datasets
 
-### summaries
+### papers by conference/journal
+
+### references
+
+#### Reasoning about physical interactions with object oriented prediction and planning
 
 ### read queue
 

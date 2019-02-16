@@ -1,6 +1,10 @@
 # intuitive-physics
 Includes models/dataset/literature overview for question answering in physical scene understanding tasks.
 
+## Definitions
+
+- **Pure Reasoning, one-shot intuition:** The ability to reason for a scene, an event or an action without previously experiencing the same specific situtaion.
+
 ## Literature
 
 This section includes literature overview for different methods developed for different intuitive physics task. You can filter these works by [year](#papers-by-year), [task](#papers-by-task), [dataset](#papers-by-dataset) or [conference or journal](#papers-by-conference-or-journal). [Read queue](#read-queue) is sort of a to do for this section and expected to be empty for most of the time.

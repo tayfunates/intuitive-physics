@@ -69,4 +69,7 @@ It is one of the examples from pre deep learning era. It basically defines diffe
 
 ### Read Queue
 
+- [Innate Ideas Revisited For a Principle of Persistence in Infants’ Physical Reasoning](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3357323/pdf/nihms375132.pdf)
+
+- [Pure Reasoning in 12-Month-Old Infants as Probabilistic Inference](http://web.mit.edu/cocosci/Papers/Science-2011-Teglas-1054-9.pdf)
 

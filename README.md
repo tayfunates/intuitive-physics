@@ -7,6 +7,8 @@ Includes models/dataset/literature overview for question answering in physical s
 
 - **Continuity:** The principle states that objects exist and move continuously in time and space, they cannot appear and disappear whenever they want (continuity) and they cannot occupy the same space as other objects (solidity).
 
+- **Persistence:** The principle states that while existing continuosly and remaining cohesive, objects also retain individual properties such as shape, color, size or pattern.
+
 - **Pure Reasoning, one-shot intuition:** The ability to reason for a scene, an event or an action without previously experiencing the same specific situtaion.
 
 ## Literature

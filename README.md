@@ -73,3 +73,5 @@ It is one of the examples from pre deep learning era. It basically defines diffe
 
 - [Pure Reasoning in 12-Month-Old Infants as Probabilistic Inference](http://web.mit.edu/cocosci/Papers/Science-2011-Teglas-1054-9.pdf)
 
+- [Newtonian Image Understanding: Unfolding the Dynamics of Objects in Static Images](https://arxiv.org/pdf/1511.04048.pdf)
+

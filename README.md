@@ -7,7 +7,7 @@ Includes models/dataset/literature overview for question answering in physical s
 
 ## Literature
 
-This section includes literature overview for different methods developed for different intuitive physics task. You can filter these works by [year](#papers-by-year), [task](#papers-by-task), [dataset](#papers-by-dataset) or [conference or journal](#papers-by-conference-or-journal). [Read queue](#read-queue) is sort of a to do for this section and expected to be empty for most of the time.
+This section includes literature overview for different methods developed for different intuitive physics tasks. You can filter these works by [year](#papers-by-year), [task](#papers-by-task), [dataset](#papers-by-dataset) or [conference or journal](#papers-by-conference-or-journal). [Read queue](#read-queue) is sort of a to do for this section and expected to be empty for most of the time.
 
 ### Papers by Year
 

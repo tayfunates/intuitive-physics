@@ -15,7 +15,19 @@ Includes models/dataset/literature overview for question answering in physical s
 
 ## Literature
 
-This section includes literature overview for different methods developed for different intuitive physics tasks. You can filter these works by [year](#papers-by-year), [task](#papers-by-task), [dataset](#papers-by-dataset) or [conference or journal](#papers-by-conference-or-journal). [Read queue](#read-queue) is sort of a to do for this section and expected to be empty for most of the time.
+This section includes literature overview for different methods developed for different intuitive physics tasks. You can filter these works by [area](#papers-by-area), [year](#papers-by-year), [task](#papers-by-task), [dataset](#papers-by-dataset) or [conference or journal](#papers-by-conference-or-journal). [Read queue](#read-queue) is sort of a to do for this section and expected to be empty for most of the time.
+
+### Papers by Area
+
+#### Computer Vision
+
+- [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+- [Simulation as an engine of physical scene understanding](#simulation-as-an-engine-of-physical-scene-understanding)
+
+#### Cognitive Science
+
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
 
 ### Papers by Year
 
@@ -34,6 +46,10 @@ This section includes literature overview for different methods developed for di
 ### Papers by Task
 
 #### Next Frame Prediction
+
+#### Continuity and Change Violation Detection
+
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
 
 ##### Object Dropped to a Scene
 

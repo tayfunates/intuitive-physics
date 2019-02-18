@@ -43,6 +43,10 @@ This section includes literature overview for different methods developed for di
 
 - [Simulation as an engine of physical scene understanding](#simulation-as-an-engine-of-physical-scene-understanding)
 
+#### 2008
+
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
+
 ### Papers by Task
 
 #### Next Frame Prediction
@@ -80,6 +84,10 @@ This section includes literature overview for different methods developed for di
 #### PNAS
 
 - [Simulation as an engine of physical scene understanding](#simulation-as-an-engine-of-physical-scene-understanding)
+
+#### PPS
+
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
 
 ### References
 

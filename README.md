@@ -45,7 +45,7 @@ This section includes literature overview for different methods developed for di
 
 #### 2008
 
-- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
+- [Innate ideas revisited for a principle of persistence in infants' physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
 
 ### Papers by Task
 

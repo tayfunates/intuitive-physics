@@ -109,6 +109,12 @@ It is one of the examples from pre deep learning era. It basically defines diffe
 
 Innate ideas have extensively been argued in philosophy and cognitive science. The source of many arguments is to decide whether or not innate ideas have impact on infants' physical reasoning. Researchers or philosophers who think that these ideas do not have any effect on infant's development, states that reasoning is a capability that can be acquired only by experimenting. However, other side of the argument mainly accepts Spelke's two principles for innate capabilities which are continuity and cohesion. This paper claims that these two principles are actually corollaries of a single principle which is persistence. In order to strengthen the claim, it states the importance of variables included by an infant to predict the outcome of an event. If these variables such as height, color of the objects in the event, are somehow induced to the infant, he or she can be able to predict the outcome of that event regardless of the type of the event (continuity or change violation) and age of his or her.
 
+#### Pure reasoning in 12-month-old infants as probabilistic inference
+
+*Ernő Téglás, Edward Vul, Vittorio Girotto, Michel Gonzalez, Joshua B. Tenenbaum6, Luca L. Bonatti - American Association for the Advancement of Science, 2011*
+
+Adults' capability for pure reasoning is rich and coherent for identifying the outcomes of the event that they never faced. This is one of the most important issues that artificial intelligence should overcome to be reach the level of human intelligence. Before fully understant how adults are capable of doing such inferences, it is important to understand to what degree infants are capable of doing similar inferences as adults. This paper try to explain 12 month old infants' capabilities for pure reasoning by creating a Bayesian model which predicts infants' looking times for specific events.
+
 ### Read Queue
 
 - [Pure Reasoning in 12-Month-Old Infants as Probabilistic Inference](http://web.mit.edu/cocosci/Papers/Science-2011-Teglas-1054-9.pdf)

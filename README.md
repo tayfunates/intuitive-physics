@@ -27,7 +27,7 @@ This section includes literature overview for different methods developed for di
 
 #### Cognitive Science
 
-- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
 
 ### Papers by Year
 
@@ -45,7 +45,7 @@ This section includes literature overview for different methods developed for di
 
 #### 2008
 
-- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
 
 ### Papers by Task
 
@@ -53,7 +53,7 @@ This section includes literature overview for different methods developed for di
 
 #### Continuity and Change Violation Detection
 
-- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
 
 ##### Object Dropped to a Scene
 
@@ -87,7 +87,7 @@ This section includes literature overview for different methods developed for di
 
 #### PPS
 
-- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
 
 ### References
 
@@ -104,8 +104,6 @@ It is one of the examples from pre deep learning era. It basically defines diffe
 Innate ideas have extensively been argued in philosophy and cognitive science. The source of many arguments is to decide whether or not innate ideas have impact on infants' physical reasoning. Researchers or philosophers who think that these ideas do not have any effect on infant's development, states that reasoning is a capability that can be acquired only by experimenting. However, other side of the argument mainly accepts Spelke's two principles for innate capabilities which are continuity and cohesion. This paper claims that these two principles are actually corollaries of a single principle which is persistence. In order to strengthen the claim, it states the importance of variables included by an infant to predict the outcome of an event. If these variables such as height, color of the objects in the event, are somehow induced to the infant, he or she can be able to predict the outcome of that event regardless of the type of the event (continuity or change violation) and age of his or her.
 
 ### Read Queue
-
-- [Innate Ideas Revisited For a Principle of Persistence in Infants’ Physical Reasoning](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3357323/pdf/nihms375132.pdf)
 
 - [Pure Reasoning in 12-Month-Old Infants as Probabilistic Inference](http://web.mit.edu/cocosci/Papers/Science-2011-Teglas-1054-9.pdf)
 

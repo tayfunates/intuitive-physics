@@ -27,7 +27,7 @@ This section includes literature overview for different methods developed for di
 
 #### Cognitive Science
 
-- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
 
 ### Papers by Year
 
@@ -53,7 +53,7 @@ This section includes literature overview for different methods developed for di
 
 #### Continuity and Change Violation Detection
 
-- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
 
 ##### Object Dropped to a Scene
 
@@ -87,7 +87,7 @@ This section includes literature overview for different methods developed for di
 
 #### PPS
 
-- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants’-physical-reasoning)
+- [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
 
 ### References
 

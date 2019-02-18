@@ -111,7 +111,7 @@ Innate ideas have extensively been argued in philosophy and cognitive science. T
 
 #### Pure reasoning in 12-month-old infants as probabilistic inference
 
-*Ernő Téglás, Edward Vul, Vittorio Girotto, Michel Gonzalez, Joshua B. Tenenbaum6, Luca L. Bonatti - American Association for the Advancement of Science, 2011*
+*Ernő Téglás, Edward Vul, Vittorio Girotto, Michel Gonzalez, Joshua B. Tenenbaum, Luca L. Bonatti - American Association for the Advancement of Science, 2011*
 
 Adults' capability for pure reasoning is rich and coherent for identifying the outcomes of the event that they never faced. This is one of the most important issues that artificial intelligence should overcome to be reach the level of human intelligence. Before fully understant how adults are capable of doing such inferences, it is important to understand to what degree infants are capable of doing similar inferences as adults. This paper try to explain 12 month old infants' capabilities for pure reasoning by creating a Bayesian model which predicts infants' looking times for specific events.
 

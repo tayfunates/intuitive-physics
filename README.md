@@ -93,13 +93,19 @@ This section includes literature overview for different methods developed for di
 
 #### Reasoning about physical interactions with object oriented prediction and planning
 
+*Michael Janner, Sergey Levine, William T. Freeman, Joshua B. Tenenbaum, Chelsea Finn, Jiajun Wu - International Conference on Learning Representations, 2019*
+
 The main problem which is tried to be solved is to learn object representations to plan actions for pyhsical scene understanding without using object representations as explicit supervisions. The training is done by dropping objects to a scene containing at most four objects and trying to predict the steady state image while learning physical relations between objects. Extractor model for these object representations can then be used, for example, for building a tower from scratch. Object representation labels are difficult to obtain and therefore methods using them are not scalable. Instead of directly using them, method uses segmentation map estimates of each object in an image to train an object representation extractor. This model is jointly trained with physical scene understanding model and pixel level frame prediction model.
 
 #### Simulation as an engine of physical scene understanding
 
+*Peter W. Battaglia, Jessica B. Hamrick, and Joshua B. Tenenbaum - Proceedings of the National Academy of Sciences, 2013*
+
 It is one of the examples from pre deep learning era. It basically defines different scence states at different time steps. Method incorporates two different forces applied to the scene which are the initial force and the transition forces betweeen two time steps. There are observable information for both scenes and forces. Given observed information about these states and latent forces, the method uses Bayesian learning to estimate the posterior probabilities for physical scene understanding. The first problem that the method is trying to solve is "Will it fall?". When provided with an image of a tower, the model and the subjects are asked to decide whether the tower will fall or not. The second experiment is conducted on top of the first experiment to evaluate the performance of the model and the subject when asked the direction of the fall action. These experiments are also repeated by using object with different masses to evaluate the intuition that the mass brings. In the last experiment, the model and the subjects are compared according to their intuitions in case of an external force such as a bump to a table holding the objects.
 
 #### Innate ideas revisited for a principle of persistence in infants’ physical reasoning
+
+*Renée Baillargeon - Perspectives on Psychological Science, 2008*
 
 Innate ideas have extensively been argued in philosophy and cognitive science. The source of many arguments is to decide whether or not innate ideas have impact on infants' physical reasoning. Researchers or philosophers who think that these ideas do not have any effect on infant's development, states that reasoning is a capability that can be acquired only by experimenting. However, other side of the argument mainly accepts Spelke's two principles for innate capabilities which are continuity and cohesion. This paper claims that these two principles are actually corollaries of a single principle which is persistence. In order to strengthen the claim, it states the importance of variables included by an infant to predict the outcome of an event. If these variables such as height, color of the objects in the event, are somehow induced to the infant, he or she can be able to predict the outcome of that event regardless of the type of the event (continuity or change violation) and age of his or her.
 

@@ -11,7 +11,7 @@ Includes models/dataset/literature overview for question answering in physical s
 
 - **Pure Reasoning, one-shot intuition:** The ability to reason for a scene, an event or an action without previously experiencing the same specific situtaion.
 
-- **Basic vs. Variable Violation:** Basic viloation is the one that only involves basic information to be detected whereas variable violation enforces one (possibly and infant) to identify variables such as shape, color and pattern which are relevant for predicting the outcomes of the event. For example, in an occlusion event, an infant may detect an object that gets lost behind a screen and get surprised, but s/he may not detect that object has been changed behind the screen if s/he does not include this variable information in her/his physical representation of event.
+- **Basic vs. Variable Violation:** Basic violation is the one that only involves basic information to be detected whereas variable violation enforces one (possibly and infant) to identify variables such as shape, color and pattern which are relevant for predicting the outcomes of the event. For example, in an occlusion event, an infant may detect an object that gets lost behind a screen and get surprised, but s/he may not detect that object has been changed behind the screen if s/he does not include this variable information in her/his physical representation of event.
 
 ## Literature
 

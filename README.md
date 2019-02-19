@@ -132,3 +132,9 @@ Adults' capability for pure reasoning is rich and coherent for identifying the o
 - [Mind Games: Game Engines as an Architecture for Intuitive Physics](http://harvardlds.org/wp-content/uploads/2017/11/Ullman-Spelke-Battaglia-Tenenbaum_Mind-Games_2017.pdf)
 
 - [Bounce and Learn: Modeling Scene Dynamics with Real-World Bounces](https://openreview.net/forum?id=BJxssoA5KX)
+
+- [Unsupervised Intuitive Physics from Visual Observations](http://geometry.cs.ucl.ac.uk/projects/2018/unsupervised-intuitive-physics/paper_docs/EhrhardtMonszpartEtAl_UnsupervisedIntuitivePhysics_ACCV18.pdf)
+
+- [Interaction Networks for Learning about Objects, Relations and Physics](https://arxiv.org/pdf/1612.00222.pdf)
+
+- [Interpretable Intuitive Physics Model](https://arxiv.org/pdf/1808.10002.pdf)

@@ -43,6 +43,10 @@ This section includes literature overview for different methods developed for di
 
 - [Simulation as an engine of physical scene understanding](#simulation-as-an-engine-of-physical-scene-understanding)
 
+#### 2011
+
+- [Pure reasoning in 12-month-old infants as probabilistic inference](#pure-reasoning-in-12-month-old-infants-as-probabilistic-inference)
+
 #### 2008
 
 - [Innate ideas revisited for a principle of persistence in infants' physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
@@ -54,6 +58,8 @@ This section includes literature overview for different methods developed for di
 #### Continuity and Change Violation Detection
 
 - [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
+
+- [Pure reasoning in 12-month-old infants as probabilistic inference](#pure-reasoning-in-12-month-old-infants-as-probabilistic-inference)
 
 ##### Object Dropped to a Scene
 
@@ -88,6 +94,10 @@ This section includes literature overview for different methods developed for di
 #### PPS
 
 - [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
+
+#### AAAS
+
+- [Pure reasoning in 12-month-old infants as probabilistic inference](#pure-reasoning-in-12-month-old-infants-as-probabilistic-inference)
 
 ### References
 

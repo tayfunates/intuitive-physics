@@ -123,3 +123,4 @@ Adults' capability for pure reasoning is rich and coherent for identifying the o
 
 - [Mind Games: Game Engines as an Architecture for Intuitive Physics](http://harvardlds.org/wp-content/uploads/2017/11/Ullman-Spelke-Battaglia-Tenenbaum_Mind-Games_2017.pdf)
 
+- [Bounce and Learn: Modeling Scene Dynamics with Real-World Bounces](https://openreview.net/forum?id=BJxssoA5KX)

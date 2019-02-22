@@ -138,3 +138,5 @@ Adults' capability for pure reasoning is rich and coherent for identifying the o
 - [Interaction Networks for Learning about Objects, Relations and Physics](https://arxiv.org/pdf/1612.00222.pdf)
 
 - [Interpretable Intuitive Physics Model](https://arxiv.org/pdf/1808.10002.pdf)
+
+- [The scope and limits of simulation in automated reasoning](https://arxiv.org/pdf/1506.04956.pdf)

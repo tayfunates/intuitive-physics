@@ -149,6 +149,8 @@ Adults' capability for pure reasoning is rich and coherent for identifying the o
 
 Humans are capable of estimating pyhsical dynamics of moving objects in a scene even from a single source of image. The main purpose of this paper is to create a model that tries to estimate the forces acting on a query object in an image and to predict the expected motion as a response to those forces. Instead of directly trying to estimate physical properties such as mass or friction, the method tries to convert from visual domain to a physical abstraction domain in which 12 Newtonian scenarios with multiple viewpoints are used. Mapping to one of these scenarios allows the method to borrow some physical quantities and to make prediction about 3D motion of the query object. This mapping is achieved by solving two different sub-problems which are finding the best scenario and the moment in the scenario to decide the current state of the object in the scene. These scenarios are created using a game engine simulation. Each resulting image after simulation is represented with 10 channels corresponding to RGB, depth, surface normals and optical flow information.
 
+![Scenarios](/images/NewtonianScenarios.png)
+
 ### Read Queue
 
 - [Mind Games: Game Engines as an Architecture for Intuitive Physics](http://harvardlds.org/wp-content/uploads/2017/11/Ullman-Spelke-Battaglia-Tenenbaum_Mind-Games_2017.pdf)

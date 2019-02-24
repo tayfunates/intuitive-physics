@@ -25,6 +25,8 @@ This section includes literature overview for different methods developed for di
 
 - [Simulation as an engine of physical scene understanding](#simulation-as-an-engine-of-physical-scene-understanding)
 
+- [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
+
 #### Cognitive Science
 
 - [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
@@ -38,6 +40,10 @@ This section includes literature overview for different methods developed for di
 #### 2018
 
 #### 2017
+
+#### 2016
+
+- [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
 
 #### 2013
 
@@ -55,15 +61,19 @@ This section includes literature overview for different methods developed for di
 
 #### Next Frame Prediction
 
+##### Motion Estimation
+
+- [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
+
+##### Object Dropped to a Scene
+
+- [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
 #### Continuity and Change Violation Detection
 
 - [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
 
 - [Pure reasoning in 12-month-old infants as probabilistic inference](#pure-reasoning-in-12-month-old-infants-as-probabilistic-inference)
-
-##### Object Dropped to a Scene
-
-- [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
 
 #### Is This Stable?
 
@@ -80,6 +90,10 @@ This section includes literature overview for different methods developed for di
 #### Custom (either not being available or used extensively)
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+#### Visual Newtonian Dynamics Dataset (VIND)
+
+- [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
 
 ### Papers by Conference or Journal
 
@@ -98,6 +112,10 @@ This section includes literature overview for different methods developed for di
 #### AAAS
 
 - [Pure reasoning in 12-month-old infants as probabilistic inference](#pure-reasoning-in-12-month-old-infants-as-probabilistic-inference)
+
+#### CVPR
+
+- [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
 
 ### References
 
@@ -125,9 +143,13 @@ Innate ideas have extensively been argued in philosophy and cognitive science. T
 
 Adults' capability for pure reasoning is rich and coherent for identifying the outcomes of the event that they never faced. This is one of the most important issues that artificial intelligence should overcome to be reach the level of human intelligence. Before fully understant how adults are capable of doing such inferences, it is important to understand to what degree infants are capable of doing similar inferences as adults. This paper try to explain 12 month old infants' capabilities for pure reasoning by creating a Bayesian model which predicts infants' looking times for specific events. For one specific event, researchers create videos of four objects moving in a container which contains a gate from which the objects may go out. By having the same color for three of these four objects, researchers estimated how well the infants predicted the true object which goes out from the gate after a few seconds of occluding the scene. By variying, the object positions and the duration of the occlusion, researchers detected that infants use different types of reasonings for different situations as adults do. On top this observations, authors try to develop an ideal observer depending on Monte Carlo sampling which can predict similar to the infants. Here, the similarity of the model and infants' predictions are compared with each other, they are not compared with ground truths.
 
-### Read Queue
+#### Newtonian image understanding: unfolding the dynamics of objects in static images
 
-- [Newtonian Image Understanding: Unfolding the Dynamics of Objects in Static Images](https://arxiv.org/pdf/1511.04048.pdf)
+*Roozbeh Mottaghi, Hessam Bagherinezhad, Mohammad Rastegari, Ali Farhadi - IEEE Conference on Computer Vision and Pattern Recognition, 2016*
+
+Humans are capable of estimating pyhsical dynamics of moving objects in a scene even from a single source of image. The main purpose of this paper is to create a model that tries to estimate the forces acting on a query object in an image and to predict the expected motion as a response to those forces. Instead of directly trying to estimate physical properties such as mass or friction, the method tries to convert from visual domain to a physical abstraction domain in which 12 Newtonian scenarios with multiple viewpoints are used. Mapping to one of these scenarios allows the method to borrow some physical quantities and to make prediction about 3D motion of the query object. This mapping is achieved by solving two different sub-problems which are finding the best scenario and the moment in the scenario to decide the current state of the object in the scene. These scenarios are created using a game engine simulation. Each resulting image after simulation is represented with 10 channels corresponding to RGB, depth, surface normals and optical flow information.
+
+### Read Queue
 
 - [Mind Games: Game Engines as an Architecture for Intuitive Physics](http://harvardlds.org/wp-content/uploads/2017/11/Ullman-Spelke-Battaglia-Tenenbaum_Mind-Games_2017.pdf)
 

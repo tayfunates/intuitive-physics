@@ -39,6 +39,8 @@ This section includes literature overview for different methods developed for di
 
 #### 2018
 
+- [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
+
 #### 2017
 
 #### 2016
@@ -151,9 +153,14 @@ Humans are capable of estimating pyhsical dynamics of moving objects in a scene 
 
 ![Scenarios](/images/NewtonianScenarios.png)
 
-### Read Queue
+#### Answering visual what-if questions: from actions to predicted scene descriptions
 
-- [Answering Visual What-If Questions: From Actions to Predicted Scene Descriptions](https://arxiv.org/pdf/1809.03707.pdf)
+*Misha Wagner, Hector Basevi, Rakshith Shetty, Wenbin Li, Mateusz Malinowski, Mario Fritz, and Ales Leonardis - European Conference on Computer Vision, 2018*
+
+Current work for scene understanding and next frame prediction problems in robotics see the agents as passive observers and do not allow them to manipulate the environment. What-if question tasks on the other hand allow the scene to be manipulated by a hypothetical action. The main problem to be solve is to describe the outcome of an action on a table top scenario. To solve their problem, authors created a dataset, TIWIQ, consisting of 3D scenes of realistically textured objects with interactions. Scenes contained five of eight realistic looking objects such as brick, banana, softball. They use a four different actions which are 1. Push an object in a specific direction. 2. Rotate an object clockwise or anti-clockwise. 3. Remove an object from the scene. 4. Drop an object on another object. They gather annotations on top of simulation rendering videos and ask their model and human baseline to output as similar as possible with the annotations. Their prediction does not include a generator model, instead they use a hybrid QA model for which they integrate a pyhsics engine. Engine gets input from laerning-based components to simulate and the result of the simulation is then tried to be expressed as a natural language output. The method overview can be seen from the visual. They compare their method with an end-to-end network without any image generation to mimic physics simulation and argue that hybrid model is more successful than a data driven model.
+
+
+### Read Queue
 
 - [Mind Games: Game Engines as an Architecture for Intuitive Physics](http://harvardlds.org/wp-content/uploads/2017/11/Ullman-Spelke-Battaglia-Tenenbaum_Mind-Games_2017.pdf)
 
@@ -166,3 +173,6 @@ Humans are capable of estimating pyhsical dynamics of moving objects in a scene 
 - [Interpretable Intuitive Physics Model](https://arxiv.org/pdf/1808.10002.pdf)
 
 - [The scope and limits of simulation in automated reasoning](https://arxiv.org/pdf/1506.04956.pdf)
+
+- [NeuroAnimator:
+Fast Neural Network Emulation and Control of Physics-Based Models](http://www.cs.toronto.edu/~fritz/absps/siggraph98.pdf)

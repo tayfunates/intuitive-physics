@@ -27,6 +27,8 @@ This section includes literature overview for different methods developed for di
 
 - [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
 
+- [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
+
 #### Cognitive Science
 
 - [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
@@ -71,6 +73,10 @@ This section includes literature overview for different methods developed for di
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
 
+##### What-if
+
+- [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
+
 #### Continuity and Change Violation Detection
 
 - [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
@@ -97,6 +103,10 @@ This section includes literature overview for different methods developed for di
 
 - [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
 
+#### Table-top Interaction Visual What-If Questions Dataset (TIWIQ)
+
+- [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
+
 ### Papers by Conference or Journal
 
 #### ICLR
@@ -118,6 +128,10 @@ This section includes literature overview for different methods developed for di
 #### CVPR
 
 - [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
+
+#### ECCV
+
+- [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
 
 ### References
 

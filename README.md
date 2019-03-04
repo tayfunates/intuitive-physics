@@ -203,3 +203,7 @@ This paper investigates the hypothesis that intuitive decisions about physics ar
 
 - [NeuroAnimator:
 Fast Neural Network Emulation and Control of Physics-Based Models](http://www.cs.toronto.edu/~fritz/absps/siggraph98.pdf)
+
+- [Inferring mass in complex scenes by mental simulation](http://cocosci.princeton.edu/papers/Hamrick_Cognition.pdf)
+
+- [Intuitive Physics](http://www.indiana.edu/~koertge/H205SciReas/McCloskey_IntuitivePhysics.pdf)

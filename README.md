@@ -190,6 +190,8 @@ Current work for scene understanding and next frame prediction problems in robot
 This paper investigates the hypothesis that intuitive decisions about physics are made by the help of a mental engine which has similar characteristics with game physics engines especially for the young infants. This hypothesis claims that the data structures in our mind to represent the objects and the events, and the algorithms to simulate have similar characteristics with those provided by video game industry. One of the facts for authors to support their hypothesis is that both mental and game engines are designed to approximate the complex scenes to a reasonable-looking and human-relevant scale. Other than the similarities of representing objects and events, bodies and shapes, static and dynamic objects; resolving the collisions between mental processings and physics engines, they both fail to identify exact physical situations in some physical illusions because of some simplified assumptions made by their processes.
 
 ### Read Queue
+- [An integrative computational architecture for object-driven cortex](http://www.mit.edu/~ilkery/papers/YildirimetalCONEUR.pdf)
+
 - [The scope and limits of simulation in automated reasoning](https://arxiv.org/pdf/1506.04956.pdf)
 
 - [Unsupervised Intuitive Physics from Visual Observations](http://geometry.cs.ucl.ac.uk/projects/2018/unsupervised-intuitive-physics/paper_docs/EhrhardtMonszpartEtAl_UnsupervisedIntuitivePhysics_ACCV18.pdf)
@@ -208,4 +210,3 @@ Fast Neural Network Emulation and Control of Physics-Based Models](http://www.cs
 - [Inferring mass in complex scenes by mental simulation](http://cocosci.princeton.edu/papers/Hamrick_Cognition.pdf)
 
 - [Intuitive Physics](http://www.indiana.edu/~koertge/H205SciReas/McCloskey_IntuitivePhysics.pdf)
-

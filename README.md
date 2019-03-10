@@ -33,6 +33,8 @@ This section includes literature overview for different methods developed for di
 
 - [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
 
+- [Mind games: game engines as an architecture for intuitive physics](#mind-games-game-engines-as-an-architecture-for-intuitive-physics)
+
 ### Papers by Year
 
 #### 2019
@@ -44,6 +46,8 @@ This section includes literature overview for different methods developed for di
 - [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
 
 #### 2017
+
+- [Mind games: game engines as an architecture for intuitive physics](#mind-games-game-engines-as-an-architecture-for-intuitive-physics)
 
 #### 2016
 
@@ -133,6 +137,10 @@ This section includes literature overview for different methods developed for di
 
 - [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
 
+#### TICS
+
+- [Mind games: game engines as an architecture for intuitive physics](#mind-games-game-engines-as-an-architecture-for-intuitive-physics)
+
 ### References
 
 #### Reasoning about physical interactions with object oriented prediction and planning
@@ -175,11 +183,16 @@ Current work for scene understanding and next frame prediction problems in robot
 
 ![Method Overview](/images/TIWIQBaseModel.png)
 
+#### Mind games: game engines as an architecture for intuitive physics
+
+*Tomer D. Ullman Elizabeth Spelke, Peter Battaglia and Joshua B. Tenenbaum - Trends in Cognitive Sciences, 2017*
+
+This paper investigates the hypothesis that intuitive decisions about physics are made by the help of a mental engine which has similar characteristics with game physics engines especially for the young infants. This hypothesis claims that the data structures in our mind to represent the objects and the events, and the algorithms to simulate have similar characteristics with those provided by video game industry. One of the facts for authors to support their hypothesis is that both mental and game engines are designed to approximate the complex scenes to a reasonable-looking and human-relevant scale. Other than the similarities of representing objects and events, bodies and shapes, static and dynamic objects; resolving the collisions between mental processings and physics engines, they both fail to identify exact physical situations in some physical illusions because of some simplified assumptions made by their processes.
+
 ### Read Queue
+- [An integrative computational architecture for object-driven cortex](http://www.mit.edu/~ilkery/papers/YildirimetalCONEUR.pdf)
 
-- [Mind Games: Game Engines as an Architecture for Intuitive Physics](http://harvardlds.org/wp-content/uploads/2017/11/Ullman-Spelke-Battaglia-Tenenbaum_Mind-Games_2017.pdf)
-
-- [Bounce and Learn: Modeling Scene Dynamics with Real-World Bounces](https://openreview.net/forum?id=BJxssoA5KX)
+- [The scope and limits of simulation in automated reasoning](https://arxiv.org/pdf/1506.04956.pdf)
 
 - [Unsupervised Intuitive Physics from Visual Observations](http://geometry.cs.ucl.ac.uk/projects/2018/unsupervised-intuitive-physics/paper_docs/EhrhardtMonszpartEtAl_UnsupervisedIntuitivePhysics_ACCV18.pdf)
 
@@ -187,7 +200,13 @@ Current work for scene understanding and next frame prediction problems in robot
 
 - [Interpretable Intuitive Physics Model](https://arxiv.org/pdf/1808.10002.pdf)
 
-- [The scope and limits of simulation in automated reasoning](https://arxiv.org/pdf/1506.04956.pdf)
+- [The Seven Tools of Causal Inference, with Reflections on Machine Learning](https://ftp.cs.ucla.edu/pub/stat_ser/r481.pdf)
+
+- [Bounce and Learn: Modeling Scene Dynamics with Real-World Bounces](https://openreview.net/forum?id=BJxssoA5KX)
 
 - [NeuroAnimator:
 Fast Neural Network Emulation and Control of Physics-Based Models](http://www.cs.toronto.edu/~fritz/absps/siggraph98.pdf)
+
+- [Inferring mass in complex scenes by mental simulation](http://cocosci.princeton.edu/papers/Hamrick_Cognition.pdf)
+
+- [Intuitive Physics](http://www.indiana.edu/~koertge/H205SciReas/McCloskey_IntuitivePhysics.pdf)

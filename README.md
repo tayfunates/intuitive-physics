@@ -1,6 +1,15 @@
 # intuitive-physics
 Includes models/dataset/literature overview for question answering in physical scene understanding tasks.
 
+## Simulator
+
+### How to Use .blend Files In Unity
+
+- Copy them to Assets folder
+- Tick generate lightmap UVs and then press apply. You have to see object images in project tab instead of some file image
+- If necessary, add rigid body to get benefit from gravity.
+- If necessary, add collider to get benefit from collision engine of unity.
+
 ## Definitions
 
 - **Cohesion:** The principle states that objects are bounded and connected entities. They cannot split into pieces as they move (cohesion) or fuse with other objects (boundedness).

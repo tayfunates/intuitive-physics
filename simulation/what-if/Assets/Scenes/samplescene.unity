@@ -123,6 +123,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_SMALL_BLUE_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -35.8
@@ -1182,6 +1186,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_BIG_BLUE_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.64
@@ -1522,6 +1530,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_SMALL_GRAY_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -35.8
@@ -1594,6 +1606,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_Name
       value: METAL_SMALL_RED_CUBE
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1975,6 +1991,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_Name
       value: METAL_BIG_GREEN_CUBE
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3227,6 +3247,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_BIG_RED_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.64
@@ -3381,6 +3405,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_Name
       value: METAL_SMALL_YELLOW_CUBE
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4085,6 +4113,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_BIG_PURPLE_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.64
@@ -4518,6 +4550,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_BIG_CYAN_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.64
@@ -4858,6 +4894,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_SMALL_PURPLE_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -35.8
@@ -5085,6 +5125,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_BIG_YELLOW_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.64
@@ -5240,6 +5284,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_BIG_BROWN_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.64
@@ -5354,6 +5402,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_SMALL_CYAN_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -35.8
@@ -5426,6 +5478,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_Name
       value: METAL_SMALL_GREEN_CUBE
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5952,6 +6008,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: METAL_BIG_GRAY_CUBE
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.64
@@ -6167,6 +6227,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_Name
       value: METAL_SMALL_BROWN_CUBE
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8e2dafa706642490f99c40286cd991fc, type: 3}
       propertyPath: m_LocalPosition.x

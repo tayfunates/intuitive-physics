@@ -10,6 +10,11 @@ Includes models/dataset/literature overview for question answering in physical s
 - If necessary, add rigid body to get benefit from gravity.
 - If necessary, add collider to get benefit from collision engine of unity.
 
+### Change Resolution of the Simulation
+
+- In the game view, change resolution from **Free Aspect, or the others** to ** Standalone.
+- Then, go to Edit -> Project Settings -> Player and uncheck the box Default Is Native Resolution. Then update the Default screen width and height.
+
 ## Definitions
 
 - **Cohesion:** The principle states that objects are bounded and connected entities. They cannot split into pieces as they move (cohesion) or fuse with other objects (boundedness).

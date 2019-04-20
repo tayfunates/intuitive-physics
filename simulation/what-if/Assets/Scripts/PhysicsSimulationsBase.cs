@@ -6,10 +6,13 @@ public class PhysicsSimulationsBase : MonoBehaviour
 {
     private Camera cam;
 
+    protected GameObject[] gameObjectTemplates = null;
+
     // Use this for initialization
     protected virtual void Start()
     {
         cam = Camera.main;
+        gameObjectTemplates = GameObject.FindGameObjectsWithTag("SimulationObject");
     }
 
     // Update is called once per frame

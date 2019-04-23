@@ -15,6 +15,11 @@ Includes models/dataset/literature overview for question answering in physical s
 - In the game view, change resolution from **Free Aspect, or the others** to ** Standalone.
 - Then, go to Edit -> Project Settings -> Player and uncheck the box Default Is Native Resolution. Then update the Default screen width and height.
 
+
+### Wooden Style
+
+In order to achieve wooden material, you have to export meshes from blender byy calculating the UVs and normals.
+
 ## Definitions
 
 - **Cohesion:** The principle states that objects are bounded and connected entities. They cannot split into pieces as they move (cohesion) or fuse with other objects (boundedness).

@@ -265,8 +265,8 @@ Material:
     - _ZTestModeDistortion: 4
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.6862745, g: 0.39607844, b: 0.8666667, a: 1}
-    - _Color: {r: 0.68627447, g: 0.3960784, b: 0.8666667, a: 1}
+    - _BaseColor: {r: 0.479054, g: 0.06594872, b: 0.735849, a: 1}
+    - _Color: {r: 0.4790539, g: 0.065948695, b: 0.735849, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissiveColor: {r: 0.07618535, g: 0.0822827, b: 0.07421354, a: 1}

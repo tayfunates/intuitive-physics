@@ -14,10 +14,11 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     // The folder to contain our screenshots.
     // If the folder exists we will append numbers to create an empty folder.
     public string folder = "ScreenshotFolder";
-    public int frameRate = 30;
+    public int frameRate = 60;
+    public int currentRemovedObjectIndex = 0;
 
     //State of the simulation, whether it is being run 
-    private SimulationState state = SimulationState.INITIAL_STABLE;
+    private SimulationState state = SimulationState.INITIAL_UNSTABLE;
     private string sceneStateJSON = null;
 
 
@@ -33,23 +34,43 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
     void Update()
     {
-        if (Time.frameCount == 15)
+        if (state == SimulationState.INITIAL_UNSTABLE)
         {
-            sceneStateJSON = SimulationSceneState.getState(gameObjectTemplates);
-        }
-
-        if(Time.frameCount == 45)
-        {
-            if(sceneStateJSON != null)
+            if(isSceneStable())
             {
-                SimulationSceneState.setState(sceneStateJSON, gameObjectTemplates);
+                state = SimulationState.INITIAL_STABLE;
+                sceneStateJSON = SimulationSceneState.getState(gameObjectTemplates);
             }
         }
-
-        if (Time.frameCount == 60)
+        else if(state == SimulationState.INITIAL_STABLE)
         {
-            stop();
+            if(currentRemovedObjectIndex < gameObjectTemplates.Length)
+            {
+                gameObjectTemplates[currentRemovedObjectIndex].SetActive(false);
+                state = SimulationState.FINAL_UNSTABLE;
+            }
+            else {
+                stop();
+            }
         }
+        else if(state == SimulationState.FINAL_UNSTABLE)
+        {
+            if (isSceneStable())
+            {
+                state = SimulationState.FINAL_STABLE;
+            }
+        }
+        else if(state == SimulationState.FINAL_STABLE)
+        {
+            if (sceneStateJSON != null)
+            {
+                SimulationSceneState.setState(sceneStateJSON, gameObjectTemplates);
+                state = SimulationState.INITIAL_STABLE;
+                gameObjectTemplates[currentRemovedObjectIndex].SetActive(true);
+            }
+            currentRemovedObjectIndex++;
+        }
+
         // Append filename to folder name (format is '0005 shot.png"')
         string name = string.Format("{0}/{1:D04}.png", folder, Time.frameCount);
 

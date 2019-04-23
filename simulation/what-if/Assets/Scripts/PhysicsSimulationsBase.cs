@@ -12,13 +12,34 @@ public class PhysicsSimulationsBase : MonoBehaviour
     protected virtual void Start()
     {
         cam = Camera.main;
-        gameObjectTemplates = GameObject.FindGameObjectsWithTag("SimulationObject");
+        gameObjectTemplates = GameObject.FindGameObjectsWithTag("SimulationObject"); //TODO: Use selected random objects
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    protected bool isSceneStable()
+    {
+        if(gameObjectTemplates != null)
+        {
+            double eps = 1e-5;
+            foreach (GameObject obj in gameObjectTemplates)
+            {
+                if(obj.activeSelf)
+                {
+                    if (Mathf.Abs(obj.GetComponent<Rigidbody>().velocity.x) > eps ||
+                         Mathf.Abs(obj.GetComponent<Rigidbody>().velocity.y) > eps ||
+                         Mathf.Abs(obj.GetComponent<Rigidbody>().velocity.z) > eps)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     protected void stop()

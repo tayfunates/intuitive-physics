@@ -12,13 +12,21 @@ Includes models/dataset/literature overview for question answering in physical s
 
 ### Change Resolution of the Simulation
 
-- In the game view, change resolution from **Free Aspect, or the others** to ** Standalone.
+- In the game view, change resolution from **Free Aspect, or the others** to **Standalone**.
 - Then, go to Edit -> Project Settings -> Player and uncheck the box Default Is Native Resolution. Then update the Default screen width and height.
 
 
 ### Wooden Style
 
-In order to achieve wooden material, you have to export meshes from blender byy calculating the UVs and normals.
+In order to achieve wooden material, you have to export meshes from blender by calculating the UVs.
+
+### Export Single Connected Object from a Single .obj File Containing Multiple Objects
+
+- Select a vertex of the object
+- Press ctrl+L to select all connected ones. Here you should see black layouts of other objects and orange layout of the selected object
+- Press P to separate this single object from the connected ones.
+- Press Shift+Ctrl+Alt+C at the same time set origin as **Geometry to Origin**. This will move center of the mass of the object to the origin of the scene. It is very important to be used in unity. Otherwise, local coordinate system of the object will be shifted.
+- Export to .obj file using file menu. You must tick **Selection Only** option. The other options are optional according to your needs.
 
 ## Definitions
 

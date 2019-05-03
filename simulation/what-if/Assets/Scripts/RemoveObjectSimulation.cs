@@ -16,6 +16,8 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     public string folder = "ScreenshotFolder";
     public int frameRate = 60;
     public int currentRemovedObjectIndex = 0;
+    private int imageWidth = 512; //Read width and height from json
+    private int imageHeight = 512;
 
     //State of the simulation, whether it is being run 
     private SimulationState state = SimulationState.INITIAL_UNSTABLE;
@@ -50,6 +52,11 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                 state = SimulationState.FINAL_UNSTABLE;
             }
             else {
+                // Append filename to folder name (format is '0005 shot.png"')
+                string name = string.Format("{0}/{1:D04}.png", folder, Time.frameCount);
+
+                // Capture the screenshot to the specified file.
+                StartCoroutine(captureScreenshot(name, imageWidth, imageHeight));
                 stop();
             }
         }
@@ -70,11 +77,5 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             }
             currentRemovedObjectIndex++;
         }
-
-        // Append filename to folder name (format is '0005 shot.png"')
-        string name = string.Format("{0}/{1:D04}.png", folder, Time.frameCount);
-
-        // Capture the screenshot to the specified file.
-        StartCoroutine(captureScreenshot(name));
     }
 }

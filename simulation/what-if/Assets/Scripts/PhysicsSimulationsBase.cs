@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.IO;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#else
+#endif
 
 public class PhysicsSimulationsBase : MonoBehaviour
 {
@@ -44,25 +49,33 @@ public class PhysicsSimulationsBase : MonoBehaviour
 
     protected void stop()
     {
+#if UNITY_EDITOR
         if (EditorApplication.isPlaying)
         {
             UnityEditor.EditorApplication.isPlaying = false;
         }
+#else
+        Application.Quit();
+#endif
+
     }
 
-    protected IEnumerator captureScreenshot(string path)
+    protected IEnumerator captureScreenshot(string path, int width, int height)
     {
         yield return new WaitForEndOfFrame();
 
-        Texture2D screenImage = new Texture2D(Screen.width, Screen.height);
-        //Get Image from screen
-        screenImage.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
-        screenImage.Apply();
-        //Convert to png
-        byte[] imageBytes = screenImage.EncodeToPNG();
-
-        //Save image to file
-        System.IO.File.WriteAllBytes(path, imageBytes);
+        RenderTexture rt = new RenderTexture(width, height, 24);
+        cam.targetTexture = rt;
+        Texture2D screenShot = new Texture2D(width, height, TextureFormat.RGB24, false);
+        cam.Render();
+        RenderTexture.active = rt;
+        screenShot.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        cam.targetTexture = null;
+        RenderTexture.active = null; // JC: added to avoid errors
+        Destroy(rt);
+        byte[] bytes = screenShot.EncodeToPNG();
+        System.IO.File.WriteAllBytes(path, bytes);
+        Debug.Log(string.Format("Took screenshot to: {0}", path));
 
     }
 }

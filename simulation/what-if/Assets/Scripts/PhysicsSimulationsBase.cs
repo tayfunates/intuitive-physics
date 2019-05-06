@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.IO;
+using System.Collections.Generic;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,12 +13,18 @@ public class PhysicsSimulationsBase : MonoBehaviour
     private Camera cam;
 
     protected GameObject[] gameObjectTemplates = null;
+    internal List<SimulationObjectState> createdSimulationObjects = new List<SimulationObjectState>();
 
     // Use this for initialization
     protected virtual void Start()
     {
         cam = Camera.main;
         gameObjectTemplates = GameObject.FindGameObjectsWithTag("SimulationObject"); //TODO: Use selected random objects
+        foreach (GameObject obj in gameObjectTemplates)
+        {
+            obj.SetActive(false);
+            //obj.GetComponent<ReflectionProbe>().enabled = false;
+        }
     }
 
     // Update is called once per frame
@@ -31,8 +38,9 @@ public class PhysicsSimulationsBase : MonoBehaviour
         if(gameObjectTemplates != null)
         {
             double eps = 1e-5;
-            foreach (GameObject obj in gameObjectTemplates)
+            foreach (SimulationObjectState state in createdSimulationObjects)
             {
+                GameObject obj = state.GetGameObject();
                 if(obj.activeSelf)
                 {
                     if (Mathf.Abs(obj.GetComponent<Rigidbody>().velocity.x) > eps ||

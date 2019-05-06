@@ -63,6 +63,8 @@
     <Compile Include="Assets\Scripts\PhysicsSimulationsBase.cs" />
     <Compile Include="Assets\Scripts\RemoveObjectSimulation.cs" />
     <Compile Include="Assets\Scripts\SimpleCameraController.cs" />
+    <Compile Include="Assets\Scripts\SimulationColor.cs" />
+    <Compile Include="Assets\Scripts\SimulationMaterial.cs" />
     <Compile Include="Assets\Scripts\SimulationObjectState.cs" />
     <Compile Include="Assets\Scripts\SimulationSceneState.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />

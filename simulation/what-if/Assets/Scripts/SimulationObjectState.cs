@@ -9,10 +9,18 @@ internal class SimulationObjectState
     public Vector3 inertiaTensor;
     public Quaternion inertiaTensorRotation;
     public Vector3 angularVelocity;
+    public int material;
+    public int color;
+    //public int sceneIndex;
+    public int templateIndex;
 
-    static public string getState(GameObject obj)
+    public GameObject GetGameObject() => gameObject;
+    public void SetGameObject(GameObject obj) => gameObject = obj;
+    private GameObject gameObject;
+
+    static public string createJSONFromObject(GameObject obj, SimulationMaterial mat, SimulationColor col, int templateIndex)
     {
-        if(obj != null)
+        if (obj != null)
         {
             SimulationObjectState state = new SimulationObjectState();
             state.position = obj.GetComponent<Rigidbody>().position;
@@ -21,6 +29,10 @@ internal class SimulationObjectState
             state.inertiaTensor = obj.GetComponent<Rigidbody>().inertiaTensor;
             state.inertiaTensorRotation = obj.GetComponent<Rigidbody>().inertiaTensorRotation;
             state.angularVelocity = obj.GetComponent<Rigidbody>().angularVelocity;
+            state.material = (int)mat.type;
+            state.color = (int)col.type;
+            //state.sceneIndex = sceneIndex;
+            state.templateIndex = templateIndex;
 
             return JsonUtility.ToJson(state);
         }
@@ -29,17 +41,35 @@ internal class SimulationObjectState
     }
 
 
-    static public void setState(string stateStr, GameObject obj)
+    static public GameObject createObjectFromJSON(string stateStr, GameObject[] gameObjectTemplates)
     {
-        var state = JsonUtility.FromJson<SimulationObjectState>(stateStr);
-        if(state != null && obj != null)
+        if (gameObjectTemplates != null)
         {
-            obj.GetComponent<Rigidbody>().position = state.position;
-            obj.GetComponent<Rigidbody>().rotation = state.rotation;
-            obj.GetComponent<Rigidbody>().velocity = state.velocity;
-            obj.GetComponent<Rigidbody>().inertiaTensor = state.inertiaTensor;
-            obj.GetComponent<Rigidbody>().inertiaTensorRotation = state.inertiaTensorRotation;
-            obj.GetComponent<Rigidbody>().angularVelocity = state.angularVelocity;
+            var state = JsonUtility.FromJson<SimulationObjectState>(stateStr);
+
+            GameObject refObject = gameObjectTemplates[state.templateIndex];
+            GameObject obj = Object.Instantiate(refObject);
+            obj.SetActive(true);
+
+            SimulationMaterial mat = new SimulationMaterial((SimulationMaterial.TYPE)state.material);
+            obj.GetComponent<Rigidbody>().SetDensity(mat.GetDensity());
+
+            SimulationColor col = new SimulationColor((SimulationColor.TYPE)state.color);
+            Material newMat = Object.Instantiate(refObject.GetComponent<Renderer>().material);
+            newMat.SetColor("_Color", col.GetColor());
+            obj.GetComponent<Renderer>().material = newMat;
+
+            if (state != null && obj != null)
+            {
+                obj.GetComponent<Rigidbody>().position = state.position;
+                obj.GetComponent<Rigidbody>().rotation = state.rotation;
+                obj.GetComponent<Rigidbody>().velocity = state.velocity;
+                obj.GetComponent<Rigidbody>().inertiaTensor = state.inertiaTensor;
+                obj.GetComponent<Rigidbody>().inertiaTensorRotation = state.inertiaTensorRotation;
+                obj.GetComponent<Rigidbody>().angularVelocity = state.angularVelocity;
+            }
+            return obj;
         }
+        return null;
     }
 }

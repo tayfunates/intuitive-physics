@@ -123,18 +123,20 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
         obj.GetComponent<Rigidbody>().position = new Vector3(x_pos, y_pos, z_pos);
 
+        SimulationObjectState objState = new SimulationObjectState();
+        objState.material = (templateIndex < 2) ? 0 : 1;
+        objState.size = (templateIndex % 2 == 0) ? 0 : 1;
+
         int colorIndex = Random.Range(0, numberOfDistinctColorsUsed);
         SimulationColor col = new SimulationColor((SimulationColor.TYPE)colorIndex);
         Material newMat = Instantiate(refObject.GetComponent<Renderer>().material);
-        newMat.SetColor("_BaseColor", col.GetColor());
+        newMat.SetColor("_BaseColor", col.GetColor((SimulationMaterial.TYPE)objState.material));
         obj.GetComponent<Renderer>().material = newMat;
 
-        SimulationObjectState objState = new SimulationObjectState();
+
         objState.SetGameObject(obj);
         objState.color = colorIndex;
         objState.templateIndex = templateIndex;
-        objState.material = (templateIndex < 2) ? 0 : 1;
-        objState.size = (templateIndex % 2 == 0) ? 0 : 1;
 
         createdSimulationObjects.Add(objState);
     }

@@ -58,7 +58,7 @@ internal class SimulationObjectState
 
             SimulationColor col = new SimulationColor((SimulationColor.TYPE)state.color);
             Material newMat = Object.Instantiate(refObject.GetComponent<Renderer>().material);
-            newMat.SetColor("_Color", col.GetColor());
+            newMat.SetColor("_BaseColor", col.GetColor(mat.type));
             obj.GetComponent<Renderer>().material = newMat;
 
             if (state != null && obj != null)

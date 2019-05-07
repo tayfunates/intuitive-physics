@@ -11,6 +11,7 @@ internal class SimulationObjectState
     public Vector3 angularVelocity;
     public int material;
     public int color;
+    public int size;
     //public int sceneIndex;
     public int templateIndex;
 
@@ -18,7 +19,7 @@ internal class SimulationObjectState
     public void SetGameObject(GameObject obj) => gameObject = obj;
     private GameObject gameObject;
 
-    static public string createJSONFromObject(GameObject obj, SimulationMaterial mat, SimulationColor col, int templateIndex)
+    static public string createJSONFromObject(GameObject obj, SimulationMaterial mat, SimulationColor col, int size, int templateIndex)
     {
         if (obj != null)
         {
@@ -31,6 +32,7 @@ internal class SimulationObjectState
             state.angularVelocity = obj.GetComponent<Rigidbody>().angularVelocity;
             state.material = (int)mat.type;
             state.color = (int)col.type;
+            state.size = size;
             //state.sceneIndex = sceneIndex;
             state.templateIndex = templateIndex;
 

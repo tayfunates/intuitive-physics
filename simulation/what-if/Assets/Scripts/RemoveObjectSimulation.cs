@@ -18,8 +18,8 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     private int imageWidth = 512; //Read from json
     private int imageHeight = 512; //Read from json
     private int noObjects = 0;  //Randomly calculated and set in CREATE_STABLE_CONFIGURATION mode.
-    private int minNoObjects = 30;
-    private int maxNoObjects = 40;
+    private int minNoObjects = 10;
+    private int maxNoObjects = 20;
     private int objectThrownFrameInterval = 60;
 
     //State of the simulation, whether it is being run 
@@ -126,7 +126,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         int colorIndex = Random.Range(0, numberOfDistinctColorsUsed);
         SimulationColor col = new SimulationColor((SimulationColor.TYPE)colorIndex);
         Material newMat = Instantiate(refObject.GetComponent<Renderer>().material);
-        newMat.SetColor("_Color", col.GetColor());
+        newMat.SetColor("_BaseColor", col.GetColor());
         obj.GetComponent<Renderer>().material = newMat;
 
         SimulationObjectState objState = new SimulationObjectState();
@@ -134,6 +134,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         objState.color = colorIndex;
         objState.templateIndex = templateIndex;
         objState.material = (templateIndex < 2) ? 0 : 1;
+        objState.size = (templateIndex % 2 == 0) ? 0 : 1;
 
         createdSimulationObjects.Add(objState);
     }

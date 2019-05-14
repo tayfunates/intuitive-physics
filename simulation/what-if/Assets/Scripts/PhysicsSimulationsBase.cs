@@ -19,7 +19,7 @@ public class PhysicsSimulationsBase : MonoBehaviour
     protected virtual void Start()
     {
         cam = Camera.main;
-        gameObjectTemplates = GameObject.FindGameObjectsWithTag("SimulationObject"); //TODO: Use selected random objects
+        gameObjectTemplates = GameObject.FindGameObjectsWithTag("SimulationObject");
         foreach (GameObject obj in gameObjectTemplates)
         {
             obj.SetActive(false);

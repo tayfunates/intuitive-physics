@@ -4603,6 +4603,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pipe
       objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: b4a2db7571f3a4e7ea700218a6c6ddd1, type: 3}
+      propertyPath: m_TagString
+      value: Pipe
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b4a2db7571f3a4e7ea700218a6c6ddd1, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.79455
@@ -4629,15 +4633,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: b4a2db7571f3a4e7ea700218a6c6ddd1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: b4a2db7571f3a4e7ea700218a6c6ddd1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: b4a2db7571f3a4e7ea700218a6c6ddd1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: -8.8
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: b4a2db7571f3a4e7ea700218a6c6ddd1, type: 3}
       propertyPath: m_LocalRotation.x

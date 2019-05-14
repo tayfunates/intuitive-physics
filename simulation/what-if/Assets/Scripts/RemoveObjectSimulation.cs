@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 public class RemoveObjectSimulation : PhysicsSimulationsBase
 {
@@ -23,9 +24,9 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         WAIT = 0
     }
 
-    // The folder to contain our screenshots.
-    // If the folder exists we will append numbers to create an empty folder.
-    public string folder = "ScreenshotFolder";
+
+    public string simulationFolder = "";
+
     public int frameRate = 30;
     private int imageWidth = 512; //Read from json
     private int imageHeight = 512; //Read from json
@@ -55,14 +56,19 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         // Set the playback framerate (real time will not relate to game time after this).
         Time.captureFramerate = frameRate;
 
-        if(simState == SimulationState.CREATE_SCENE)
+        simulationFolder = "Data/";
+        string simulationIDString = simulationId.ToString().PadLeft(4, '0');
+
+        simulationFolder = string.Concat(simulationFolder, simulationIDString);
+
+        if (simState == SimulationState.CREATE_SCENE)
         {
             noObjects = Random.Range(minNoObjects, maxNoObjects + 1);
 
             pipeObject = GameObject.FindGameObjectsWithTag("Pipe")[0];
 
             // Create the folder
-            System.IO.Directory.CreateDirectory(folder);
+            System.IO.Directory.CreateDirectory(simulationFolder);
         }
     }
 
@@ -96,10 +102,18 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                 if(isSceneStable())
                 {
                     // Append filename to folder name (format is '0005 shot.png"')
-                    string fileName = string.Format("{0}/{1:D04}.png", folder, simulationId);
+                    string imageFileName = string.Format("{0}/InitialStable.png", simulationFolder);
+                    string jsonFileName = string.Format("{0}/InitialStable.json", simulationFolder);
+
+                    string sceneJSON = SimulationSceneState.toJSON(createdSimulationObjects);
+
+                    StreamWriter sw = File.CreateText(jsonFileName); // if file doesnt exist, make the file in the specified path
+                    sw.Close();
+
+                    File.WriteAllText(jsonFileName, sceneJSON); // fill the file with the data(json)
 
                     // Capture the screenshot to the specified file.
-                    StartCoroutine(captureScreenshot(fileName, imageWidth, imageHeight));
+                    StartCoroutine(captureScreenshot(imageFileName, imageWidth, imageHeight));
                     stopWaitFrame = 30;
                     createSceneState = CreateSceneState.STOP;
                     return;

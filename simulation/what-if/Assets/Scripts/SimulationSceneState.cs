@@ -6,15 +6,17 @@ internal class SimulationSceneState
 {
     public List<string> objectStates = new List<string>();
 
-    static public string getState(GameObject[] objList)
+    static public string toJSON(List<SimulationObjectState> objStates)
     {
-        if (objList != null)
+        if (objStates != null)
         {
             SimulationSceneState sceneState = new SimulationSceneState();
-            /*foreach (GameObject obj in objList)
+            foreach (SimulationObjectState obj in objStates)
             {
-                sceneState.objectStates.Add(SimulationObjectState.getState(obj));
-            }*/
+                SimulationColor col = new SimulationColor((SimulationColor.TYPE)obj.color);
+                SimulationMaterial mat = new SimulationMaterial((SimulationMaterial.TYPE)obj.material);
+                sceneState.objectStates.Add(SimulationObjectState.createJSONFromObject(obj.GetGameObject(), mat, col, obj.size, obj.templateIndex));
+            }
 
             return JsonUtility.ToJson(sceneState);
 

@@ -26,19 +26,21 @@ internal class SimulationSceneState
     }
 
 
-    static public void setState(string sceneStateStr, GameObject[] objList)
+    static public List<SimulationObjectState> fromJSON(string sceneStateStr, GameObject[] gameObjectTemplates)
     {
-        /*var sceneState = JsonUtility.FromJson<SimulationSceneState>(sceneStateStr);
-        if (sceneState != null && objList != null)
+        List<SimulationObjectState> ret = new List<SimulationObjectState>();
+        SimulationSceneState sceneState = JsonUtility.FromJson<SimulationSceneState>(sceneStateStr);
+        if (sceneState != null)
         {
-            for (int i=0; i < objList.Length; i++)
+            for (int i=0; i < sceneState.objectStates.Count; i++)
             {
-                GameObject obj = objList[i];
-                if(obj != null) 
+                SimulationObjectState objState = SimulationObjectState.createObjectFromJSON(sceneState.objectStates[i], gameObjectTemplates);
+                if(objState != null) 
                 {
-                    SimulationObjectState.setState(sceneState.objectStates[i], obj);
+                    ret.Add(objState);
                 }
             }
-        }*/
+        }
+        return ret;
     }
 }

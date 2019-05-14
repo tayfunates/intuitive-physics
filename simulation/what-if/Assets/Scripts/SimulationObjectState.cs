@@ -43,7 +43,7 @@ internal class SimulationObjectState
     }
 
 
-    static public GameObject createObjectFromJSON(string stateStr, GameObject[] gameObjectTemplates)
+    static public SimulationObjectState createObjectFromJSON(string stateStr, GameObject[] gameObjectTemplates)
     {
         if (gameObjectTemplates != null)
         {
@@ -70,7 +70,8 @@ internal class SimulationObjectState
                 obj.GetComponent<Rigidbody>().inertiaTensorRotation = state.inertiaTensorRotation;
                 obj.GetComponent<Rigidbody>().angularVelocity = state.angularVelocity;
             }
-            return obj;
+            state.SetGameObject(obj);
+            return state;
         }
         return null;
     }

@@ -21,7 +21,8 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
     enum RemoveObjectState
     {
-        WAIT = 0
+        WAIT = 0,
+        STOP = 1
     }
 
 
@@ -37,7 +38,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
     private int simulationId = 0; //Read from json
     //State of the simulation, whether it is being run 
-    private SimulationState simState = SimulationState.CREATE_SCENE; //Read from json
+    private SimulationState simState = SimulationState.REMOVE_OBJECT; //Read from json
     private CreateSceneState createSceneState = CreateSceneState.THROW;
     private RemoveObjectState removeObjectState = RemoveObjectState.WAIT;
     private string sceneStateJSON = null;
@@ -61,14 +62,18 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
         simulationFolder = string.Concat(simulationFolder, simulationIDString);
 
+        pipeObject = GameObject.FindGameObjectsWithTag("Pipe")[0];
         if (simState == SimulationState.CREATE_SCENE)
         {
             noObjects = Random.Range(minNoObjects, maxNoObjects + 1);
 
-            pipeObject = GameObject.FindGameObjectsWithTag("Pipe")[0];
-
             // Create the folder
             System.IO.Directory.CreateDirectory(simulationFolder);
+        }
+        else if(simState == SimulationState.REMOVE_OBJECT)
+        {
+            pipeObject.SetActive(false);
+            CreateSceneFromJSON();
         }
     }
 
@@ -116,12 +121,33 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                     StartCoroutine(captureScreenshot(imageFileName, imageWidth, imageHeight));
                     stopWaitFrame = 30;
                     createSceneState = CreateSceneState.STOP;
-                    return;
                 }
             }
             else if (createSceneState == CreateSceneState.STOP)
             {
                 if(stopWaitFrame<=0)
+                {
+                    stop();
+                }
+                stopWaitFrame--;
+            }
+        }
+
+        else if (simState == SimulationState.REMOVE_OBJECT)
+        {
+            if(removeObjectState == RemoveObjectState.WAIT)
+            {
+                if (isSceneStable())
+                {
+                    string imageFileName = string.Format("{0}/Deneme.png", simulationFolder);
+                    StartCoroutine(captureScreenshot(imageFileName, imageWidth, imageHeight));
+                    stopWaitFrame = 30;
+                    removeObjectState = RemoveObjectState.STOP;
+                }
+            }
+            else if (removeObjectState == RemoveObjectState.STOP)
+            {
+                if (stopWaitFrame <= 0)
                 {
                     stop();
                 }
@@ -166,6 +192,13 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             currentRemovedObjectIndex++;
         }
         */
+    }
+
+    protected virtual void CreateSceneFromJSON()
+    {
+        string jsonFileName = string.Format("{0}/InitialStable_temp.json", simulationFolder);
+        string sceneJSON = File.ReadAllText(jsonFileName);
+        createdSimulationObjects = SimulationSceneState.fromJSON(sceneJSON, gameObjectTemplates);
     }
 
     protected virtual void AddRandomSimulationObject()

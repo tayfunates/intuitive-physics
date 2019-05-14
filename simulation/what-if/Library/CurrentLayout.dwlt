@@ -114,7 +114,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 498}
   m_MaxSize: {x: 14004, y: 14048}
   vertical: 0
-  controlID: 67
+  controlID: 65
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 498}
   m_MaxSize: {x: 10002, y: 14048}
   vertical: 1
-  controlID: 68
+  controlID: 66
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -164,7 +164,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 224}
   m_MaxSize: {x: 8006, y: 4024}
   vertical: 0
-  controlID: 69
+  controlID: 67
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -310,20 +310,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/ExampleAssets/Materials
+    - Assets/ExampleAssets/Physics Material
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/ExampleAssets/Materials
+  - Assets/ExampleAssets/Physics Material
   m_LastFoldersGridSize: -1
   m_LastProjectPath: /Users/tates/Workspace/self/hacettepe/intuitive-physics/simulation/what-if
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 55}
-    m_SelectedIDs: 0a2e0000
-    m_LastClickedID: 11786
-    m_ExpandedIDs: 00000000a62d0000d636000000ca9a3b
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: 66110000
+    m_LastClickedID: 4454
+    m_ExpandedIDs: 00000000ee10000026170000201a000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -351,7 +351,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000a62d0000d6360000
+    m_ExpandedIDs: 00000000ee100000201a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -403,7 +403,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 144}
+    m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 64
   m_DirectoriesAreaWidth: 317
 --- !u!114 &13
@@ -435,9 +435,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 84320000
-      m_LastClickedID: 0
-      m_ExpandedIDs: d0fbffff0a3800001a39000076390000
+      m_SelectedIDs: c41c0000
+      m_LastClickedID: 7364
+      m_ExpandedIDs: 78e4ffffd6fbffff661c0000c21c0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -492,9 +492,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -17.07, y: 14.5399065, z: -11.901167}
+    m_Target: {x: 0.9, y: 32.5, z: -43.6}
     speed: 2
-    m_Value: {x: -17.07, y: 14.5399065, z: -11.901167}
+    m_Value: {x: 0.9, y: 32.5, z: -43.6}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -522,17 +522,17 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
+    m_Target: {x: -0.3979041, y: 0, z: 0, w: -0.91742706}
     speed: 2
-    m_Value: {x: 0, y: 0.7071068, z: 0, w: -0.7071068}
+    m_Value: {x: -0.3979041, y: 0, z: 0, w: -0.91742706}
   m_Size:
-    m_Target: 77.50548
+    m_Target: 80.5597
     speed: 2
-    m_Value: 77.50548
+    m_Value: 80.5597
   m_Ortho:
-    m_Target: 0
+    m_Target: 1
     speed: 2
-    m_Value: 0
+    m_Value: 1
   m_ShowGlobalGrid: 1
   m_LastSceneViewRotation: {x: -0.0027517255, y: 0.9829175, z: -0.18343446, w: -0.014744876}
   m_LastSceneViewOrtho: 0

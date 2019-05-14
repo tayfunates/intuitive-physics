@@ -18,9 +18,9 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     private int imageWidth = 512; //Read from json
     private int imageHeight = 512; //Read from json
     private int noObjects = 0;  //Randomly calculated and set in CREATE_STABLE_CONFIGURATION mode.
-    private int minNoObjects = 10;
-    private int maxNoObjects = 20;
-    private int objectThrownFrameInterval = 60;
+    private int minNoObjects = 20;
+    private int maxNoObjects = 30;
+    private int objectThrownFrameInterval = 100;
 
     //State of the simulation, whether it is being run 
     private SimulationState simState = SimulationState.CREATE_STABLE_CONFIGURATION_THROW; //Read from json
@@ -112,7 +112,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
     protected virtual void AddRandomSimulationObject()
     {
-        int templateIndex = Random.Range(0, numberOfDistinctObjectUsed);
+        int templateIndex = Random.Range(2, numberOfDistinctObjectUsed);
         GameObject refObject = gameObjectTemplates[templateIndex];
         GameObject obj = Object.Instantiate(refObject);
         obj.SetActive(true);

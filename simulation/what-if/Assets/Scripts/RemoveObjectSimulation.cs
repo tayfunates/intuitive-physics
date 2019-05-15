@@ -30,8 +30,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
     public int frameRate = 30;
     private int noObjects = 0;  //Randomly calculated
-    private int minNoObjects = 5;
-    private int maxNoObjects = 10;
+
     private int objectThrownFrameInterval = 100;
 
     //State of the simulation, whether it is being run 
@@ -39,11 +38,9 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     private RemoveObjectState removeObjectState = RemoveObjectState.WAIT;
 
     private int numberOfDistinctObjectUsed = 4; //Rubber/Metal/Small/Big Cubes
-    private Vector3 throwMin = new Vector3(-2.0F, 20.0F, -2.0f);
-    private Vector3 throwMax = new Vector3(2.0f, 20.0f, 2.0f);
     private int numberOfDistinctColorsUsed = 8;
 
-    private GameObject pipeObject = null;
+    private GameObject[] pipeObjects = null;
     private int stopWaitFrame = 30;
 
     private SimulationControllerState controllerState = null;
@@ -62,17 +59,21 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         string simulationIDString = controllerState.simulationID.ToString().PadLeft(4, '0');
         simulationFolder = string.Concat(simulationFolder, simulationIDString);
 
-        pipeObject = GameObject.FindGameObjectsWithTag("Pipe")[0];
+        pipeObjects = GameObject.FindGameObjectsWithTag("Pipe");
         if ((SimulationState)controllerState.simulationState == SimulationState.CREATE_SCENE)
         {
-            noObjects = Random.Range(minNoObjects, maxNoObjects + 1);
+            noObjects = controllerState.noObjects;
 
             // Create the folder
             System.IO.Directory.CreateDirectory(simulationFolder);
         }
         else if((SimulationState)controllerState.simulationState == SimulationState.REMOVE_OBJECT)
         {
-            pipeObject.SetActive(false);
+            foreach (GameObject obj in pipeObjects)
+            {
+                obj.SetActive(false);
+            }
+
             CreateSceneFromJSON();
         }
     }
@@ -98,7 +99,10 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             {
                 if (isSceneStable())
                 {
-                    pipeObject.SetActive(false);
+                    foreach (GameObject obj in pipeObjects)
+                    {
+                        obj.SetActive(false);
+                    }
                     createSceneState = CreateSceneState.WAIT_WITHOUT_PIPE;
                 }
             }
@@ -201,14 +205,23 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
     protected virtual void AddRandomSimulationObject()
     {
-        int templateIndex = Random.Range(2, numberOfDistinctObjectUsed);
+        int templateIndex = 0;
+        if (controllerState.noObjects - noObjects < controllerState.initialBigObjects)
+        {
+            templateIndex = 3;
+        }
+        else
+        {
+            templateIndex = Random.Range(2, numberOfDistinctObjectUsed);
+        }
+
         GameObject refObject = gameObjectTemplates[templateIndex];
         GameObject obj = Object.Instantiate(refObject);
         obj.SetActive(true);
 
-        float x_pos = Random.Range(throwMin.x, throwMax.x);
-        float y_pos = Random.Range(throwMin.y, throwMax.y);
-        float z_pos = Random.Range(throwMin.z, throwMax.z);
+        float x_pos = Random.Range(controllerState.throwMinX, controllerState.throwMaxX);
+        float y_pos = Random.Range(controllerState.throwMinY, controllerState.throwMaxY);
+        float z_pos = Random.Range(controllerState.throwMinZ, controllerState.throwMaxZ);
 
         obj.GetComponent<Rigidbody>().position = new Vector3(x_pos, y_pos, z_pos);
 

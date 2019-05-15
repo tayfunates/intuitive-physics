@@ -5,6 +5,7 @@ import json
 import subprocess
 import os
 import ast
+import random
 
 class SimulationState(Enum):
     CREATE_SCENE = 0
@@ -15,7 +16,15 @@ SimulationControllerState = {
   'simulationState': 0,
   'imageWidth': 512,
   'imageHeight': 512,
-  'removedObjectIndex': 0
+  'removedObjectIndex': 0,
+  'noObjects': 0,
+  'initialBigObjects': 10,
+  'throwMinX': -3,
+  'throwMaxX': 3,
+  'throwMinY': 25,
+  'throwMaxY': 25,
+  'throwMinZ': -3,
+  'throwMaxZ': 3
 }
 
 def writeControllerAsJSON(controller, filepath):
@@ -32,7 +41,7 @@ def readInitialStableConfigurationObjectCount(filePath):
     return len(sceneDict['objectStates'])
 
 
-simulation_count = 10
+simulation_count = 75
 
 unity_call_str = './what-if-test.app/Contents/MacOS/what-if-test -batchmode'
 
@@ -42,10 +51,17 @@ initial_stable_json_path = 'InitialStable.json'
 dataBaseFolder = 'Data'
 
 
+minNoObjects = 15
+maxNoObjects = 25
+
 for i in range(simulation_count):
+
+    noObjects = random.randint(minNoObjects, maxNoObjects+1)
+
     #Create initial stable configuration
     SimulationControllerState['simulationID'] = i
     SimulationControllerState['simulationState'] = 0
+    SimulationControllerState['noObjects'] = noObjects
 
     writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
 
@@ -53,8 +69,6 @@ for i in range(simulation_count):
     p1.wait()
 
     simulationFolder = os.path.join(os.path.join(dataBaseFolder, str(i).zfill(4)), initial_stable_json_path)
-
-    noObjects = readInitialStableConfigurationObjectCount(simulationFolder)
     print(noObjects, " objects are created")
 
     for j in range(noObjects):

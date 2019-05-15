@@ -41,7 +41,7 @@ def readInitialStableConfigurationObjectCount(filePath):
     return len(sceneDict['objectStates'])
 
 
-simulation_count = 75
+simulation_count = 100
 
 unity_call_str = './what-if-test.app/Contents/MacOS/what-if-test -batchmode'
 

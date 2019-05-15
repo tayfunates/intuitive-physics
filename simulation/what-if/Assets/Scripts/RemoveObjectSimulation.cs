@@ -208,11 +208,12 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         int templateIndex = 0;
         if (controllerState.noObjects - noObjects < controllerState.initialBigObjects)
         {
-            templateIndex = 3;
+            templateIndex = Random.Range(0, numberOfDistinctObjectUsed / 2);
+            templateIndex = templateIndex * 2 + 1;
         }
         else
         {
-            templateIndex = Random.Range(2, numberOfDistinctObjectUsed);
+            templateIndex = Random.Range(0, numberOfDistinctObjectUsed);
         }
 
         GameObject refObject = gameObjectTemplates[templateIndex];

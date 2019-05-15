@@ -1,23 +1,72 @@
-import matplotlib as mpl
-mpl.use('TkAgg')
-import matplotlib.pyplot as plt
-import numpy as np
 import sys
 
-sys.path.insert(0, '/Users/tates/Workspace/self/hacettepe/ml-agents/gym-unity')
+from enum import Enum
+import json
+import subprocess
+import os
+import ast
 
-from gym_unity.envs import UnityEnv
+class SimulationState(Enum):
+    CREATE_SCENE = 0
+    REMOVE_OBJECT = 1
+
+SimulationControllerState = {
+  'simulationID': 0,
+  'simulationState': 0,
+  'imageWidth': 512,
+  'imageHeight': 512,
+  'removedObjectIndex': 0
+}
+
+def writeControllerAsJSON(controller, filepath):
+    controllerJSON = json.dumps(controller, sort_keys=False)
+    with open(filepath, 'w') as outfile:
+        outfile.write(controllerJSON)
+
+def readInitialStableConfigurationObjectCount(filePath):
+    sceneJSONStr = ''
+    with open(filePath, 'r') as inFile:
+        sceneJSONStr = inFile.read()
+
+    sceneDict = ast.literal_eval(sceneJSONStr)
+    return len(sceneDict['objectStates'])
 
 
-print("Python version:")
-print(sys.version)
+simulation_count = 10
 
-# check Python version
-if (sys.version_info[0] < 3):
-    raise Exception("ERROR: ML-Agents Toolkit (v0.3 onwards) requires Python 3")
+unity_call_str = './what-if-test.app/Contents/MacOS/what-if-test -batchmode'
 
-env_name = "test_env"  # Name of the Unity environment binary to launch
-env = UnityEnv(env_name, worker_id=0, use_visual=True)
+controller_json_filepath = 'controller.json'
+initial_stable_json_path = 'InitialStable.json'
 
-# Examine environment parameters
-print(str(env))
+dataBaseFolder = 'Data'
+
+
+for i in range(simulation_count):
+    #Create initial stable configuration
+    SimulationControllerState['simulationID'] = i
+    SimulationControllerState['simulationState'] = 0
+
+    writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
+
+    p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
+    p1.wait()
+
+    simulationFolder = os.path.join(os.path.join(dataBaseFolder, str(i).zfill(4)), initial_stable_json_path)
+
+    noObjects = readInitialStableConfigurationObjectCount(simulationFolder)
+    print(noObjects, " objects are created")
+
+    for j in range(noObjects):
+        SimulationControllerState['simulationState'] = 1
+        SimulationControllerState['removedObjectIndex'] = j
+
+        writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
+
+        p2 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
+        p2.wait()
+
+
+
+
+

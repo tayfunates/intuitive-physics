@@ -24,8 +24,8 @@ internal class SimulationObjectState
         if (obj != null)
         {
             SimulationObjectState state = new SimulationObjectState();
-            state.position = obj.GetComponent<Rigidbody>().position;
-            state.rotation = obj.GetComponent<Rigidbody>().rotation;
+            state.position = obj.transform.position;
+            state.rotation = obj.transform.rotation;
             state.velocity = obj.GetComponent<Rigidbody>().velocity;
             state.inertiaTensor = obj.GetComponent<Rigidbody>().inertiaTensor;
             state.inertiaTensorRotation = obj.GetComponent<Rigidbody>().inertiaTensorRotation;
@@ -51,7 +51,6 @@ internal class SimulationObjectState
 
             GameObject refObject = gameObjectTemplates[state.templateIndex];
             GameObject obj = Object.Instantiate(refObject);
-            obj.SetActive(true);
 
             SimulationMaterial mat = new SimulationMaterial((SimulationMaterial.TYPE)state.material);
             obj.GetComponent<Rigidbody>().SetDensity(mat.GetDensity());
@@ -63,13 +62,14 @@ internal class SimulationObjectState
 
             if (state != null && obj != null)
             {
-                obj.GetComponent<Rigidbody>().position = state.position;
-                obj.GetComponent<Rigidbody>().rotation = state.rotation;
-                obj.GetComponent<Rigidbody>().velocity = state.velocity;
-                obj.GetComponent<Rigidbody>().inertiaTensor = state.inertiaTensor;
-                obj.GetComponent<Rigidbody>().inertiaTensorRotation = state.inertiaTensorRotation;
-                obj.GetComponent<Rigidbody>().angularVelocity = state.angularVelocity;
+                obj.transform.position = state.position;
+                obj.transform.rotation = state.rotation;
+                //obj.GetComponent<Rigidbody>().velocity = state.velocity;
+                //obj.GetComponent<Rigidbody>().inertiaTensor = state.inertiaTensor;
+                //obj.GetComponent<Rigidbody>().inertiaTensorRotation = state.inertiaTensorRotation;
+                //obj.GetComponent<Rigidbody>().angularVelocity = state.angularVelocity;
             }
+            obj.SetActive(true);
             state.SetGameObject(obj);
             return state;
         }

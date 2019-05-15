@@ -26,7 +26,7 @@ internal class SimulationSceneState
     }
 
 
-    static public List<SimulationObjectState> fromJSON(string sceneStateStr, GameObject[] gameObjectTemplates)
+    static public List<SimulationObjectState> fromJSON(string sceneStateStr, GameObject[] gameObjectTemplates, int removedObjectIndex)
     {
         List<SimulationObjectState> ret = new List<SimulationObjectState>();
         SimulationSceneState sceneState = JsonUtility.FromJson<SimulationSceneState>(sceneStateStr);
@@ -34,10 +34,13 @@ internal class SimulationSceneState
         {
             for (int i=0; i < sceneState.objectStates.Count; i++)
             {
-                SimulationObjectState objState = SimulationObjectState.createObjectFromJSON(sceneState.objectStates[i], gameObjectTemplates);
-                if(objState != null) 
+                if(i!=removedObjectIndex)
                 {
-                    ret.Add(objState);
+                    SimulationObjectState objState = SimulationObjectState.createObjectFromJSON(sceneState.objectStates[i], gameObjectTemplates);
+                    if (objState != null)
+                    {
+                        ret.Add(objState);
+                    }
                 }
             }
         }

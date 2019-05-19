@@ -25,7 +25,8 @@ SimulationControllerState = {
   'throwMaxY': 25,
   'throwMinZ': -3,
   'throwMaxZ': 3,
-  'stopWaitFrame': 0
+  'stopWaitFrame': 0,
+  'maxFramesToWaitPerObject': 450
 }
 
 def writeControllerAsJSON(controller, filepath):
@@ -44,7 +45,7 @@ def readInitialStableConfigurationObjectCount(filePath):
 
 simulation_count = 100
 
-unity_call_str = './what-if-test.app/Contents/MacOS/what-if-test'
+unity_call_str = './what-if-test.app/Contents/MacOS/what-if-test -batchmode'
 
 controller_json_filepath = 'controller.json'
 initial_stable_json_path = 'InitialStable.json'
@@ -56,30 +57,33 @@ minNoObjects = 15
 maxNoObjects = 25
 
 for i in range(simulation_count):
+    simulationFolder = os.path.join(dataBaseFolder, str(i).zfill(4))
 
-    noObjects = random.randint(minNoObjects, maxNoObjects+1)
+    while(not os.path.exists(simulationFolder)):
+        noObjects = random.randint(minNoObjects, maxNoObjects+1)
 
-    #Create initial stable configuration
-    SimulationControllerState['simulationID'] = i
-    SimulationControllerState['simulationState'] = 0
-    SimulationControllerState['noObjects'] = noObjects
-
-    writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
-
-    p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
-    p1.wait()
-
-    simulationFolder = os.path.join(os.path.join(dataBaseFolder, str(i).zfill(4)), initial_stable_json_path)
-    print(noObjects, " objects are created")
-
-    for j in range(noObjects):
-        SimulationControllerState['simulationState'] = 1
-        SimulationControllerState['removedObjectIndex'] = j
+        #Create initial stable configuration
+        SimulationControllerState['simulationID'] = i
+        SimulationControllerState['simulationState'] = 0
+        SimulationControllerState['noObjects'] = noObjects
 
         writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
 
-        p2 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
-        p2.wait()
+        p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
+        p1.wait()
+
+        print(noObjects, " objects are created")
+
+        if (os.path.exists(simulationFolder)):
+            for j in range(noObjects):
+                SimulationControllerState['simulationState'] = 1
+                SimulationControllerState['removedObjectIndex'] = j
+
+                writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
+
+                p2 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
+                p2.wait()
+
 
 
 

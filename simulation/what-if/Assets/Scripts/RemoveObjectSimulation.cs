@@ -40,6 +40,8 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     private int numberOfDistinctObjectUsed = 4; //Rubber/Metal/Small/Big Cubes
     private int numberOfDistinctColorsUsed = 8;
 
+    private int maxSimulationFrames = 0;
+
     private GameObject[] pipeObjects = null;
 
     private SimulationControllerState controllerState = null;
@@ -74,7 +76,10 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             }
 
             CreateSceneFromJSON();
+            noObjects = createdSimulationObjects.Count;
         }
+
+        maxSimulationFrames = controllerState.maxFramesToWaitPerObject * noObjects;
     }
 
     void Update()
@@ -128,6 +133,13 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                 }
                 controllerState.stopWaitFrame--;
             }
+
+            if(maxSimulationFrames != 0 && Time.frameCount >= maxSimulationFrames)
+            {
+                //Reset simulation by deleting the directory
+                System.IO.Directory.Delete(simulationFolder);
+                stop();
+            }
         }
 
         else if ((SimulationState)controllerState.simulationState == SimulationState.REMOVE_OBJECT)
@@ -151,6 +163,13 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                     stop();
                 }
                 controllerState.stopWaitFrame--;
+            }
+
+            if (maxSimulationFrames != 0 && Time.frameCount >= maxSimulationFrames)
+            {
+                //Reset simulation by deleting the directory
+                System.IO.Directory.Delete(simulationFolder);
+                stop();
             }
         }
 

@@ -24,7 +24,8 @@ SimulationControllerState = {
   'throwMinY': 25,
   'throwMaxY': 25,
   'throwMinZ': -3,
-  'throwMaxZ': 3
+  'throwMaxZ': 3,
+  'stopWaitFrame': 0
 }
 
 def writeControllerAsJSON(controller, filepath):
@@ -43,7 +44,7 @@ def readInitialStableConfigurationObjectCount(filePath):
 
 simulation_count = 100
 
-unity_call_str = './what-if-test.app/Contents/MacOS/what-if-test -batchmode'
+unity_call_str = './what-if-test.app/Contents/MacOS/what-if-test'
 
 controller_json_filepath = 'controller.json'
 initial_stable_json_path = 'InitialStable.json'

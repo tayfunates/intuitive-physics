@@ -41,7 +41,6 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     private int numberOfDistinctColorsUsed = 8;
 
     private GameObject[] pipeObjects = null;
-    private int stopWaitFrame = 30;
 
     private SimulationControllerState controllerState = null;
 
@@ -118,17 +117,16 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
                     // Capture the screenshot to the specified file.
                     StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
-                    stopWaitFrame = 30;
                     createSceneState = CreateSceneState.STOP;
                 }
             }
             else if (createSceneState == CreateSceneState.STOP)
             {
-                if(stopWaitFrame<=0)
+                if(controllerState.stopWaitFrame<=0)
                 {
                     stop();
                 }
-                stopWaitFrame--;
+                controllerState.stopWaitFrame--;
             }
         }
 
@@ -143,17 +141,16 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                     WriteSceneToJSON(jsonFileName);
 
                     StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
-                    stopWaitFrame = 30;
                     removeObjectState = RemoveObjectState.STOP;
                 }
             }
             else if (removeObjectState == RemoveObjectState.STOP)
             {
-                if (stopWaitFrame <= 0)
+                if (controllerState.stopWaitFrame <= 0)
                 {
                     stop();
                 }
-                stopWaitFrame--;
+                controllerState.stopWaitFrame--;
             }
         }
 

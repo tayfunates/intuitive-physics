@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Collections.Generic;
+using UnityEngine.Rendering;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -24,6 +25,12 @@ public class PhysicsSimulationsBase : MonoBehaviour
         {
             obj.SetActive(false);
             //obj.GetComponent<ReflectionProbe>().enabled = false;
+            ReflectionProbe probe = obj.GetComponentInChildren<ReflectionProbe>();
+            if(probe != null)
+            {
+                probe.refreshMode = ReflectionProbeRefreshMode.ViaScripting;
+                probe.timeSlicingMode = ReflectionProbeTimeSlicingMode.NoTimeSlicing;
+            }
         }
     }
 
@@ -55,6 +62,22 @@ public class PhysicsSimulationsBase : MonoBehaviour
         return true;
     }
 
+    protected void renderReflectionProbes(RenderTexture rt)
+    {
+        foreach (SimulationObjectState state in createdSimulationObjects)
+        {
+            GameObject obj = state.GetGameObject();
+            if (obj.activeSelf)
+            {
+                ReflectionProbe probe = obj.GetComponentInChildren<ReflectionProbe>();
+                if(probe != null)
+                {
+                    probe.RenderProbe(rt);
+                }
+            }
+        }
+    }
+
     protected void stop()
     {
 #if UNITY_EDITOR
@@ -72,11 +95,14 @@ public class PhysicsSimulationsBase : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
+
+
         RenderTexture rt = new RenderTexture(width, height, 24);
         cam.targetTexture = rt;
         Texture2D screenShot = new Texture2D(width, height, TextureFormat.RGB24, false);
         cam.Render();
         RenderTexture.active = rt;
+        renderReflectionProbes(RenderTexture.active);
         screenShot.ReadPixels(new Rect(0, 0, width, height), 0, 0);
         cam.targetTexture = null;
         RenderTexture.active = null; // JC: added to avoid errors

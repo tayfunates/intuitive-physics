@@ -60,7 +60,7 @@ for i in range(simulation_count):
     simulationFolder = os.path.join(dataBaseFolder, str(i).zfill(4))
 
     while(not os.path.exists(simulationFolder)):
-        noObjects = random.randint(minNoObjects, maxNoObjects+1)
+        noObjects = random.randint(minNoObjects, maxNoObjects)
 
         #Create initial stable configuration
         SimulationControllerState['simulationID'] = i

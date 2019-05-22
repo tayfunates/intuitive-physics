@@ -69,7 +69,7 @@ internal class SimulationObjectState
             //obj.GetComponent<Rigidbody>().inertiaTensorRotation = state.inertiaTensorRotation;
             //obj.GetComponent<Rigidbody>().angularVelocity = state.angularVelocity;
 
-            if(active)
+            if(active && state.active==1)
             {
                 obj.SetActive(true);
             }

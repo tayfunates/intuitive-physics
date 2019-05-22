@@ -72,6 +72,8 @@ for i in range(simulation_count):
         p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
         p1.wait()
 
+
+
         print(noObjects, " objects are created")
 
         if (os.path.exists(simulationFolder)):

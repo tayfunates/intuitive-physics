@@ -8,7 +8,8 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     enum SimulationState
     {
         CREATE_SCENE = 0,
-        REMOVE_OBJECT = 1 
+        REMOVE_OBJECT = 1,
+        SEGMENTATION_SCREENSHOT = 2
     }
 
     enum CreateSceneState
@@ -67,16 +68,27 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
             // Create the folder
             System.IO.Directory.CreateDirectory(simulationFolder);
+            ActivateGround();
         }
-        else if((SimulationState)controllerState.simulationState == SimulationState.REMOVE_OBJECT)
+        else if(((SimulationState)controllerState.simulationState == SimulationState.REMOVE_OBJECT)
+        || ((SimulationState)controllerState.simulationState == SimulationState.SEGMENTATION_SCREENSHOT))
         {
-            foreach (GameObject obj in pipeObjects)
+            bool segmentationScreenShot = (SimulationState)controllerState.simulationState == SimulationState.SEGMENTATION_SCREENSHOT;
+            int removedObjectIndex = (segmentationScreenShot) ? -1 : controllerState.removedObjectIndex;
+            DeactivatePipes();
+            CreateSceneFromJSON(removedObjectIndex);
+            noObjects = createdSimulationObjects.Count;
+
+
+            if (segmentationScreenShot)
             {
-                obj.SetActive(false);
+                DisableVolumeSettings();
+                SetUnlitMaterials();
             }
 
-            CreateSceneFromJSON();
-            noObjects = createdSimulationObjects.Count;
+            ActivateGround();
+            ActivateCreatedObjects();
+
         }
 
         maxSimulationFrames = controllerState.maxFramesToWaitPerObject * noObjects;
@@ -172,51 +184,82 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                 stop();
             }
         }
-
-
-        /*
-        else if(state == SimulationState.REMOVE_OBJECT)
+        if ((SimulationState)controllerState.simulationState == SimulationState.SEGMENTATION_SCREENSHOT)
         {
-            if(currentRemovedObjectIndex < gameObjectTemplates.Length)
-            {
-                gameObjectTemplates[currentRemovedObjectIndex].SetActive(false);
-                state = SimulationState.FINAL_UNSTABLE;
-            }
-            else {
-                // Append filename to folder name (format is '0005 shot.png"')
-                string name = string.Format("{0}/{1:D04}.png", folder, Time.frameCount);
-
-                // Capture the screenshot to the specified file.
-                StartCoroutine(captureScreenshot(name, imageWidth, imageHeight));
-                stop();
-            }
+            string imageFileName = string.Format("{0}/InitialStable_VisibleSeg.png", simulationFolder);
+            StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
+            stop();
         }
-
-        else if(state == SimulationState.FINAL_UNSTABLE)
-        {
-            if (isSceneStable())
-            {
-                state = SimulationState.FINAL_STABLE;
-            }
-        }
-        else if(state == SimulationState.FINAL_STABLE)
-        {
-            if (sceneStateJSON != null)
-            {
-                SimulationSceneState.setState(sceneStateJSON, gameObjectTemplates);
-                state = SimulationState.INITIAL_STABLE;
-                gameObjectTemplates[currentRemovedObjectIndex].SetActive(true);
-            }
-            currentRemovedObjectIndex++;
-        }
-        */
     }
 
-    protected virtual void CreateSceneFromJSON()
+    protected virtual void DisableVolumeSettings()
+    {
+        var volumeSettings = GameObject.FindGameObjectsWithTag("DisabledInSegmentation");
+        foreach (GameObject obj in volumeSettings)
+        {
+            obj.SetActive(false);
+        }
+    }
+
+    protected virtual void DeactivatePipes()
+    {
+        if(pipeObjects != null)
+        {
+            foreach (GameObject obj in pipeObjects)
+            {
+                obj.SetActive(false);
+            }
+        }
+    }
+
+    protected virtual void ActivateCreatedObjects()
+    {
+        foreach (SimulationObjectState state in createdSimulationObjects)
+        {
+            GameObject obj = state.GetGameObject();
+            obj.SetActive(true);
+        }
+    }
+
+    protected virtual void SetUnlitMaterials()
+    { 
+        float colorInc = 1.0f / noObjects;
+
+        Material unlitMat = new Material(Shader.Find("Unlit/Color"));
+
+        int i = 1;
+        foreach (SimulationObjectState state in createdSimulationObjects) {
+            GameObject obj = state.GetGameObject();
+            Renderer objRend = obj.GetComponent<Renderer>();
+
+            float grayColor = i * colorInc;
+            objRend.material = Object.Instantiate(unlitMat);
+            objRend.material.SetColor("_Color", new Color(grayColor, grayColor, grayColor));
+            i++;
+        }
+
+        
+        Renderer rend = ground.GetComponent<Renderer>();
+        if (rend.materials != null)
+        {
+            Material newMat = Object.Instantiate(unlitMat);
+            newMat.SetColor("_Color", new Color(0.0f, 0.0f, 0.0f));
+            var mats = new Material[rend.materials.Length];
+            for (var j = 0; j < rend.materials.Length; j++)
+            {
+                mats[j] = newMat;
+            }
+            rend.materials = mats;
+        }
+
+    }
+
+
+    protected virtual void CreateSceneFromJSON(int removedObjectIndex)
     {
         string jsonFileName = string.Format("{0}/InitialStable.json", simulationFolder);
         string sceneJSON = File.ReadAllText(jsonFileName);
-        createdSimulationObjects = SimulationSceneState.fromJSON(sceneJSON, gameObjectTemplates, controllerState.removedObjectIndex);
+        createdSimulationObjects = SimulationSceneState.fromJSON(sceneJSON, gameObjectTemplates, removedObjectIndex);
     }
 
     protected virtual void AddRandomSimulationObject()

@@ -14,6 +14,7 @@ internal class SimulationControllerState
     public float throwMaxX = 0.0f;
     public float throwMinY = 0.0f;
     public float throwMaxY = 0.0f;
+
     public float throwMinZ = 0.0f;
     public float throwMaxZ = 0.0f;
     public int stopWaitFrame = 0;

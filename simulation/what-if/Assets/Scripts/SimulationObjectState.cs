@@ -60,16 +60,13 @@ internal class SimulationObjectState
             newMat.SetColor("_BaseColor", col.GetColor(mat.type));
             obj.GetComponent<Renderer>().material = newMat;
 
-            if (state != null && obj != null)
-            {
-                obj.transform.position = state.position;
-                obj.transform.rotation = state.rotation;
-                //obj.GetComponent<Rigidbody>().velocity = state.velocity;
-                //obj.GetComponent<Rigidbody>().inertiaTensor = state.inertiaTensor;
-                //obj.GetComponent<Rigidbody>().inertiaTensorRotation = state.inertiaTensorRotation;
-                //obj.GetComponent<Rigidbody>().angularVelocity = state.angularVelocity;
-            }
-            obj.SetActive(true);
+            obj.transform.position = state.position;
+            obj.transform.rotation = state.rotation;
+            //obj.GetComponent<Rigidbody>().velocity = state.velocity;
+            //obj.GetComponent<Rigidbody>().inertiaTensor = state.inertiaTensor;
+            //obj.GetComponent<Rigidbody>().inertiaTensorRotation = state.inertiaTensorRotation;
+            //obj.GetComponent<Rigidbody>().angularVelocity = state.angularVelocity;
+
             state.SetGameObject(obj);
             return state;
         }

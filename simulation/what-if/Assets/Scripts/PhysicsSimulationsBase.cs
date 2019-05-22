@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine.Rendering;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,6 +15,7 @@ public class PhysicsSimulationsBase : MonoBehaviour
     private Camera cam;
 
     protected GameObject[] gameObjectTemplates = null;
+    protected GameObject ground = null;
     internal List<SimulationObjectState> createdSimulationObjects = new List<SimulationObjectState>();
 
     // Use this for initialization
@@ -32,12 +34,21 @@ public class PhysicsSimulationsBase : MonoBehaviour
                 probe.timeSlicingMode = ReflectionProbeTimeSlicingMode.NoTimeSlicing;
             }
         }
+        ground = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(g => g.CompareTag("Ground"));
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    protected virtual void ActivateGround()
+    {
+        if(ground)
+        {
+            ground.SetActive(true);
+        }
     }
 
     protected bool isSceneStable()

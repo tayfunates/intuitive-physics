@@ -87,8 +87,6 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             }
 
             ActivateGround();
-            ActivateCreatedObjects();
-
         }
 
         maxSimulationFrames = controllerState.maxFramesToWaitPerObject * noObjects;
@@ -209,15 +207,6 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             {
                 obj.SetActive(false);
             }
-        }
-    }
-
-    protected virtual void ActivateCreatedObjects()
-    {
-        foreach (SimulationObjectState state in createdSimulationObjects)
-        {
-            GameObject obj = state.GetGameObject();
-            obj.SetActive(true);
         }
     }
 

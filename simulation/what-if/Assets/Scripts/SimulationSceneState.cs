@@ -34,13 +34,12 @@ internal class SimulationSceneState
         {
             for (int i=0; i < sceneState.objectStates.Count; i++)
             {
-                if(i!=removedObjectIndex)
+                bool active = i != removedObjectIndex;
+
+                SimulationObjectState objState = SimulationObjectState.createObjectFromJSON(sceneState.objectStates[i], gameObjectTemplates, active);
+                if (objState != null)
                 {
-                    SimulationObjectState objState = SimulationObjectState.createObjectFromJSON(sceneState.objectStates[i], gameObjectTemplates);
-                    if (objState != null)
-                    {
-                        ret.Add(objState);
-                    }
+                    ret.Add(objState);
                 }
             }
         }

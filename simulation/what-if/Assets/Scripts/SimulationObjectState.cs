@@ -3,6 +3,7 @@
 [System.Serializable]
 internal class SimulationObjectState
 {
+    public int active;
     public Vector3 position;
     public Quaternion rotation;
     public Vector3 velocity;
@@ -35,6 +36,7 @@ internal class SimulationObjectState
             state.size = size;
             //state.sceneIndex = sceneIndex;
             state.templateIndex = templateIndex;
+            state.active = obj.activeSelf ? 1 : 0;
 
             return JsonUtility.ToJson(state);
         }
@@ -43,7 +45,7 @@ internal class SimulationObjectState
     }
 
 
-    static public SimulationObjectState createObjectFromJSON(string stateStr, GameObject[] gameObjectTemplates)
+    static public SimulationObjectState createObjectFromJSON(string stateStr, GameObject[] gameObjectTemplates, bool active)
     {
         if (gameObjectTemplates != null)
         {
@@ -66,6 +68,11 @@ internal class SimulationObjectState
             //obj.GetComponent<Rigidbody>().inertiaTensor = state.inertiaTensor;
             //obj.GetComponent<Rigidbody>().inertiaTensorRotation = state.inertiaTensorRotation;
             //obj.GetComponent<Rigidbody>().angularVelocity = state.angularVelocity;
+
+            if(active)
+            {
+                obj.SetActive(true);
+            }
 
             state.SetGameObject(obj);
             return state;

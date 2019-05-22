@@ -26,7 +26,8 @@ SimulationControllerState = {
   'throwMinZ': -3,
   'throwMaxZ': 3,
   'stopWaitFrame': 0,
-  'maxFramesToWaitPerObject': 450
+  'maxFramesToWaitPerObject': 450,
+  'inputSceneJSON': "InitialStable.json"
 }
 
 def writeControllerAsJSON(controller, filepath):
@@ -72,13 +73,21 @@ for i in range(simulation_count):
         p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
         p1.wait()
 
-
-
         print(noObjects, " objects are created")
 
+        #Create segmentation map for the initial configuration
+        SimulationControllerState['simulationState'] = 2
+
+        writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
+
+        p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
+        p1.wait()
+
+        #Start creating final stable configurations
         if (os.path.exists(simulationFolder)):
             for j in range(noObjects):
                 SimulationControllerState['simulationState'] = 1
+                SimulationControllerState['inputSceneJSON'] = 'InitialStable.json'
                 SimulationControllerState['removedObjectIndex'] = j
 
                 writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
@@ -86,7 +95,14 @@ for i in range(simulation_count):
                 p2 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
                 p2.wait()
 
+                #Create segmentation maps for the final stable configurations
+                SimulationControllerState['simulationState'] = 2
+                SimulationControllerState['inputSceneJSON'] = "FinalStable_" + str(j).zfill(4) + ".json"
 
+                writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
+
+                p2 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
+                p2.wait()
 
 
 

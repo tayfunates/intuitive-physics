@@ -53,8 +53,8 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         // Set the playback framerate (real time will not relate to game time after this).
         Time.captureFramerate = frameRate;
 
-        string constrollerJSON = File.ReadAllText("controller.json");
-        controllerState = SimulationControllerState.fromJSON(constrollerJSON);
+        string controllerJSON = File.ReadAllText("controller.json");
+        controllerState = SimulationControllerState.fromJSON(controllerJSON);
 
 
         simulationFolder = "Data/";
@@ -76,7 +76,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             bool segmentationScreenShot = (SimulationState)controllerState.simulationState == SimulationState.SEGMENTATION_SCREENSHOT;
             int removedObjectIndex = (segmentationScreenShot) ? -1 : controllerState.removedObjectIndex;
             DeactivatePipes();
-            CreateSceneFromJSON(removedObjectIndex);
+            CreateSceneFromJSON(removedObjectIndex, controllerState.inputSceneJSON);
             noObjects = createdSimulationObjects.Count;
 
 
@@ -158,8 +158,8 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             {
                 if (isSceneStable())
                 { 
-                    string imageFileName = string.Format("{0}/FinaleStable_{1:D04}.png", simulationFolder, controllerState.removedObjectIndex);
-                    string jsonFileName = string.Format("{0}/FinaleStable_{1:D04}.json", simulationFolder, controllerState.removedObjectIndex);
+                    string imageFileName = string.Format("{0}/FinalStable_{1:D04}.png", simulationFolder, controllerState.removedObjectIndex);
+                    string jsonFileName = string.Format("{0}/FinalStable_{1:D04}.json", simulationFolder, controllerState.removedObjectIndex);
                     WriteSceneToJSON(jsonFileName);
 
                     StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
@@ -184,7 +184,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         }
         if ((SimulationState)controllerState.simulationState == SimulationState.SEGMENTATION_SCREENSHOT)
         {
-            string imageFileName = string.Format("{0}/InitialStable_VisibleSeg.png", simulationFolder);
+            string imageFileName = string.Format("{0}/{1}_VisibleSeg.png", simulationFolder, Path.GetFileNameWithoutExtension(controllerState.inputSceneJSON));
             StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
             stop();
         }
@@ -244,9 +244,9 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     }
 
 
-    protected virtual void CreateSceneFromJSON(int removedObjectIndex)
+    protected virtual void CreateSceneFromJSON(int removedObjectIndex, string json)
     {
-        string jsonFileName = string.Format("{0}/InitialStable.json", simulationFolder);
+        string jsonFileName = string.Format("{0}/{1}", simulationFolder, json);
         string sceneJSON = File.ReadAllText(jsonFileName);
         createdSimulationObjects = SimulationSceneState.fromJSON(sceneJSON, gameObjectTemplates, removedObjectIndex);
     }

@@ -19,6 +19,7 @@ internal class SimulationControllerState
     public float throwMaxZ = 0.0f;
     public int stopWaitFrame = 0;
     public int maxFramesToWaitPerObject = 0;
+    public string inputSceneJSON = "";
 
     static public SimulationControllerState fromJSON(string stateStr)
     {

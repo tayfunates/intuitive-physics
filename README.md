@@ -56,7 +56,7 @@ This section includes literature overview for different methods developed for di
 
 - [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
 
-- []
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
 
 #### Cognitive Science
 
@@ -69,6 +69,8 @@ This section includes literature overview for different methods developed for di
 #### 2019
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
 
 #### 2018
 
@@ -102,6 +104,8 @@ This section includes literature overview for different methods developed for di
 
 - [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
 
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+
 ##### Object Dropped to a Scene
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
@@ -132,6 +136,8 @@ This section includes literature overview for different methods developed for di
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
 
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+
 #### Visual Newtonian Dynamics Dataset (VIND)
 
 - [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
@@ -145,6 +151,8 @@ This section includes literature overview for different methods developed for di
 #### ICLR
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
 
 #### PNAS
 
@@ -223,6 +231,8 @@ This paper investigates the hypothesis that intuitive decisions about physics ar
 *Yunzhu Li, Jiajun Wu, Russ Tedrake, Joshua B. Tenenbaum, & Antonio Torralba - International Conference on Learning Representations, 2019*
 
 It is one of the examples that uses graph networks for learning physics dynamics of objects. It is implemented on top of interaction networks, propagation networks and hierarchical relation networks where authors create the relations (edges) dynamically. The creation of these relations and the usage of hierarchy are object state specific where the tested object states are rigid bodies, fluids and deformable objects. Each of these are represented by different graphs where nodes are titled as particles. Besides learning the representation of the physics, authors experimented the models on downstream control tasks using model predictive control algorithms (MPC) where the trajectories are represented as the collection of graphs. The proposed algorithm using MPC is also capable of learning unknown object properties via shooting.
+
+![Method Features](/images/DPINetsFeatures.png)
 
 ### Read Queue
 - [An integrative computational architecture for object-driven cortex](http://www.mit.edu/~ilkery/papers/YildirimetalCONEUR.pdf)

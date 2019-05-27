@@ -56,6 +56,8 @@ This section includes literature overview for different methods developed for di
 
 - [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
 
+- []
+
 #### Cognitive Science
 
 - [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
@@ -215,6 +217,12 @@ Current work for scene understanding and next frame prediction problems in robot
 *Tomer D. Ullman Elizabeth Spelke, Peter Battaglia and Joshua B. Tenenbaum - Trends in Cognitive Sciences, 2017*
 
 This paper investigates the hypothesis that intuitive decisions about physics are made by the help of a mental engine which has similar characteristics with game physics engines especially for the young infants. This hypothesis claims that the data structures in our mind to represent the objects and the events, and the algorithms to simulate have similar characteristics with those provided by video game industry. One of the facts for authors to support their hypothesis is that both mental and game engines are designed to approximate the complex scenes to a reasonable-looking and human-relevant scale. Other than the similarities of representing objects and events, bodies and shapes, static and dynamic objects; resolving the collisions between mental processings and physics engines, they both fail to identify exact physical situations in some physical illusions because of some simplified assumptions made by their processes.
+
+#### Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids
+
+*Yunzhu Li, Jiajun Wu, Russ Tedrake, Joshua B. Tenenbaum, & Antonio Torralba - International Conference on Learning Representations, 2019*
+
+It is one of the examples that uses graph networks for learning physics dynamics of objects. It is implemented on top of interaction networks, propagation networks and hierarchical relation networks where authors create the relations (edges) dynamically. The creation of these relations and the usage of hierarchy are object state specific where the tested object states are rigid bodies, fluids and deformable objects. Each of these are represented by different graphs where nodes are titled as particles. Besides learning the representation of the physics, authors experimented the models on downstream control tasks using model predictive control algorithms (MPC) where the trajectories are represented as the collection of graphs. The proposed algorithm using MPC is also capable of learning unknown object properties via shooting.
 
 ### Read Queue
 - [An integrative computational architecture for object-driven cortex](http://www.mit.edu/~ilkery/papers/YildirimetalCONEUR.pdf)

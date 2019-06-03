@@ -75,6 +75,29 @@ def convertSegmentationImageIndicesToColors(img, noObjects):
     return ret
 
 
+def extractSegmentationMapFor(dataStateName):
+    SimulationControllerState['inputSceneJSON'] = dataStateName+'.json'
+
+    # If segmentation of the initial stable configuration is needed open here
+    # Create segmentation map for the initial configuration
+    SimulationControllerState['simulationState'] = 3
+
+    writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
+
+    p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
+    p1.wait()
+
+    segmentationImageNameVisible = os.path.join(simulationFolder, (dataStateName + "_VisibleSeg.png"))
+    initialSegmentationImageVisible = np.uint8(mpimg.imread(segmentationImageNameVisible) * 255)
+
+    initialSegmentationImageNONVisible = convertSegmentationImageColorsToIndices(
+        initialSegmentationImageVisible, noObjects)
+    segmentationImageNameNONVisible = os.path.join(simulationFolder, (dataStateName + "_NONVisibleSeg.png"))
+    im = Image.fromarray(initialSegmentationImageNONVisible)
+    im.save(segmentationImageNameNONVisible)
+
+
+
 simulation_count = 100
 
 unity_call_str = './what-if-test.app/Contents/MacOS/what-if-test -batchmode'
@@ -110,26 +133,8 @@ for i in range(simulation_count):
 
         #Start creating final stable configurations
         if (os.path.exists(simulationFolder)):
-            SimulationControllerState['inputSceneJSON'] = 'InitialStable.json'
-            # Create segmentation map for the initial configuration
-            SimulationControllerState['simulationState'] = 2
+            extractSegmentationMapFor('InitialStable')
 
-            writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
-
-            p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
-            p1.wait()
-
-
-            segmentationImageNameVisible = os.path.join(simulationFolder, (
-            os.path.splitext(initial_stable_json_path)[0] + "_VisibleSeg.png"))
-            initialSegmentationImageVisible = np.uint8(mpimg.imread(segmentationImageNameVisible) * 255)
-
-            initialSegmentationImageNONVisible = convertSegmentationImageColorsToIndices(
-            initialSegmentationImageVisible, noObjects)
-            segmentationImageNameNONVisible = os.path.join(simulationFolder, (
-            os.path.splitext(initial_stable_json_path)[0] + "_NONVisibleSeg.png"))
-            im = Image.fromarray(initialSegmentationImageNONVisible)
-            im.save(segmentationImageNameNONVisible)
 
             for j in range(noObjects):
                 SimulationControllerState['simulationState'] = 1
@@ -141,22 +146,15 @@ for i in range(simulation_count):
                 p2 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
                 p2.wait()
 
-                #Create segmentation maps for the final stable configurations
-                SimulationControllerState['simulationState'] = 2
-                SimulationControllerState['inputSceneJSON'] = "FinalStable_" + str(j).zfill(4) + ".json"
+                extractSegmentationMapFor("FinalUnStable_" + str(j).zfill(4))
 
+                SimulationControllerState['simulationState'] = 2
                 writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
 
                 p2 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
                 p2.wait()
 
-                segmentationImageNameVisible = os.path.join(simulationFolder, (os.path.splitext(SimulationControllerState['inputSceneJSON'])[0] + "_VisibleSeg.png"))
-                finalSegmentationImageVisible = np.uint8(mpimg.imread(segmentationImageNameVisible) * 255)
-
-                finalSegmentationImageNONVisible = convertSegmentationImageColorsToIndices(finalSegmentationImageVisible, noObjects)
-                segmentationImageNameNONVisible = os.path.join(simulationFolder, (os.path.splitext(SimulationControllerState['inputSceneJSON'])[0] + "_NONVisibleSeg.png"))
-                im = Image.fromarray(finalSegmentationImageNONVisible)
-                im.save(segmentationImageNameNONVisible)
+                extractSegmentationMapFor("FinalStable_" + str(j).zfill(4))
 
 
 

@@ -8,8 +8,9 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     enum SimulationState
     {
         CREATE_SCENE = 0,
-        REMOVE_OBJECT = 1,
-        SEGMENTATION_SCREENSHOT = 2
+        CREATE_FINAL_UNSTABLE = 1,
+        CREATE_FINAL_STABLE = 2,
+        SEGMENTATION_SCREENSHOT = 3
     }
 
     enum CreateSceneState
@@ -70,10 +71,13 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             System.IO.Directory.CreateDirectory(simulationFolder);
             ActivateGround();
         }
-        else if(((SimulationState)controllerState.simulationState == SimulationState.REMOVE_OBJECT)
-        || ((SimulationState)controllerState.simulationState == SimulationState.SEGMENTATION_SCREENSHOT))
+        else if (((SimulationState)controllerState.simulationState == SimulationState.CREATE_FINAL_STABLE)
+        || ((SimulationState)controllerState.simulationState == SimulationState.SEGMENTATION_SCREENSHOT)
+        || ((SimulationState)controllerState.simulationState == SimulationState.CREATE_FINAL_UNSTABLE))
         {
             bool segmentationScreenShot = (SimulationState)controllerState.simulationState == SimulationState.SEGMENTATION_SCREENSHOT;
+            bool createUnstable = (SimulationState)controllerState.simulationState == SimulationState.CREATE_FINAL_UNSTABLE;
+
             int removedObjectIndex = (segmentationScreenShot) ? -1 : controllerState.removedObjectIndex;
             DeactivatePipes();
             CreateSceneFromJSON(removedObjectIndex, controllerState.inputSceneJSON);
@@ -85,11 +89,27 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                 DisableVolumeSettings();
                 SetUnlitMaterials();
             }
+            else if(createUnstable)
+            {
+                WriteGroundTruthInfo(string.Format("FinalUnStable_{0:D04}", controllerState.removedObjectIndex));
+                stop();
+            }
 
             ActivateGround();
         }
 
         maxSimulationFrames = controllerState.maxFramesToWaitPerObject * noObjects;
+    }
+
+    void WriteGroundTruthInfo(string infoName)
+    {
+        string imageFileName = string.Format("{0}/{1}.png", simulationFolder, infoName);
+        string jsonFileName = string.Format("{0}/{1}.json", simulationFolder, infoName);
+        WriteSceneToJSON(jsonFileName);
+
+
+        // Capture the screenshot to the specified file.
+        StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
     }
 
     void Update()
@@ -154,13 +174,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                 if(IsSceneStable())
                 {
                     // Append filename to folder name (format is '0005 shot.png"')
-                    string imageFileName = string.Format("{0}/InitialStable.png", simulationFolder);
-                    string jsonFileName = string.Format("{0}/InitialStable.json", simulationFolder);
-                    WriteSceneToJSON(jsonFileName);
-
-
-                    // Capture the screenshot to the specified file.
-                    StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
+                    WriteGroundTruthInfo("InitialStable");
                     createSceneState = CreateSceneState.STOP;
                 }
             }
@@ -181,17 +195,13 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             }
         }
 
-        else if ((SimulationState)controllerState.simulationState == SimulationState.REMOVE_OBJECT)
+        else if ((SimulationState)controllerState.simulationState == SimulationState.CREATE_FINAL_STABLE)
         {
             if(removeObjectState == RemoveObjectState.WAIT)
             {
                 if (IsSceneStable())
-                { 
-                    string imageFileName = string.Format("{0}/FinalStable_{1:D04}.png", simulationFolder, controllerState.removedObjectIndex);
-                    string jsonFileName = string.Format("{0}/FinalStable_{1:D04}.json", simulationFolder, controllerState.removedObjectIndex);
-                    WriteSceneToJSON(jsonFileName);
-
-                    StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
+                {
+                    WriteGroundTruthInfo(string.Format("FinalStable_{0:D04}", controllerState.removedObjectIndex));
                     removeObjectState = RemoveObjectState.STOP;
                 }
             }

@@ -32,8 +32,6 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     public int frameRate = 30;
     private int noObjects = 0;  //Randomly calculated
 
-    private int objectThrownFrameInterval = 100;
-
     //State of the simulation, whether it is being run 
     private CreateSceneState createSceneState = CreateSceneState.THROW;
     private RemoveObjectState removeObjectState = RemoveObjectState.WAIT;
@@ -44,6 +42,8 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     private int maxSimulationFrames = 0;
 
     private GameObject[] pipeObjects = null;
+    private GameObject prevCreatedObject = null;
+    private SimulationObjectState prevObjectState = null;
 
     private SimulationControllerState controllerState = null;
 
@@ -98,10 +98,29 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         {
             if (createSceneState == CreateSceneState.THROW)
             {
-                if (Time.frameCount % objectThrownFrameInterval == 0)
+                if (prevCreatedObject == null)
                 {
                     AddRandomSimulationObject();
-                    noObjects--;
+                }
+                else
+                {
+                    if(IsObjectStable(prevCreatedObject))
+                    {
+                        if(IsCreatedObjectValid(prevCreatedObject))
+                        {
+                            createdSimulationObjects.Add(prevObjectState);
+                            noObjects--;
+                            prevCreatedObject = null;
+                            prevObjectState = null;
+                        }
+                        else
+                        {
+                            prevCreatedObject.SetActive(false);
+                            Destroy(prevCreatedObject);
+                            prevCreatedObject = null;
+                            prevObjectState = null;
+                        }
+                    }
                 }
 
                 if (noObjects <= 0)
@@ -111,7 +130,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             }
             else if (createSceneState == CreateSceneState.WAIT_WITH_PIPE)
             {
-                if (isSceneStable())
+                if (IsSceneStable())
                 {
                     foreach (GameObject obj in pipeObjects)
                     {
@@ -122,7 +141,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             }
             else if(createSceneState == CreateSceneState.WAIT_WITHOUT_PIPE)
             {
-                if(isSceneStable())
+                if(IsSceneStable())
                 {
                     // Append filename to folder name (format is '0005 shot.png"')
                     string imageFileName = string.Format("{0}/InitialStable.png", simulationFolder);
@@ -156,7 +175,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         {
             if(removeObjectState == RemoveObjectState.WAIT)
             {
-                if (isSceneStable())
+                if (IsSceneStable())
                 { 
                     string imageFileName = string.Format("{0}/FinalStable_{1:D04}.png", simulationFolder, controllerState.removedObjectIndex);
                     string jsonFileName = string.Format("{0}/FinalStable_{1:D04}.json", simulationFolder, controllerState.removedObjectIndex);
@@ -243,6 +262,19 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
 
     }
 
+    protected bool IsCreatedObjectValid(GameObject obj)
+    {  
+        foreach (GameObject pipeObject in pipeObjects)
+        {
+            Bounds pipeBounds = pipeObject.GetComponentInChildren<MeshCollider>().bounds;
+            if(pipeBounds.Contains(obj.transform.position))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     protected virtual void CreateSceneFromJSON(int removedObjectIndex, string json)
     {
@@ -302,7 +334,8 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
         objState.color = colorIndex;
         objState.templateIndex = templateIndex;
 
-        createdSimulationObjects.Add(objState);
+        prevObjectState = objState;
+        prevCreatedObject = obj;
     }
 
     protected virtual void WriteSceneToJSON(string filePath)

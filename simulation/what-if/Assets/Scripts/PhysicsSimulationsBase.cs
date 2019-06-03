@@ -51,7 +51,22 @@ public class PhysicsSimulationsBase : MonoBehaviour
         }
     }
 
-    protected bool isSceneStable()
+    protected bool IsObjectStable(GameObject obj)
+    {
+        double eps = 1e-5;
+        if (obj.activeSelf)
+        {
+            if (Mathf.Abs(obj.GetComponent<Rigidbody>().velocity.x) > eps ||
+                 Mathf.Abs(obj.GetComponent<Rigidbody>().velocity.y) > eps ||
+                 Mathf.Abs(obj.GetComponent<Rigidbody>().velocity.z) > eps)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected bool IsSceneStable()
     {
         if(gameObjectTemplates != null)
         {

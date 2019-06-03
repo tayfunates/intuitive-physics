@@ -132,11 +132,21 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             {
                 if (IsSceneStable())
                 {
+                    bool changeState = true;
                     foreach (GameObject obj in pipeObjects)
                     {
-                        obj.SetActive(false);
+                        if(obj.activeSelf == true)
+                        {
+                            changeState = false;
+                            obj.SetActive(false);
+                            break;
+                        }
+
                     }
-                    createSceneState = CreateSceneState.WAIT_WITHOUT_PIPE;
+                    if (changeState)
+                    {
+                        createSceneState = CreateSceneState.WAIT_WITHOUT_PIPE;
+                    }
                 }
             }
             else if(createSceneState == CreateSceneState.WAIT_WITHOUT_PIPE)
@@ -263,15 +273,62 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     }
 
     protected bool IsCreatedObjectValid(GameObject obj)
-    {  
-        foreach (GameObject pipeObject in pipeObjects)
+    {
+        //Contact validness checks the transformed bounding box of the object by looking the lower face
+        //Lower face is transformed using object's current transform matrix
+        //The space of transformed box is not important, since we will only calculate a normal from a triangle of the face and compare with 6 ground truth directions to consider flipped orientations
+        Bounds meshBounds = obj.GetComponent<MeshRenderer>().bounds;
+        Vector3[] lowerBoundsWithoutTransform = new[] { new Vector3(meshBounds.center.x - meshBounds.extents.x, meshBounds.center.y - meshBounds.extents.y, meshBounds.center.z - meshBounds.extents.z), 
+                                        new Vector3(meshBounds.center.x + meshBounds.extents.x, meshBounds.center.y - meshBounds.extents.y, meshBounds.center.z - meshBounds.extents.z),
+                                        new Vector3(meshBounds.center.x + meshBounds.extents.x, meshBounds.center.y - meshBounds.extents.y, meshBounds.center.z + meshBounds.extents.z)};
+
+
+        List<Vector3> lowerBounds = new List<Vector3>();
+        foreach (Vector3 lbpt in lowerBoundsWithoutTransform)
         {
-            Bounds pipeBounds = pipeObject.GetComponentInChildren<MeshCollider>().bounds;
-            if(pipeBounds.Contains(obj.transform.position))
+            lowerBounds.Add(obj.transform.worldToLocalMatrix * lbpt);
+        }
+
+
+        const float contactValidnessAngleThres = 20f;
+
+        /*
+        Dir = (B - A) x(C - A)
+        Norm = Dir / len(Dir) */
+
+        Vector3 Dir = Vector3.Normalize(Vector3.Cross((lowerBounds[1] - lowerBounds[0]), (lowerBounds[2] - lowerBounds[0])));
+
+        bool contactValid = false;
+
+        Vector3[] gtConfigurationsAfterTransform = new[] { new Vector3(-1f, 0f, 0f),
+                                                            new Vector3(1f, 0f, 0f),
+                                                            new Vector3(0f, -1f, 0f),
+                                                            new Vector3(0f, 1f, 0f),
+                                                            new Vector3(0f, 0f, -1f),
+                                                            new Vector3(0f, 0f, 1f)};
+
+        foreach(Vector3 gtConf in gtConfigurationsAfterTransform)
+        {
+            float angle = Vector3.Angle(gtConf, Dir);
+            if(angle < contactValidnessAngleThres)
             {
-                return true;
+                contactValid = true;
+                break;
             }
         }
+
+        if (contactValid)
+        {
+            foreach (GameObject pipeObject in pipeObjects)
+            {
+                Bounds pipeBounds = pipeObject.GetComponentInChildren<MeshCollider>().bounds;
+                if (pipeBounds.Contains(obj.transform.position))
+                {
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 

@@ -20,11 +20,11 @@ class SimulationState(Enum):
 SimulationControllerState = {
   'simulationID': 0,
   'simulationState': 0,
-  'imageWidth': 512,
-  'imageHeight': 512,
+  'imageWidth': 224,
+  'imageHeight': 224,
   'removedObjectIndex': 0,
   'noObjects': 0,
-  'initialBigObjects': 10,
+  'initialBigObjects': 4,
   'throwMinX': -3,
   'throwMaxX': 3,
   'throwMinY': 25,
@@ -85,8 +85,8 @@ initial_stable_json_path = 'InitialStable.json'
 dataBaseFolder = 'Data'
 
 
-minNoObjects = 15
-maxNoObjects = 25
+minNoObjects = 8
+maxNoObjects = 12
 
 for i in range(simulation_count):
     simulationFolder = os.path.join(dataBaseFolder, str(i).zfill(4))
@@ -106,24 +106,31 @@ for i in range(simulation_count):
 
         print(noObjects, " objects are created")
 
-        #Create segmentation map for the initial configuration
-        SimulationControllerState['simulationState'] = 2
 
-        writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
-
-        p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
-        p1.wait()
-
-        segmentationImageNameVisible = os.path.join(simulationFolder, (os.path.splitext(initial_stable_json_path)[0]+"_VisibleSeg.png"))
-        initialSegmentationImageVisible = np.uint8(mpimg.imread(segmentationImageNameVisible) * 255)
-
-        initialSegmentationImageNONVisible = convertSegmentationImageColorsToIndices(initialSegmentationImageVisible, noObjects)
-        segmentationImageNameNONVisible = os.path.join(simulationFolder, (os.path.splitext(initial_stable_json_path)[0]+"_NONVisibleSeg.png"))
-        im = Image.fromarray(initialSegmentationImageNONVisible)
-        im.save(segmentationImageNameNONVisible)
 
         #Start creating final stable configurations
         if (os.path.exists(simulationFolder)):
+            SimulationControllerState['inputSceneJSON'] = 'InitialStable.json'
+            # Create segmentation map for the initial configuration
+            SimulationControllerState['simulationState'] = 2
+
+            writeControllerAsJSON(SimulationControllerState, controller_json_filepath)
+
+            p1 = subprocess.Popen([unity_call_str], shell=True, stdout=subprocess.PIPE)
+            p1.wait()
+
+
+            segmentationImageNameVisible = os.path.join(simulationFolder, (
+            os.path.splitext(initial_stable_json_path)[0] + "_VisibleSeg.png"))
+            initialSegmentationImageVisible = np.uint8(mpimg.imread(segmentationImageNameVisible) * 255)
+
+            initialSegmentationImageNONVisible = convertSegmentationImageColorsToIndices(
+            initialSegmentationImageVisible, noObjects)
+            segmentationImageNameNONVisible = os.path.join(simulationFolder, (
+            os.path.splitext(initial_stable_json_path)[0] + "_NONVisibleSeg.png"))
+            im = Image.fromarray(initialSegmentationImageNONVisible)
+            im.save(segmentationImageNameNONVisible)
+
             for j in range(noObjects):
                 SimulationControllerState['simulationState'] = 1
                 SimulationControllerState['inputSceneJSON'] = 'InitialStable.json'

@@ -1,0 +1,6 @@
+datasets/
+.idea/
+*.pyc
+*.png
+*.tar
+*.txt

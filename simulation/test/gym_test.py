@@ -98,7 +98,7 @@ def extractSegmentationMapFor(dataStateName):
 
 
 
-simulation_count = 100
+simulation_count = 2000
 
 unity_call_str = './what-if-test.app/Contents/MacOS/what-if-test -batchmode'
 

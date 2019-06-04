@@ -41,6 +41,7 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
     private int numberOfDistinctColorsUsed = 8;
 
     private int maxSimulationFrames = 0;
+    private int hardCodedMaxSimulationFrames = 6000;
 
     private GameObject[] pipeObjects = null;
     private GameObject prevCreatedObject = null;
@@ -88,14 +89,19 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
             {
                 DisableVolumeSettings();
                 SetUnlitMaterials();
+                string imageFileName = string.Format("{0}/{1}_VisibleSeg.png", simulationFolder, Path.GetFileNameWithoutExtension(controllerState.inputSceneJSON));
+                StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
+                stop();
             }
-            else if(createUnstable)
+
+
+            ActivateGround();
+
+            if (createUnstable)
             {
                 WriteGroundTruthInfo(string.Format("FinalUnStable_{0:D04}", controllerState.removedObjectIndex));
                 stop();
             }
-
-            ActivateGround();
         }
 
         maxSimulationFrames = controllerState.maxFramesToWaitPerObject * noObjects;
@@ -186,13 +192,6 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                 }
                 controllerState.stopWaitFrame--;
             }
-
-            if(maxSimulationFrames != 0 && Time.frameCount >= maxSimulationFrames)
-            {
-                //Reset simulation by deleting the directory
-                System.IO.Directory.Delete(simulationFolder);
-                stop();
-            }
         }
 
         else if ((SimulationState)controllerState.simulationState == SimulationState.CREATE_FINAL_STABLE)
@@ -213,18 +212,12 @@ public class RemoveObjectSimulation : PhysicsSimulationsBase
                 }
                 controllerState.stopWaitFrame--;
             }
-
-            if (maxSimulationFrames != 0 && Time.frameCount >= maxSimulationFrames)
-            {
-                //Reset simulation by deleting the directory
-                System.IO.Directory.Delete(simulationFolder);
-                stop();
-            }
         }
-        if ((SimulationState)controllerState.simulationState == SimulationState.SEGMENTATION_SCREENSHOT)
+
+        if ((maxSimulationFrames != 0 && Time.frameCount >= maxSimulationFrames) || (Time.frameCount >= hardCodedMaxSimulationFrames))
         {
-            string imageFileName = string.Format("{0}/{1}_VisibleSeg.png", simulationFolder, Path.GetFileNameWithoutExtension(controllerState.inputSceneJSON));
-            StartCoroutine(captureScreenshot(imageFileName, controllerState.imageWidth, controllerState.imageHeight));
+            //Reset simulation by deleting the directory
+            System.IO.Directory.Delete(simulationFolder);
             stop();
         }
     }

@@ -9,7 +9,7 @@ root_path ="../datasets/PhysVQA/"
 scene_folders = os.listdir(root_path)
 
 max_objects_in_a_scene = 12
-force_clean = True
+force_clean = False
 
 for scene in scene_folders:
     scene_folder = os.path.join(root_path, scene)

@@ -11,6 +11,8 @@ scene_folders = os.listdir(root_path)
 max_objects_in_a_scene = 12
 force_clean = False
 
+noise_remove_kernel = np.ones((3,3),np.uint8)
+
 for scene in scene_folders:
     scene_folder = os.path.join(root_path, scene)
     if os.path.isdir(scene_folder):
@@ -55,5 +57,7 @@ for scene in scene_folders:
             for objIndex in range(0, max_objects_in_a_scene):
                 if exist_list[objIndex] and objIndex != disabled_object_index:
                     obj_path = os.path.join(repeat_objects_path, str(objIndex) + '.png')
-                    cv2.imwrite(obj_path, object_imgs[objIndex, :])
+                    raw_image = object_imgs[objIndex, :]
+                    object_image = cv2.morphologyEx(raw_image, cv2.MORPH_OPEN, noise_remove_kernel)
+                    cv2.imwrite(obj_path, object_image)
 

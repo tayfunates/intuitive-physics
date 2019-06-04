@@ -17,7 +17,7 @@ class BaseOptions:
                                  help='name of the experiment. It decides where to store samples and models')
         self.parser.add_argument('--checkpoints_dir', type=str, default='./checkpoints',
                                  help='models are saved here')
-        self.parser.add_argument('--dataroot', default='./datasets/PhysNetReal',
+        self.parser.add_argument('--dataroot', default='./datasets/PhysVQA',
                                  help='path to images (should have subfolders first, last, mask, segment)')
         self.parser.add_argument('--train_batch_size', type=int, default=1, help='training batch size')
         self.parser.add_argument('--test_batch_size', type=int, default=1, help='test batch size')

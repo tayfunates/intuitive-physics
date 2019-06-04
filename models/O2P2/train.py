@@ -8,7 +8,7 @@ from util.logger import Logger
 from util.filesystem import mkdir
 from util.checkpoint import save_checkpoint
 import os.path as osp
-from data.physNetReal import PhysNetReal
+from data.PhysVQA import PhysVQA
 from data.dataset import O2P2Dataset
 from model.percept import Percept
 from model.physics import Physics
@@ -27,7 +27,7 @@ def main():
     torch.cuda.manual_seed_all(opt.seed)
 
     # Read and initialize dataset
-    phys_net_data = PhysNetReal(opt.dataroot)
+    phys_vqa_data = PhysVQA(opt.dataroot)
 
     # Construct train and test transform operations
     transform_train = Compose([
@@ -38,9 +38,9 @@ def main():
     ])
 
     # PyTorch Dataset classes for train, validation and test sets
-    train_dataset = O2P2Dataset(phys_net_data.train, transform=transform_train)
-    val_dataset = O2P2Dataset(phys_net_data.val, transform=transform_test)
-    test_dataset = O2P2Dataset(phys_net_data.test, transform=transform_test)
+    train_dataset = O2P2Dataset(phys_vqa_data.train, transform=transform_train)
+    val_dataset = O2P2Dataset(phys_vqa_data.val, transform=transform_test)
+    test_dataset = O2P2Dataset(phys_vqa_data.test, transform=transform_test)
 
     # PyTorch Dataloaders for train, validation and test sets
     train_loader = DataLoader(train_dataset, batch_size=opt.train_batch_size, shuffle=True, pin_memory=use_gpu)

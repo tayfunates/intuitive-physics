@@ -252,16 +252,11 @@ def validate(epoch, val_loader, percept, physics, render, criterion, vgg, vgg_no
     with torch.no_grad():
         for batch_idx, (img0, img1, segs) in enumerate(val_loader):
             if use_gpu:
-                img0, img1 = img0.cuda(), img1.cuda()
-                for i, seg in enumerate(segs):
-                    segs[i] = seg.cuda()
+                img0, img1, segs = img0.cuda(), img1.cuda(), segs.cuda()
 
             # compute model output
-            objects = []
-            for seg in segs:
-                # TODO: objects from segs can be computed as a single batch
-                obj = percept(seg)
-                objects.append(obj)
+            # compute model output
+            objects = percept(segs)
 
             img0_reconstruction = render(objects)
             objects_evolved = physics(objects)

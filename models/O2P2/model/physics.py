@@ -32,4 +32,5 @@ class Physics(torch.nn.Module):
                 obj_interact += self.interact(obj_cat)
             obj_new = obj_trans + obj_interact + obj
             new_objs.append(obj_new)
-        return new_objs
+        output = torch.stack(new_objs)
+        return output

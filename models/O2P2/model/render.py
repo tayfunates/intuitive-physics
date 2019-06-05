@@ -26,8 +26,12 @@ class Render(torch.nn.Module):
         self.image_deconv3 = DeConvLayer(64, 32, 6, 2, 2, 0)
         wi = self.image_deconv3.output_size(wi)
 
-        self.image_deconv4 = DeConvLayer(32, 3, 6, 2, 2, 0)
-        wi = self.image_deconv4.output_size(wi)
+        #self.image_deconv4 = DeConvLayer(32, 3, 6, 2, 2, 0)
+        self.image_deconv4 = nn.Sequential(
+            nn.ConvTranspose2d(32, 3, stride=2, kernel_size=6, padding=2, output_padding=0)
+            #,nn.Sigmoid()
+        )
+        #wi = self.image_deconv4.output_size(wi)
 
         self.f_image = nn.Sequential(self.image_deconv1, self.image_deconv2, self.image_deconv3, self.image_deconv4)
 
@@ -44,12 +48,16 @@ class Render(torch.nn.Module):
         self.heatmap_deconv3 = DeConvLayer(64, 32, 6, 2, 2, 0)
         wh = self.heatmap_deconv3.output_size(wh)
 
-        self.heatmap_deconv4 = DeConvLayer(32, 1, 6, 2, 2, 0)
-        wh = self.heatmap_deconv4.output_size(wh)
+        #self.heatmap_deconv4 = DeConvLayer(32, 1, 6, 2, 2, 0)
+        self.heatmap_deconv4 = nn.Sequential(
+            nn.ConvTranspose2d(32, 1, stride=2, kernel_size=6, padding=2, output_padding=0)
+            #,nn.Sigmoid()
+        )
+        #wh = self.heatmap_deconv4.output_size(wh)
 
         self.f_heatmap = nn.Sequential(self.heatmap_deconv1, self.heatmap_deconv2, self.heatmap_deconv3, self.heatmap_deconv4)
 
-        self.output_size = wh * wh * 3
+        self.output_size = wh * wh * 12
 
     def forward(self, objs):
         images = []

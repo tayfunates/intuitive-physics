@@ -19,10 +19,10 @@ class BaseOptions:
                                  help='models are saved here')
         self.parser.add_argument('--dataroot', default='./datasets/PhysVQA500',
                                  help='path to images (should have subfolders first, last, mask, segment)')
-        self.parser.add_argument('--train_batch_size', type=int, default=8, help='training batch size')
+        self.parser.add_argument('--train_batch_size', type=int, default=12, help='training batch size')
         self.parser.add_argument('--test_batch_size', type=int, default=1, help='test batch size')
         self.parser.add_argument('--max-epoch', default=120, type=int, help="maximum epochs to run")
-        self.parser.add_argument('--eval-freq', default=10, type=int, help="evaluation frequency")
+        self.parser.add_argument('--eval-freq', default=1, type=int, help="evaluation frequency")
         self.parser.add_argument('--seed', type=int, default=23, help='random seed')
         self.parser.add_argument('--use-perceptual-loss', action='store_true',
                                  help="use perceptual loss in addition to L2 loss")

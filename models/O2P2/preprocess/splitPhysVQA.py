@@ -5,7 +5,7 @@ root_path ="../datasets/PhysVQA500/"
 scene_folders = os.listdir(root_path)
 
 test_ratio = 0.2
-val_ratio = 0.2
+val_ratio = 0.005
 
 train_test = train_test_split(scene_folders, test_size=test_ratio, shuffle=True)
 

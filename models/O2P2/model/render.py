@@ -54,7 +54,8 @@ class Render(torch.nn.Module):
     def forward(self, objs):
         images = []
         heatmaps = []
-        for obj in objs:
+
+        for i, obj in enumerate(objs):
             i = self.image_fc(obj)
             i = i.view(-1, 256, 14, 14)
             i = self.f_image(i)
@@ -68,9 +69,10 @@ class Render(torch.nn.Module):
 
         w = torch.cat(heatmaps, 1)
         w = self.heatmap_softmax(w)
+        w = w.transpose(0, 1)
 
-        image = torch.zeros(1, 3, 224, 224).cuda()
+        image = torch.zeros(w.shape[1], 3, 224, 224).cuda()
         for idx, i in enumerate(images):
-            image += w[:, idx, :, :, :] * i
+            image += w[idx] * i
 
         return image

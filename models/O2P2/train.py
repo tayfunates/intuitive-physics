@@ -38,9 +38,9 @@ def main():
     ])
 
     # PyTorch Dataset classes for train, validation and test sets
-    train_dataset = O2P2Dataset(phys_vqa_data.train, transform=transform_train)
-    val_dataset = O2P2Dataset(phys_vqa_data.val, transform=transform_test)
-    test_dataset = O2P2Dataset(phys_vqa_data.test, transform=transform_test)
+    train_dataset = O2P2Dataset(phys_vqa_data.train, phys_vqa_data.max_objects, transform=transform_train)
+    val_dataset = O2P2Dataset(phys_vqa_data.val, phys_vqa_data.max_objects,  transform=transform_test)
+    test_dataset = O2P2Dataset(phys_vqa_data.test, phys_vqa_data.max_objects, transform=transform_test)
 
     # PyTorch Dataloaders for train, validation and test sets
     train_loader = DataLoader(train_dataset, batch_size=opt.train_batch_size, shuffle=True, pin_memory=use_gpu)
@@ -150,16 +150,10 @@ def train(epoch, train_loader, percept, physics, render, criterion, vgg,
 
     for batch_idx, (img0, img1, segs) in enumerate(train_loader):
         if use_gpu:
-            img0, img1 = img0.cuda(), img1.cuda()
-            for i, seg in enumerate(segs):
-                segs[i] = seg.cuda()
+            img0, img1, segs = img0.cuda(), img1.cuda(), segs.cuda()
 
         # compute model output
-        objects = []
-        for seg in segs:
-            # TODO: objects from segs can be computed as a single batch
-            obj = percept(seg)
-            objects.append(obj)
+        objects = percept(segs)
 
         img0_reconstruction = render(objects)
         objects_evolved = physics(objects)

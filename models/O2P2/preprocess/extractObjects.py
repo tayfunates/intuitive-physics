@@ -5,7 +5,7 @@ import glob
 import shutil
 import re
 
-root_path ="../datasets/PhysVQA/"
+root_path ="../datasets/PhysVQA500/"
 scene_folders = os.listdir(root_path)
 
 max_objects_in_a_scene = 12

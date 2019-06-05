@@ -36,7 +36,13 @@ class Percept(torch.nn.Module):
         self.convnet = nn.Sequential(self.conv1, self.conv2, self.conv3, self.conv4)
 
     def forward(self, seg):
-        output = self.convnet(seg)
-        output = output.view(-1, self.fc_input_size)
-        output = self.fcnet(output)
+        objects = seg.transpose(0, 1)
+
+        objects_output = []
+        for i, object in enumerate(objects):
+            obj_features = self.convnet(object)
+            obj_features = obj_features.view(-1, self.fc_input_size)
+            obj_features = self.fcnet(obj_features)
+            objects_output.append(obj_features)
+        output = torch.stack(objects_output)
         return output

@@ -10,6 +10,7 @@ class PhysVQA:
         self.split_file = osp.join(path, "split.txt")
 
         self.train, self.val, self.test = self.parse_split_file()
+        self.max_objects = 11
 
         print("Train data count {}".format(len(self.train)))
         print("Val data count {}".format(len(self.val)))

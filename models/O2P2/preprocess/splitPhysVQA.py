@@ -1,7 +1,7 @@
 import os
 from sklearn.model_selection import train_test_split
 
-root_path ="../datasets/PhysVQA/"
+root_path ="../datasets/PhysVQA500/"
 scene_folders = os.listdir(root_path)
 
 test_ratio = 0.2
@@ -13,10 +13,10 @@ train = train_test[0]
 test = train_test[1]
 
 train_val = train_test_split(train, test_size=val_ratio, shuffle=True)
-train = train_test[0]
-val = train_test[1]
+train = train_val[0]
+val = train_val[1]
 
-split_path = "../datasets/PhysVQA/split.txt"
+split_path = "../datasets/PhysVQA500/split.txt"
 
 f = open(split_path, "w+")
 

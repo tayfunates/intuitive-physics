@@ -39,9 +39,9 @@ def main():
     ])
 
     # PyTorch Dataset classes for train, validation and test sets
-    train_dataset = O2P2Dataset(phys_vqa_data.train, phys_vqa_data.max_objects, transform=transform_train)
-    val_dataset = O2P2Dataset(phys_vqa_data.val, phys_vqa_data.max_objects,  transform=transform_test)
-    test_dataset = O2P2Dataset(phys_vqa_data.test, phys_vqa_data.max_objects, transform=transform_test)
+    train_dataset = O2P2Dataset(phys_vqa_data.train, phys_vqa_data.max_objects, phys_vqa_data.load_image_to_memory, transform=transform_train)
+    val_dataset = O2P2Dataset(phys_vqa_data.val, phys_vqa_data.max_objects, phys_vqa_data.load_image_to_memory,  transform=transform_test)
+    test_dataset = O2P2Dataset(phys_vqa_data.test, phys_vqa_data.max_objects, phys_vqa_data.load_image_to_memory, transform=transform_test)
 
     # PyTorch Dataloaders for train, validation and test sets
     train_loader = DataLoader(train_dataset, batch_size=opt.train_batch_size, shuffle=True, pin_memory=use_gpu, num_workers=6)
@@ -76,10 +76,10 @@ def main():
         vgg_norm = vgg_norm.cuda()
 
     # Define loss and optimizers
-    criterion = MaskedMSELoss()
-    optim_percept = torch.optim.Adam(percept.parameters(), lr=1e-2)
-    optim_physics = torch.optim.Adam(physics.parameters(), lr=1e-2)
-    optim_render = torch.optim.Adam(render.parameters(), lr=1e-2)
+    criterion = torch.nn.MSELoss()
+    optim_percept = torch.optim.Adam(percept.parameters(), lr=1e-3)
+    optim_physics = torch.optim.Adam(physics.parameters(), lr=1e-3)
+    optim_render = torch.optim.Adam(render.parameters(), lr=1e-3)
 
     best_render_loss = np.inf
     best_epoch = 0
@@ -149,16 +149,18 @@ def train(epoch, train_loader, percept, physics, render, criterion, vgg,
     physics_losses = []
     render_losses = []
 
-    for batch_idx, (img0, img1, mask0, mask1, segs) in enumerate(train_loader):
+    for batch_idx, (img0, img1, segs) in enumerate(train_loader):
         if use_gpu:
-            img0, img1, mask0, mask1, segs = img0.cuda(), img1.cuda(), mask0.cuda(), mask1.cuda(), segs.cuda()
+            # If Want to Use Whole Mask
+            #img0, img1, mask0, mask1, segs = img0.cuda(), img1.cuda(), mask0.cuda(), mask1.cuda(), segs.cuda()
+            img0, img1, segs = img0.cuda(), img1.cuda(), segs.cuda()
 
-        mask0 = torch.sum(mask0, 1)
-        mask1 = torch.sum(mask1, 1)
-
-        t = 0.0001  # threshold
-        mask0 = (mask0 > t).float() * 1
-        mask1 = (mask1 > t).float() * 1
+        # If Want to Use Whole Mask
+        #mask0 = torch.sum(mask0, 1)
+        #mask1 = torch.sum(mask1, 1)
+        #t = 0.0001  # threshold
+        #mask0 = (mask0 > t).float() * 1
+        #mask1 = (mask1 > t).float() * 1
 
         # compute model output
         objects = percept(segs)
@@ -168,8 +170,8 @@ def train(epoch, train_loader, percept, physics, render, criterion, vgg,
         img1_reconstruction = render(objects_evolved)
 
         # measure l2 losses
-        percept_loss_l2 = criterion(img0, img0_reconstruction, mask0)
-        physics_loss_l2 = criterion(img1, img1_reconstruction, mask1)
+        percept_loss_l2 = criterion(img0, img0_reconstruction)
+        physics_loss_l2 = criterion(img1, img1_reconstruction)
 
         if opt.use_perceptual_loss:
             # get vgg features for perceptual loss
@@ -262,16 +264,18 @@ def validate(epoch, val_loader, percept, physics, render, criterion, vgg, vgg_no
     render_losses = []
 
     with torch.no_grad():
-        for batch_idx, (img0, img1, mask0, mask1, segs) in enumerate(val_loader):
+        for batch_idx, (img0, img1, segs) in enumerate(val_loader):
             if use_gpu:
-                img0, img1, mask0, mask1, segs = img0.cuda(), img1.cuda(), mask0.cuda(), mask1.cuda(), segs.cuda()
+                # If Want to Use Whole Mask
+                #img0, img1, mask0, mask1, segs = img0.cuda(), img1.cuda(), mask0.cuda(), mask1.cuda(), segs.cuda()
+                img0, img1, segs = img0.cuda(), img1.cuda(), segs.cuda()
 
-            mask0 = torch.sum(mask0, 1)
-            mask1 = torch.sum(mask1, 1)
-
-            t = 0.0001  # threshold
-            mask0 = (mask0 > t).float() * 1
-            mask1 = (mask1 > t).float() * 1
+            # If Want to Use Whole Mask
+            #mask0 = torch.sum(mask0, 1)
+            #mask1 = torch.sum(mask1, 1)
+            #t = 0.0001  # threshold
+            #mask0 = (mask0 > t).float() * 1
+            #mask1 = (mask1 > t).float() * 1
 
             # compute model output
             # compute model output
@@ -282,8 +286,8 @@ def validate(epoch, val_loader, percept, physics, render, criterion, vgg, vgg_no
             img1_reconstruction = render(objects_evolved)
 
             # measure l2 losses
-            percept_loss_l2 = criterion(img0, img0_reconstruction, mask0)
-            physics_loss_l2 = criterion(img1, img1_reconstruction, mask1)
+            percept_loss_l2 = criterion(img0, img0_reconstruction)
+            physics_loss_l2 = criterion(img1, img1_reconstruction)
 
             if opt.use_perceptual_loss:
                 # get vgg features for perceptual loss

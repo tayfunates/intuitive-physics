@@ -1,6 +1,7 @@
 import os
 import os.path as osp
 import glob
+import cv2
 
 class PhysVQA:
 
@@ -9,8 +10,9 @@ class PhysVQA:
         self.path = path
         self.split_file = osp.join(path, "split.txt")
 
+        self.max_objects = 6
+        self.load_image_to_memory = True
         self.train, self.val, self.test = self.parse_split_file()
-        self.max_objects = 11
 
         print("Train data count {}".format(len(self.train)))
         print("Val data count {}".format(len(self.val)))
@@ -40,12 +42,18 @@ class PhysVQA:
 
                     scene_all_stable_repeats = glob.glob(osp.join(scene_folder, '*FinalStable*.png'))
                     scene_all_stable_repeats.sort()
-                    scene_repeats_stable_segs = [f for f in scene_all_unstable_repeats if "NONVisibleSeg" in f]
+
+                    # If Want to Use Whole Mask
+                    #scene_repeats_stable_segs = [f for f in scene_all_unstable_repeats if "NONVisibleSeg" in f]
+
                     scene_repeats_last_imgs = [f for f in scene_all_stable_repeats if "NONVisibleSeg" not in f and "VisibleSeg" not in f]
 
                     for rp in range(0, len(scene_repeats_unstable_segs)):
                         repeat_unstable = scene_repeats_unstable_segs[rp]
-                        repeat_stable = scene_repeats_stable_segs[rp]
+
+                        # If Want to Use Whole Mask
+                        #repeat_stable = scene_repeats_stable_segs[rp]
+
                         repeat_first_img = scene_repeats_first_imgs[rp]
                         repeat_last_img = scene_repeats_last_imgs[rp]
 
@@ -57,7 +65,14 @@ class PhysVQA:
 
 
                         object_paths = [osp.join(repeat_objects_path, f) for f in os.listdir(repeat_objects_path)]
-                        data = (repeat_first_img, repeat_last_img, repeat_unstable, repeat_stable, object_paths)
+
+                        # If Want to Use Whole Mask
+                        #data = (repeat_first_img, repeat_last_img, repeat_unstable, repeat_stable, object_paths)
+
+                        if self.load_image_to_memory == True:
+                            data = (cv2.imread(repeat_first_img), cv2.imread(repeat_last_img), [cv2.imread(obj_img) for obj_img in object_paths])
+                        else:
+                            data = (repeat_first_img, repeat_last_img, object_paths)
 
                         if int(spl) == 1:
                             train.append(data)

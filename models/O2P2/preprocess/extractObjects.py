@@ -5,10 +5,10 @@ import glob
 import shutil
 import re
 
-root_path ="../datasets/PhysVQA500/"
+root_path ="../datasets/PhysVQA350/"
 scene_folders = os.listdir(root_path)
 
-max_objects_in_a_scene = 12
+max_objects_in_a_scene = 7
 force_clean = False
 
 noise_remove_kernel = np.ones((3,3),np.uint8)

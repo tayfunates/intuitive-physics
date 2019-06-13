@@ -108,8 +108,8 @@ initial_stable_json_path = 'InitialStable.json'
 dataBaseFolder = 'Data'
 
 
-minNoObjects = 8
-maxNoObjects = 12
+minNoObjects = 7
+maxNoObjects = 7
 
 for i in range(simulation_count):
     simulationFolder = os.path.join(dataBaseFolder, str(i).zfill(4))

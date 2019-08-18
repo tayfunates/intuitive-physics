@@ -240,6 +240,9 @@ It is one of the examples that uses graph networks for learning physics dynamics
 ![Method Features](/images/DPINetsFeatures.png)
 
 ### Read Queue
+
+- [Do neural language representations learn physical commonsense?](https://arxiv.org/pdf/1908.02899.pdf)
+
 - [An integrative computational architecture for object-driven cortex](http://www.mit.edu/~ilkery/papers/YildirimetalCONEUR.pdf)
 
 - [The scope and limits of simulation in automated reasoning](https://arxiv.org/pdf/1506.04956.pdf)

@@ -1,3 +1,6 @@
 [submodule "simulation/2d/Box2D"]
 	path = simulation/2d/Box2D
 	url = /Users/tates/Workspace/self/hacettepe/intuitive-physics/simulation/2d/Box2D
+[submodule "simulation/clevr/clevr-dataset-gen"]
+	path = simulation/clevr/clevr-dataset-gen
+	url = /Users/tates/Workspace/self/hacettepe/intuitive-physics/simulation/clevr/clevr-dataset-gen

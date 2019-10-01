@@ -1,6 +1,3 @@
 [submodule "clevr"]
 	path = clevr
 	url = https://github.com/facebookresearch/clevr-dataset-gen.git
-[submodule "simulation/2d"]
-	path = simulation/2d
-	url = https://github.com/erincatto/Box2D.git

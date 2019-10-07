@@ -19,6 +19,8 @@ box2d provides 2-dimensional physics engine for our simulations. To draw simulat
 
 b2VisBody holds color and/or texture information for box2d bodies to be rendered in our own renderer. b2VisWorld is the corresponding class which knows that the attached bodies has the type of b2VisBody.
 
+For material textures (if used), b2VisTexture depend on libpng to load texture from file.
+
 ### what if
 
 Folder **what if** contains a Unity project which implements the simulations in 3-dimensional environments.

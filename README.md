@@ -16,10 +16,11 @@ box2d provides 2-dimensional physics engine for our simulations. To draw simulat
 - b2VisBody
 - b2VisWorld
 - b2VisTexure
+- b2VisPolygonShape
 
 b2VisBody holds color and/or texture information for box2d bodies to be rendered in our own renderer. b2VisWorld is the corresponding class which knows that the attached bodies has the type of b2VisBody.
 
-For material textures (if used), b2VisTexture depend on libpng to load texture from file.
+For material textures (if used), b2VisTexture depend on libpng to load texture from file. Texture coordinates of polygons can be obtained from the interface provided in b2VisPolygonShape.
 
 ### what if
 

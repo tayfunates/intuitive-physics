@@ -22,6 +22,8 @@ b2VisBody holds color and/or texture information for box2d bodies to be rendered
 
 For material textures (if used), b2VisTexture depend on libpng to load texture from file. Texture coordinates of polygons can be obtained from the interface provided in b2VisPolygonShape.
 
+b2VisBody has the interface to reach the renderer. By the help of this interface, you can have renderer to output rendered images to output file for each step required by the simulation.
+
 ### what if
 
 Folder **what if** contains a Unity project which implements the simulations in 3-dimensional environments.

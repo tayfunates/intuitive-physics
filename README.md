@@ -24,6 +24,12 @@ For material textures (if used), b2VisTexture depend on libpng to load texture f
 
 b2VisWorld has the interface to reach the renderer. By the help of this interface, you can have renderer to output rendered images to output file for each step required by the simulation.
 
+To be able to import the simulation data from json files or to export the simulation data to json files (settings, objects, scene information etc.), following repository is used for serialization/deserialization:
+
+[nlohmann's json serialization library](https://github.com/nlohmann/json)
+
+It can be installed via brew as stated in the documentation of the library if you are using OSX. Please refer readme of the repository for other operating systems.
+
 ### what if
 
 Folder **what if** contains a Unity project which implements the simulations in 3-dimensional environments.

@@ -26,7 +26,7 @@ b2VisWorld has the interface to reach the renderer. By the help of this interfac
 
 To be able to import the simulation data from json files or to export the simulation data to json files (settings, objects, scene information etc.), following repository is used for serialization/deserialization:
 
-[nlohmann's json serialization library](https://github.com/nlohmann/json)
+[nlohmann's json serialization/deserialization library](https://github.com/nlohmann/json)
 
 It can be installed via brew as stated in the documentation of the library if you are using OSX. Please refer readme of the repository for other operating systems.
 

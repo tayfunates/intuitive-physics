@@ -88,7 +88,9 @@ This section includes literature overview for different methods developed for di
 
 - [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
 
-- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+
+- [Clevrer: collision events for video representation and reasoning](#clevrer-collision-events-for-video-representation-and-reasoning)
 
 #### Cognitive Science
 
@@ -102,7 +104,9 @@ This section includes literature overview for different methods developed for di
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
 
-- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+
+- [Clevrer: collision events for video representation and reasoning](#clevrer-collision-events-for-video-representation-and-reasoning)
 
 #### 2018
 
@@ -132,19 +136,25 @@ This section includes literature overview for different methods developed for di
 
 #### Next Frame Prediction
 
+- [Clevrer: collision events for video representation and reasoning](#clevrer-collision-events-for-video-representation-and-reasoning)
+
 ##### Motion Estimation
 
 - [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
 
-- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+
+- [Clevrer: collision events for video representation and reasoning](#clevrer-collision-events-for-video-representation-and-reasoning)
 
 ##### Object Dropped to a Scene
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
 
-##### What-if
+##### What-if (Counterfactual)
 
 - [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
+
+- [Clevrer: collision events for video representation and reasoning](#clevrer-collision-events-for-video-representation-and-reasoning)
 
 #### Continuity and Change Violation Detection
 
@@ -168,7 +178,7 @@ This section includes literature overview for different methods developed for di
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
 
-- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
 
 #### Visual Newtonian Dynamics Dataset (VIND)
 
@@ -178,13 +188,19 @@ This section includes literature overview for different methods developed for di
 
 - [Answering visual what-if questions: from actions to predicted scene descriptions](#answering-visual-what-if-questions-from-actions-to-predicted-scene-descriptions)
 
+#### Collision Events For Video Representation and Reasoning Dataset (CLEVRER)
+
+- [Clevrer: collision events for video representation and reasoning](#clevrer-collision-events-for-video-representation-and-reasoning)
+
 ### Papers by Conference or Journal
 
 #### ICLR
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
 
-- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#Learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+- [Learning particle dynamics for manipulating rigid bodies, deformable objects, and fluids](#learning-particle-dynamics-for-manipulating-rigid-bodies-deformable-objects-and-fluids)
+
+- [Clevrer: collision events for video representation and reasoning](#clevrer-collision-events-for-video-representation-and-reasoning) (in review)
 
 #### PNAS
 
@@ -265,6 +281,12 @@ This paper investigates the hypothesis that intuitive decisions about physics ar
 It is one of the examples that uses graph networks for learning physics dynamics of objects. It is implemented on top of interaction networks, propagation networks and hierarchical relation networks where authors create the relations (edges) dynamically. The creation of these relations and the usage of hierarchy are object state specific where the tested object states are rigid bodies, fluids and deformable objects. Each of these are represented by different graphs where nodes are titled as particles. Besides learning the representation of the physics, authors experimented the models on downstream control tasks using model predictive control algorithms (MPC) where the trajectories are represented as the collection of graphs. The proposed algorithm using MPC is also capable of learning unknown object properties via shooting.
 
 ![Method Features](/images/DPINetsFeatures.png)
+
+#### Clevrer: collision events for video representation and reasoning
+
+Authors provide a new dataset for evaluating reasoning performance of the models trained for video understanding. Besides recognizing visual features inside the video, this dataset challenges models to understand the dynamics between objects and events and answer to the questions which require causal analysis to recognize the events and their reasons. The dataset contains for different question types; descriptive, explanatory, predictive and counterfactual whose samples are provided below. There are three events which are enter, exit and collision from them collision is the reason for extracting a causal tree of the events. The dataset objects, materials, colors are very similar to CLEVR dataset except the fact that authors use a physics engine to simulate events and a render engine to create videos instead of single images. A couple of baseline models; language only, video question answering and compositional visual reasoning (by modifying to work with videos) are trained and evaluated using Clevrer. While the overall performance of baseline models are quite low, authors observed that using object segmentation maps as explicit object representations increases performances. The second observation that the authors provided is that the dynamics modeling is required as well as explisit object representations in models to be able to be successful in such datasets requiring investigation of the causal structure between the events. Therefore, they also train a new model which models the dynamics using Propagation Networks (PropNet) and show that the results are better compared to baselines.
+
+![Samples for Four Different Question Types](/images/CLEVRER.png)
 
 ### Read Queue
 

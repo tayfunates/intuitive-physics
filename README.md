@@ -30,6 +30,7 @@ To be able to import the simulation data from json files or to export the simula
 
 It can be installed via brew as stated in the documentation of the library if you are using OSX. Please refer readme of the repository for other operating systems.
 
+To output video ffmpeg is also required.
 
 ### what if
 

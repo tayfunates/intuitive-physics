@@ -99,6 +99,8 @@ This section includes literature overview for different methods developed for di
 
 - [Mind games: game engines as an architecture for intuitive physics](#mind-games-game-engines-as-an-architecture-for-intuitive-physics)
 
+- [Causal reasoning with forces](#causal-reasoning-with-forces)
+
 ### Papers by Year
 
 #### 2019
@@ -120,6 +122,11 @@ This section includes literature overview for different methods developed for di
 #### 2016
 
 - [Newtonian image understanding: unfolding the dynamics of objects in static images](#newtonian-image-understanding-unfolding-the-dynamics-of-objects-in-static-images)
+
+#### 2015
+
+
+- [Causal reasoning with forces](#causal-reasoning-with-forces)
 
 #### 2013
 
@@ -172,6 +179,10 @@ This section includes literature overview for different methods developed for di
 ##### Building Towers
 
 - [Reasoning about physical interactions with object oriented prediction and planning](#reasoning-about-physical-interactions-with-object-oriented-prediction-and-planning)
+
+#### Causal Reasoning
+
+- [Causal reasoning with forces](#causal-reasoning-with-forces)
 
 ### Papers by Dataset
 
@@ -226,6 +237,10 @@ This section includes literature overview for different methods developed for di
 #### TICS
 
 - [Mind games: game engines as an architecture for intuitive physics](#mind-games-game-engines-as-an-architecture-for-intuitive-physics)
+
+#### FNHUM
+
+- [Causal reasoning with forces](#causal-reasoning-with-forces)
 
 ### References
 
@@ -288,6 +303,12 @@ It is one of the examples that uses graph networks for learning physics dynamics
 Authors provide a new dataset for evaluating reasoning performance of the models trained for video understanding. Besides recognizing visual features inside the video, this dataset challenges models to understand the dynamics between objects and events and answer to the questions which require causal analysis to recognize the events and their reasons. The dataset contains for different question types; descriptive, explanatory, predictive and counterfactual whose samples are provided below. There are three events which are enter, exit and collision from them collision is the reason for extracting a causal tree of the events. The dataset objects, materials, colors are very similar to CLEVR dataset except the fact that authors use a physics engine to simulate events and a render engine to create videos instead of single images. A couple of baseline models; language only, video question answering and compositional visual reasoning (by modifying to work with videos) are trained and evaluated using Clevrer. While the overall performance of baseline models are quite low, authors observed that using object segmentation maps as explicit object representations increases performances. The second observation that the authors provided is that the dynamics modeling is required as well as explisit object representations in models to be able to be successful in such datasets requiring investigation of the causal structure between the events. Therefore, they also train a new model which models the dynamics using Propagation Networks (PropNet) and show that the results are better compared to baselines.
 
 ![Samples for Four Different Question Types](/images/CLEVRER.png)
+
+#### Causal reasoning with forces
+
+Understanding how people perceive events or statements requiring causal reasoning is important. In order to understand this hierarchical perception of humans there exist several theories, from them some are mental model theory and causal model theory whose units of perceptions are abstract. Mentam model theory states that logical operations are used in sub-relations of complex compositions to produce a single conclusion, whereas causal model theory is based on a Bayesian network where the relations are represented probabilistically. Authors propose a new theory which they title as force theory for which their first claim is that the units of perception need not to be abstract as in the previous theories and can resemblance to real world entities. They represent cause, help or prevent relations by different configurations of the forces appeared in affector and patient. Therefore, composition of sub-relations to obtain the final (possibly more than one) result can be achieved by transferring or eliminating the forces existing in the relation. In their experiments, they created physical environments based on 3D simulators and compared participants' perception results with the outputs of three models mentioned. They observe that the force theory predicts as well as or better than the theories which are based on abstract units. They also provide experiment results evaluating abstract causation performances. They compared how close predictions of force theory to humans when compared to other theories when provided causal compositions such as "Stress causes for getfulness and forgetfulness causes confusion". This time the forces are not real world forces but are approximate influences of affectors on again patients. They observe a similar pattern in their experiments evaluating abstract causation. All three models are very successful mimicing human performances with few mistakes. However, depending on iconic representations, can better explain how these events might be perceived.
+
+![Iconic Representation of Forces](/images/CausalReasoningWithForces.png)
 
 ### Read Queue
 

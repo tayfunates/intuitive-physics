@@ -4,3 +4,6 @@
 [submodule "simulation/clevr/clevr-dataset-gen"]
 	path = simulation/clevr/clevr-dataset-gen
 	url = /Users/tates/Workspace/self/hacettepe/intuitive-physics/simulation/clevr/clevr-dataset-gen
+[submodule "simulation/2d/SVQA-Box2D"]
+	path = simulation/2d/SVQA-Box2D
+	url = https://github.com/cagatayyigit/SVQA-Box2D.git

@@ -19,3 +19,6 @@ class Event:
         self.objects = event_dict[Event.KEY_OBJECTS]
         self.step = event_dict[Event.KEY_STEP]
         self.type = Event.Type(event_dict[Event.KEY_TYPE])
+
+    def __hash__(self):
+        return self.id

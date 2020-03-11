@@ -51,7 +51,7 @@ class Object:
         self.isDynamic = self.initialState[Object.KEY_BODY_TYPE] == 0
         self.uniqueId = self.initialState[Object.KEY_UNIQUE_ID]
         self.color = Object.ColorType(self.initialState[Object.KEY_COLOR_TYPE])
-        self.geometry = Object.GeometryType(self.initialState[KEY_OBJECT_TYPE])
+        self.geometry = Object.GeometryType(self.initialState[Object.KEY_OBJECT_TYPE])
 
     def isActiveAtInit(self):
         return self.initialState[Object.KEY_ACTIVE]

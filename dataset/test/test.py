@@ -20,7 +20,10 @@ def test__causal_graph():
         string = graph_file.read()
         causal_graph = CausalGraph(json.loads(string))
 
+    print(causal_graph.outcome_events(causal_graph.events[0]))
+
+    return True
 
 if __name__ == "__main__":
     assert test__event_class()
-    test__causal_graph()
+    assert test__causal_graph()

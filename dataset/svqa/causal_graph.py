@@ -8,6 +8,7 @@ class CausalGraph:
 
         self.__id_to_event = {}  # Mapping integer event IDs to Event objects.
         self.__from_id_to_ids = {}  # Mapping integer event IDs to connected event IDs. Represents edges.
+
         for event_dict in graph_dict["nodes"]:
             self.__id_to_event[event_dict["id"]] = Event(event_dict)
         for edge_dict in graph_dict["edges"]:
@@ -20,7 +21,7 @@ class CausalGraph:
 
     @property
     def events(self):
-        return self.__graph.keys()
+        return [key for key in self.__graph.keys()]
 
     def events_after(self, step_count):
         return [event for event in self.events if event.step > step_count]
@@ -39,17 +40,17 @@ class CausalGraph:
         return causes
 
     def outcome_events(self, cause: Event):
-        all_outcomes = []
+        all_outcomes = set()
         outcomes = self.immediate_outcome_events(cause)
-        all_outcomes.extend(outcomes)
-        for event in outcomes:
-            all_outcomes.append(self.outcome_events(event))
-        return all_outcomes
+        all_outcomes.update(outcomes)
+        for e in outcomes:
+            all_outcomes.update(self.outcome_events(e))
+        return list(all_outcomes)
 
-    def cause_events(self, outcome: Event):
-        all_causes = []
-        causes = self.immediate_cause_events(outcome)
-        all_causes.extend(causes)
-        for outcome in causes:
-            all_causes.append(self.outcome_events(outcome))
-        return all_causes
+    def cause_events(self, event: Event):
+        all_causes = set()
+        causes = self.immediate_cause_events(event)
+        all_causes.update(causes)
+        for e in causes:
+            all_causes.update(self.cause_events(e))
+        return list(all_causes)

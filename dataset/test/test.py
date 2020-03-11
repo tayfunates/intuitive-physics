@@ -1,9 +1,7 @@
 import json
-
-from src.simulation import Simulation
-from src.causal_graph import CausalGraph
-from src.event import Event
-
+from svqa.simulation import Simulation
+from svqa.causal_graph import CausalGraph
+from svqa.event import Event
 
 def test__event_class():
     event_dict = json.loads("""{

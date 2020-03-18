@@ -566,6 +566,10 @@ def main(args):
     for key, template in templates.items():
       template_counts[key[:2]] = 0
       final_node_type = template['nodes'][-1]['type']
+
+      if final_node_type == 'query_material' or final_node_type == 'equal_material':
+        continue
+
       final_dtype = node_type_to_dtype[final_node_type]
       answers = metadata['types'][final_dtype]
       if final_dtype == 'Bool':

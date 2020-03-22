@@ -12,7 +12,7 @@
       "gray", "red", "blue", "green", "brown", "purple", "cyan", "yellow", "black"
     ],
     "Relation": [
-      "left", "right", "behind", "front"
+      "left", "right", "above", "below"
     ],
     "Size": [
       "small", "large"

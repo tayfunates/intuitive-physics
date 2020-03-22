@@ -46,19 +46,19 @@ us to efficiently prune the search space and terminate early when we know that
 parser = argparse.ArgumentParser()
 
 # Inputs
-parser.add_argument('--input_scene_file', default='../../simulation/2d/SVQA-Box2D/Testbed/scene.json',
+parser.add_argument('--input_scene_file', default='../../simulation/2d/SVQA-Box2D/Testbed/SVQA_val_000000.json',
     help="JSON file containing ground-truth scene information for all images " +
          "from render_images.py")
 parser.add_argument('--metadata_file', default='metadata.json',
     help="JSON file containing metadata about functions")
 parser.add_argument('--synonyms_json', default='synonyms.json',
     help="JSON file defining synonyms for parameter values")
-parser.add_argument('--template_dir', default='CLEVR_1.0_templates',
+parser.add_argument('--template_dir', default='SVQA_1.0_templates',
     help="Directory containing JSON templates for questions")
 
 # Output
 parser.add_argument('--output_questions_file',
-    default='../output/CLEVR_questions.json',
+    default='SVQA_questions.json',
     help="The output file to write containing generated questions")
 
 # Control which and how many images to process
@@ -147,8 +147,8 @@ def find_filter_options(object_idxs, scene_struct, metadata):
 def add_empty_filter_options(attribute_map, metadata, num_to_add):
   # Add some filtering criterion that do NOT correspond to objects
 
-  if metadata['dataset'] == 'CLEVR-v1.0':
-    attr_keys = ['Size', 'Color', 'Material', 'Shape']
+  if metadata['dataset'] == 'SVQA-v1.0':
+    attr_keys = ['Size', 'Color', 'Shape']
   else:
     assert False, 'Unrecognized dataset'
   
@@ -163,11 +163,40 @@ def add_empty_filter_options(attribute_map, metadata, num_to_add):
       attribute_map[k] = []
 
 
+def compute_all_relationships(scene_struct, eps=0.2):
+  """
+  Computes relationships between all pairs of objects in the scene.
+
+  Returns a dictionary mapping string relationship names to lists of lists of
+  integers, where output[rel][i] gives a list of object indices that have the
+  relationship rel with object i. For example if j is in output['left'][i] then
+  object j is left of object i.
+  """
+  all_relationships = {}
+  for name, direction_vec in scene_struct['directions'].items():
+    all_relationships[name] = []
+    for i, obj1 in enumerate(scene_struct['objects']):
+      coords1 = obj1['2dCoords']
+      related = set()
+      for j, obj2 in enumerate(scene_struct['objects']):
+        if obj1 == obj2: continue
+        coords2 = obj2['2dCoords']
+        diff = [coords2[k] - coords1[k] for k in [0, 1]]
+        dot = sum(diff[k] * direction_vec[k] for k in [0, 1])
+        if dot > eps:
+          related.add(j)
+      all_relationships[name].append(sorted(list(related)))
+  scene_struct['relationships'] = all_relationships
+
+
 def find_relate_filter_options(object_idx, scene_struct, metadata,
     unique=False, include_zero=False, trivial_frac=0.1):
   options = {}
   if '_filter_options' not in scene_struct:
     precompute_filter_options(scene_struct, metadata)
+
+  if 'relationships' not in scene_struct:
+    compute_all_relationships(scene_struct)
 
   # TODO: Right now this is only looking for nontrivial combinations; in some
   # cases I may want to add trivial combinations, either where the intersection
@@ -409,7 +438,7 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
             cur_next_vals[param_name] = param_val
             next_input = len(state['nodes']) + len(new_nodes) - 1
           elif param_val is None:
-            if metadata['dataset'] == 'CLEVR-v1.0' and param_type == 'Shape':
+            if metadata['dataset'] == 'SVQA-v1.0' and param_type == 'Shape':
               param_val = 'thing'
             else:
               param_val = ''
@@ -484,6 +513,8 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
   for state in final_states:
     structured_questions.append(state['nodes'])
     answers.append(state['answer'])
+    if len(template['text'])==0:
+      continue
     text = random.choice(template['text'])
     for name, val in state['vals'].items():
       if val in synonyms:
@@ -551,6 +582,8 @@ def discard_material_from_nodes(nodes):
       node['type'] = 'query_color'
     if node['type'] == 'equal_material':
       node['type'] = 'equal_color'
+    if node['type'] == 'same_material':
+        node['type'] = 'same_color'
 
 def discard_material_from_text(text):
   ret = []
@@ -568,7 +601,7 @@ def discard_material_from_constraints(constraints):
     for j, cons_type in enumerate(constraint['params']):
       if(type(cons_type)==str):
         if re.search('<M.*>', cons_type):
-          constraint['params'].remove(cons_type)
+          constraints.remove(constraint)
 
 
 def discard_material_from_template(template):
@@ -582,8 +615,6 @@ def discard_material_from_template(template):
   discard_material_from_constraints(template['constraints'])
 
   ret = template
-
-
 
 def main(args):
   with open(args.metadata_file, 'r') as f:
@@ -631,12 +662,8 @@ def main(args):
         if metadata['dataset'] == 'SVQA-v1.0':
           answers = list(range(0, 11))
       template_answer_counts[key[:2]] = {}
-      try:
-        for a in answers:
-          template_answer_counts[key[:2]][a] = 0
-      except:
-        print
-        "Caught it!"
+      for a in answers:
+        template_answer_counts[key[:2]][a] = 0
 
     return template_counts, template_answer_counts
 
@@ -644,7 +671,7 @@ def main(args):
 
   #TODO: Handle multiple runs here
   # Read file containing input scenes
-  all_scenes = []
+  all_simulations = []
   #with open(args.input_scene_file, 'r') as f:
   #  scene_data = json.load(f)
   #  all_scenes = scene_data['scenes']
@@ -658,7 +685,7 @@ def main(args):
 
   with open(args.input_scene_file, 'r') as f:
     scene_data = json.load(f)
-    all_scenes.append(scene_data)
+    all_simulations.append(scene_data)
 
   # Read synonyms file
   with open(args.synonyms_json, 'r') as f:
@@ -666,14 +693,12 @@ def main(args):
 
   questions = []
   scene_count = 0
-  for i, scene in enumerate(all_scenes):
+  for i, simulation in enumerate(all_simulations):
 
-    #TODO: add video file name here
-    #scene_fn = scene['image_filename']
-    scene_fn = 'Default'
-    scene_struct = scene
+    scene_fn = simulation['video_filename']
+    scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step']==0][0] #Gets start state of the simulation
     print('starting image %s (%d / %d)'
-          % (scene_fn, i + 1, len(all_scenes)))
+          % (scene_fn, i + 1, len(all_simulations)))
 
     if scene_count % args.reset_counts_every == 0:
       print('resetting counts')
@@ -703,13 +728,22 @@ def main(args):
       if args.time_dfs and args.verbose:
         toc = time.time()
         print('that took ', toc - tic)
-      image_index = int(os.path.splitext(scene_fn)[0].split('_')[-1])
+
+      output_name_splitted = os.path.splitext(scene_fn)[0].split('_')
+      video_index = int(output_name_splitted[-1])
+      split = output_name_splitted[-2]
+
+      scene_info = {}
+      scene_info['split'] = split
+      scene_info['video_filename'] = scene_fn
+      scene_info['video_index'] = video_index
+
       for t, q, a in zip(ts, qs, ans):
         questions.append({
           'split': scene_info['split'],
-          'image_filename': scene_fn,
-          'image_index': image_index,
-          'image': os.path.splitext(scene_fn)[0],
+          'video_filename': scene_info['video_filename'],
+          'video_index': scene_info['video_index'],
+          'video': os.path.splitext(scene_fn)[0],
           'question': t,
           'program': q,
           'answer': a,

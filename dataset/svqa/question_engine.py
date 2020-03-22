@@ -152,7 +152,6 @@ execute_handlers = {
   'scene': scene_handler,
   'filter_color': make_filter_handler('color'),
   'filter_shape': make_filter_handler('shape'),
-  'filter_material': make_filter_handler('material'),
   'filter_size': make_filter_handler('size'),
   'filter_objectcategory': make_filter_handler('objectcategory'),
   'unique': unique_handler,
@@ -162,13 +161,11 @@ execute_handlers = {
   'count': count_handler,
   'query_color': make_query_handler('color'),
   'query_shape': make_query_handler('shape'),
-  'query_material': make_query_handler('material'),
   'query_size': make_query_handler('size'),
   'exist': exist_handler,
   'equal_color': equal_handler,
   'equal_shape': equal_handler,
   'equal_integer': equal_handler,
-  'equal_material': equal_handler,
   'equal_size': equal_handler,
   'equal_object': equal_handler,
   'less_than': less_than_handler,
@@ -176,7 +173,6 @@ execute_handlers = {
   'same_color': make_same_attr_handler('color'),
   'same_shape': make_same_attr_handler('shape'),
   'same_size': make_same_attr_handler('size'),
-  'same_material': make_same_attr_handler('material'),
 }
 
 

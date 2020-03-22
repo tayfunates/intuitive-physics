@@ -9,6 +9,7 @@ from __future__ import print_function
 import argparse, json, os, itertools, random, shutil
 import time
 import re
+from svqa.simulation import Simulation
 
 import question_engine as qeng
 
@@ -45,7 +46,7 @@ us to efficiently prune the search space and terminate early when we know that
 parser = argparse.ArgumentParser()
 
 # Inputs
-parser.add_argument('--input_scene_file', default='../output/CLEVR_scenes.json',
+parser.add_argument('--input_scene_file', default='../../simulation/2d/SVQA-Box2D/Testbed/scene.json',
     help="JSON file containing ground-truth scene information for all images " +
          "from render_images.py")
 parser.add_argument('--metadata_file', default='metadata.json',
@@ -96,8 +97,8 @@ def precompute_filter_options(scene_struct, metadata):
   # and values are lists of object idxs that match the filter criterion
   attribute_map = {}
 
-  if metadata['dataset'] == 'CLEVR-v1.0':
-    attr_keys = ['size', 'color', 'material', 'shape']
+  if metadata['dataset'] == 'SVQA-v1.0':
+    attr_keys = ['size', 'color', 'shape']
   else:
     assert False, 'Unrecognized dataset'
 
@@ -110,7 +111,7 @@ def precompute_filter_options(scene_struct, metadata):
     masks.append(mask)
 
   for object_idx, obj in enumerate(scene_struct['objects']):
-    if metadata['dataset'] == 'CLEVR-v1.0':
+    if metadata['dataset'] == 'SVQA-v1.0':
       keys = [tuple(obj[k] for k in attr_keys)]
 
     for mask in masks:
@@ -529,11 +530,66 @@ def replace_optionals(s):
   return s
 
 
+def discard_material_from_side_inputs(side_inputs):
+  for i, side_input in enumerate(side_inputs):
+    if re.search('<M.*>', side_input):
+      side_inputs.remove(side_input)
+
+
+def discard_material_from_nodes(nodes):
+  for i, node in enumerate(nodes):
+
+    side_inputs = node.get('side_inputs')
+    if side_inputs != None:
+      discard_material_from_side_inputs(side_inputs)
+
+    #This is some how hacky, if the question is about to filter or query material
+    #We switch to the color since we cannot remove the node type
+    if node['type'] == 'filter_material':
+      node['type'] = 'filter_color'
+    if node['type'] == 'query_material':
+      node['type'] = 'query_color'
+    if node['type'] == 'equal_material':
+      node['type'] = 'equal_color'
+
+def discard_material_from_text(text):
+  ret = []
+  for i, t in enumerate(text):
+    if re.search('material', t):
+      continue
+    if re.search('made of', t):
+      continue
+
+    ret.append(re.sub(' <M.*?>', '', t))
+  return ret
+
+def discard_material_from_constraints(constraints):
+  for i, constraint in enumerate(constraints):
+    for j, cons_type in enumerate(constraint['params']):
+      if(type(cons_type)==str):
+        if re.search('<M.*>', cons_type):
+          constraint['params'].remove(cons_type)
+
+
+def discard_material_from_template(template):
+  for i, param in enumerate(template['params']):
+    if param['type'] == 'Material':
+      template['params'].remove(param)
+
+  discard_material_from_nodes(template['nodes'])
+  template['text'] = discard_material_from_text(template['text'])
+
+  discard_material_from_constraints(template['constraints'])
+
+  ret = template
+
+
+
 def main(args):
   with open(args.metadata_file, 'r') as f:
     metadata = json.load(f)
     dataset = metadata['dataset']
-    if dataset != 'CLEVR-v1.0':
+    if dataset != 'SVQA-v1.0':
       raise ValueError('Unrecognized dataset "%s"' % dataset)
   
   functions_by_name = {}
@@ -552,6 +608,7 @@ def main(args):
       for i, template in enumerate(json.load(f)):
         num_loaded_templates += 1
         key = (fn, i)
+        discard_material_from_template(template)
         templates[key] = template
   print('Read %d templates from disk' % num_loaded_templates)
 
@@ -566,36 +623,42 @@ def main(args):
     for key, template in templates.items():
       template_counts[key[:2]] = 0
       final_node_type = template['nodes'][-1]['type']
-
-      if final_node_type == 'query_material' or final_node_type == 'equal_material':
-        continue
-
       final_dtype = node_type_to_dtype[final_node_type]
       answers = metadata['types'][final_dtype]
       if final_dtype == 'Bool':
         answers = [True, False]
       if final_dtype == 'Integer':
-        if metadata['dataset'] == 'CLEVR-v1.0':
+        if metadata['dataset'] == 'SVQA-v1.0':
           answers = list(range(0, 11))
       template_answer_counts[key[:2]] = {}
-      for a in answers:
-        template_answer_counts[key[:2]][a] = 0
+      try:
+        for a in answers:
+          template_answer_counts[key[:2]][a] = 0
+      except:
+        print
+        "Caught it!"
+
     return template_counts, template_answer_counts
 
   template_counts, template_answer_counts = reset_counts()
 
+  #TODO: Handle multiple runs here
   # Read file containing input scenes
   all_scenes = []
+  #with open(args.input_scene_file, 'r') as f:
+  #  scene_data = json.load(f)
+  #  all_scenes = scene_data['scenes']
+  #  scene_info = scene_data['info']
+  #begin = args.scene_start_idx
+  #if args.num_scenes > 0:
+  #  end = args.scene_start_idx + args.num_scenes
+  #  all_scenes = all_scenes[begin:end]
+  #else:
+  #  all_scenes = all_scenes[begin:]
+
   with open(args.input_scene_file, 'r') as f:
     scene_data = json.load(f)
-    all_scenes = scene_data['scenes']
-    scene_info = scene_data['info']
-  begin = args.scene_start_idx
-  if args.num_scenes > 0:
-    end = args.scene_start_idx + args.num_scenes
-    all_scenes = all_scenes[begin:end]
-  else:
-    all_scenes = all_scenes[begin:]
+    all_scenes.append(scene_data)
 
   # Read synonyms file
   with open(args.synonyms_json, 'r') as f:
@@ -604,7 +667,10 @@ def main(args):
   questions = []
   scene_count = 0
   for i, scene in enumerate(all_scenes):
-    scene_fn = scene['image_filename']
+
+    #TODO: add video file name here
+    #scene_fn = scene['image_filename']
+    scene_fn = 'Default'
     scene_struct = scene
     print('starting image %s (%d / %d)'
           % (scene_fn, i + 1, len(all_scenes)))

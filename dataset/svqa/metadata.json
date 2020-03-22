@@ -1,18 +1,15 @@
 {
-  "dataset": "CLEVR-v1.0",
+  "dataset": "SVQA-v1.0",
   "types": {
     "Object": null,
     "ObjectSet": null,
     "Integer": null,
     "Bool": null,
-    "StaticElements": [
-      "left boundary", "right boundary", "bottom boundary"
-    ],
     "Shape": [
-      "cube", "sphere", "cylinder"
+      "cube", "triangle", "hexagon", "circle"
     ],
     "Color": [
-      "gray", "red", "blue", "green", "brown", "purple", "cyan", "yellow"
+      "gray", "red", "blue", "green", "brown", "purple", "cyan", "yellow", "black"
     ],
     "Relation": [
       "left", "right", "behind", "front"

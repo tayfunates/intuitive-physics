@@ -62,8 +62,8 @@ class Object:
     def pos_x_at_start(self):
         return self.start_state[Object.KEY_POSX]
 
-    def pos_x_at_end(se):
-        return se.end_state[Object.KEY_POSX]
+    def pos_x_at_end(self):
+        return self.end_state[Object.KEY_POSX]
 
     def pos_y_at_start(self):
         return self.start_state[Object.KEY_POSY]

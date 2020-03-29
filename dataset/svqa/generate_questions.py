@@ -11,7 +11,7 @@ import time
 import re
 from svqa.simulation import Simulation
 
-import question_engine as qeng
+import svqa.question_engine as qeng
 
 """
 Generate synthetic questions and answers for CLEVR images. Input is a single
@@ -46,46 +46,46 @@ us to efficiently prune the search space and terminate early when we know that
 parser = argparse.ArgumentParser()
 
 # Inputs
-parser.add_argument('--input_scene_file', default='../../simulation/2d/SVQA-Box2D/Testbed/SVQA_val_000000.json',
+parser.add_argument('--input-scene-file',
     help="JSON file containing ground-truth scene information for all images " +
          "from render_images.py")
-parser.add_argument('--metadata_file', default='metadata.json',
+parser.add_argument('--metadata-file', default='metadata.json',
     help="JSON file containing metadata about functions")
-parser.add_argument('--synonyms_json', default='synonyms.json',
+parser.add_argument('--synonyms-json', default='synonyms.json',
     help="JSON file defining synonyms for parameter values")
-parser.add_argument('--template_dir', default='SVQA_1.0_templates',
+parser.add_argument('--template-dir', default='SVQA_1.0_templates',
     help="Directory containing JSON templates for questions")
 
 # Output
-parser.add_argument('--output_questions_file',
+parser.add_argument('--output-questions-file',
     default='SVQA_questions.json',
     help="The output file to write containing generated questions")
 
 # Control which and how many images to process
-parser.add_argument('--scene_start_idx', default=0, type=int,
+parser.add_argument('--scene-start-idx', default=0, type=int,
     help="The image at which to start generating questions; this allows " +
          "question generation to be split across many workers")
-parser.add_argument('--num_scenes', default=0, type=int,
+parser.add_argument('--num-scenes', default=0, type=int,
     help="The number of images for which to generate questions. Setting to 0 " +
          "generates questions for all scenes in the input file starting from " +
-         "--scene_start_idx")
+         "--scene-start-idx")
 
 # Control the number of questions per image; we will attempt to generate
 # templates_per_image * instances_per_template questions per image.
-parser.add_argument('--templates_per_image', default=10, type=int,
+parser.add_argument('--templates-per-image', default=10, type=int,
     help="The number of different templates that should be instantiated " +
          "on each image")
-parser.add_argument('--instances_per_template', default=1, type=int,
+parser.add_argument('--instances-per-template', default=1, type=int,
     help="The number of times each template should be instantiated on an image")
 
 # Misc
-parser.add_argument('--reset_counts_every', default=250, type=int,
+parser.add_argument('--reset-counts-every', default=250, type=int,
     help="How often to reset template and answer counts. Higher values will " +
          "result in flatter distributions over templates and answers, but " +
          "will result in longer runtimes.")
 parser.add_argument('--verbose', action='store_true',
     help="Print more verbose output")
-parser.add_argument('--time_dfs', action='store_true',
+parser.add_argument('--time-dfs', action='store_true',
     help="Time each depth-first search; must be given with --verbose")
 parser.add_argument('--profile', action='store_true',
     help="If given then run inside cProfile")

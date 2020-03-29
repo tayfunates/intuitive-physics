@@ -1,6 +1,7 @@
 from svqa.object import Object
 from svqa.causal_graph import CausalGraph
 
+
 class Simulation:
     def __init__(self, start_scene_dict, end_scene_dict, causal_graph_dict):
         self.objects = []

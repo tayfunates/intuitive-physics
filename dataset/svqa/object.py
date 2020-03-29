@@ -1,7 +1,7 @@
 from enum import Enum
 
-class Object:
 
+class Object:
     class ColorType(Enum):
         BLUE = "blue"
         BROWN = "brown"
@@ -35,15 +35,13 @@ class Object:
         RIGHT_BOUNDARY = "r_bound"
         BOTTOM_BOUNDARY = "b_bound"
 
-
     KEY_ACTIVE = "active"
     KEY_POSX = "posX"
     KEY_POSY = "posY"
-    KEY_BODY_TYPE = "bodyType" #bodyType=0 --> static, bodyType=1 --> not used, bodyType=2 --> dynamic
+    KEY_BODY_TYPE = "bodyType"  # bodyType=0 --> static, bodyType=1 --> not used, bodyType=2 --> dynamic
     KEY_UNIQUE_ID = "uniqueID"
     KEY_COLOR_TYPE = "colorType"
     KEY_OBJECT_TYPE = "objectType"
-
 
     def __init__(self, start_state, end_state):
         self.start_state = start_state

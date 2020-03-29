@@ -6,16 +6,31 @@
     "Integer": null,
     "Bool": null,
     "Shape": [
-      "cube", "triangle", "hexagon", "circle"
+      "cube",
+      "triangle",
+      "hexagon",
+      "circle"
     ],
     "Color": [
-      "gray", "red", "blue", "green", "brown", "purple", "cyan", "yellow", "black"
+      "gray",
+      "red",
+      "blue",
+      "green",
+      "brown",
+      "purple",
+      "cyan",
+      "yellow",
+      "black"
     ],
     "Relation": [
-      "left", "right", "above", "below"
+      "left",
+      "right",
+      "above",
+      "below"
     ],
     "Size": [
-      "small", "large"
+      "small",
+      "large"
     ]
   },
   "functions": [
@@ -27,201 +42,314 @@
     },
     {
       "name": "filter_color",
-      "inputs": ["ObjectSet"],
-      "side_inputs": ["Color"],
+      "inputs": [
+        "ObjectSet"
+      ],
+      "side_inputs": [
+        "Color"
+      ],
       "output": "ObjectSet",
       "terminal": false
     },
     {
       "name": "filter_shape",
-      "inputs": ["ObjectSet"],
-      "side_inputs": ["Shape"],
+      "inputs": [
+        "ObjectSet"
+      ],
+      "side_inputs": [
+        "Shape"
+      ],
       "output": "ObjectSet",
       "terminal": false
     },
     {
       "name": "filter_size",
-      "inputs": ["ObjectSet"],
-      "side_inputs": ["Size"],
+      "inputs": [
+        "ObjectSet"
+      ],
+      "side_inputs": [
+        "Size"
+      ],
       "output": "ObjectSet",
       "terminal": false
     },
     {
       "name": "unique",
-      "inputs": ["ObjectSet"],
+      "inputs": [
+        "ObjectSet"
+      ],
       "output": "Object",
       "terminal": false,
       "properties": []
     },
     {
       "name": "relate",
-      "inputs": ["Object"],
-      "side_inputs": ["Relation"],
+      "inputs": [
+        "Object"
+      ],
+      "side_inputs": [
+        "Relation"
+      ],
       "output": "ObjectSet",
       "terminal": false
     },
     {
       "name": "union",
-      "inputs": ["ObjectSet", "ObjectSet"],
+      "inputs": [
+        "ObjectSet",
+        "ObjectSet"
+      ],
       "output": "ObjectSet",
       "terminal": false
     },
     {
       "name": "intersect",
-      "inputs": ["ObjectSet", "ObjectSet"],
+      "inputs": [
+        "ObjectSet",
+        "ObjectSet"
+      ],
       "output": "ObjectSet",
       "terminal": false
     },
     {
       "name": "count",
-      "inputs": ["ObjectSet"],
+      "inputs": [
+        "ObjectSet"
+      ],
       "output": "Integer",
       "terminal": true
     },
     {
       "name": "query_shape",
-      "inputs": ["Object"],
+      "inputs": [
+        "Object"
+      ],
       "output": "Shape",
       "terminal": true
     },
     {
       "name": "query_color",
-      "inputs": ["Object"],
+      "inputs": [
+        "Object"
+      ],
       "output": "Color",
       "terminal": true
     },
     {
       "name": "query_size",
-      "inputs": ["Object"],
+      "inputs": [
+        "Object"
+      ],
       "output": "Size",
       "terminal": true
     },
     {
       "name": "exist",
-      "inputs": ["ObjectSet"],
+      "inputs": [
+        "ObjectSet"
+      ],
       "output": "Bool",
       "terminal": true
     },
     {
       "name": "equal_color",
-      "inputs": ["Color", "Color"],
+      "inputs": [
+        "Color",
+        "Color"
+      ],
       "output": "Bool",
       "terminal": true
     },
     {
       "name": "equal_shape",
-      "inputs": ["Shape", "Shape"],
+      "inputs": [
+        "Shape",
+        "Shape"
+      ],
       "output": "Bool",
       "terminal": true
     },
     {
       "name": "equal_integer",
-      "inputs": ["Integer", "Integer"],
+      "inputs": [
+        "Integer",
+        "Integer"
+      ],
       "output": "Bool",
       "terminal": true
     },
     {
       "name": "less_than",
-      "inputs": ["Integer", "Integer"],
+      "inputs": [
+        "Integer",
+        "Integer"
+      ],
       "output": "Bool",
       "terminal": true
     },
     {
       "name": "greater_than",
-      "inputs": ["Integer", "Integer"],
+      "inputs": [
+        "Integer",
+        "Integer"
+      ],
       "output": "Bool",
       "terminal": true
     },
     {
       "name": "equal_size",
-      "inputs": ["Size", "Size"],
+      "inputs": [
+        "Size",
+        "Size"
+      ],
       "output": "Bool",
       "terminal": true
     },
     {
       "name": "equal_object",
-      "inputs": ["Object", "Object"],
+      "inputs": [
+        "Object",
+        "Object"
+      ],
       "output": "Bool",
       "terminal": true
     },
     {
       "name": "same_size",
-      "inputs": ["Object"],
+      "inputs": [
+        "Object"
+      ],
       "output": "ObjectSet",
       "terminal": false
     },
     {
       "name": "same_color",
-      "inputs": ["Object"],
+      "inputs": [
+        "Object"
+      ],
       "output": "ObjectSet",
       "terminal": false
     },
     {
       "name": "same_shape",
-      "inputs": ["Object"],
+      "inputs": [
+        "Object"
+      ],
       "output": "ObjectSet",
       "terminal": false
     },
     {
       "name": "filter",
-      "inputs": ["ObjectSet"],
-      "side_inputs": ["Size", "Color", "Shape"],
+      "inputs": [
+        "ObjectSet"
+      ],
+      "side_inputs": [
+        "Size",
+        "Color",
+        "Shape"
+      ],
       "output": "ObjectSet",
       "terminal": false,
       "template_only": true
     },
     {
       "name": "filter_unique",
-      "inputs": ["ObjectSet"],
-      "side_inputs": ["Size", "Color", "Shape"],
+      "inputs": [
+        "ObjectSet"
+      ],
+      "side_inputs": [
+        "Size",
+        "Color",
+        "Shape"
+      ],
       "output": "Object",
       "terminal": false,
       "template_only": true
     },
     {
       "name": "filter_count",
-      "inputs": ["ObjectSet"],
-      "side_inputs": ["Size", "Color", "Shape"],
+      "inputs": [
+        "ObjectSet"
+      ],
+      "side_inputs": [
+        "Size",
+        "Color",
+        "Shape"
+      ],
       "output": "Integer",
       "terminal": true,
       "template_only": true
     },
     {
       "name": "filter_exist",
-      "inputs": ["ObjectSet"],
-      "side_inputs": ["Size", "Color", "Shape"],
+      "inputs": [
+        "ObjectSet"
+      ],
+      "side_inputs": [
+        "Size",
+        "Color",
+        "Shape"
+      ],
       "output": "Bool",
       "terminal": true,
       "template_only": true
     },
     {
       "name": "relate_filter",
-      "inputs": ["Object"],
-      "side_inputs": ["Relation", "Size", "Color", "Shape"],
+      "inputs": [
+        "Object"
+      ],
+      "side_inputs": [
+        "Relation",
+        "Size",
+        "Color",
+        "Shape"
+      ],
       "output": "ObjectSet",
       "terminal": false,
       "template_only": true
     },
     {
       "name": "relate_filter_unique",
-      "inputs": ["Object"],
-      "side_inputs": ["Relation", "Size", "Color", "Shape"],
+      "inputs": [
+        "Object"
+      ],
+      "side_inputs": [
+        "Relation",
+        "Size",
+        "Color",
+        "Shape"
+      ],
       "output": "Object",
       "terminal": false,
       "template_only": true
     },
     {
       "name": "relate_filter_count",
-      "inputs": ["Object"],
-      "side_inputs": ["Relation", "Size", "Color", "Shape"],
+      "inputs": [
+        "Object"
+      ],
+      "side_inputs": [
+        "Relation",
+        "Size",
+        "Color",
+        "Shape"
+      ],
       "output": "Integer",
       "terminal": false,
       "template_only": true
     },
     {
       "name": "relate_filter_exist",
-      "inputs": ["Object"],
-      "side_inputs": ["Relation", "Size", "Color", "Shape"],
+      "inputs": [
+        "Object"
+      ],
+      "side_inputs": [
+        "Relation",
+        "Size",
+        "Color",
+        "Shape"
+      ],
       "output": "Bool",
       "terminal": false,
       "template_only": true

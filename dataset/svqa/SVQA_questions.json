@@ -1,1 +1,1469 @@
-{"info": {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0}, "questions": [{"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Is the number of purple hexagons the same as the number of brown things?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [0], "_output": [], "value_inputs": ["purple"]}, {"type": "filter_shape", "inputs": [1], "_output": [], "value_inputs": ["hexagon"]}, {"type": "count", "inputs": [2], "_output": 0, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [4], "_output": [2], "value_inputs": ["brown"]}, {"type": "count", "inputs": [5], "_output": 1, "value_inputs": []}, {"type": "equal_integer", "inputs": [3, 6], "_output": false, "value_inputs": []}], "answer": false, "template_filename": "compare_integer.json", "question_family_index": 0, "question_index": 0}, {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Are there fewer black left boundarys than big objects?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [0], "_output": [3, 4, 5], "value_inputs": ["black"]}, {"type": "filter_shape", "inputs": [1], "_output": [5], "value_inputs": ["left boundary"]}, {"type": "count", "inputs": [2], "_output": 1, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_size", "inputs": [4], "_output": [1, 3, 4, 5], "value_inputs": ["large"]}, {"type": "count", "inputs": [5], "_output": 4, "value_inputs": []}, {"type": "less_than", "inputs": [3, 6], "_output": true, "value_inputs": []}], "answer": true, "template_filename": "compare_integer.json", "question_family_index": 1, "question_index": 1}, {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Are there more bottom boundarys than large gray circles?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_shape", "inputs": [0], "_output": [3], "value_inputs": ["bottom boundary"]}, {"type": "count", "inputs": [1], "_output": 1, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_size", "inputs": [3], "_output": [1, 3, 4, 5], "value_inputs": ["large"]}, {"type": "filter_color", "inputs": [4], "_output": [], "value_inputs": ["gray"]}, {"type": "filter_shape", "inputs": [5], "_output": [], "value_inputs": ["circle"]}, {"type": "count", "inputs": [6], "_output": 0, "value_inputs": []}, {"type": "greater_than", "inputs": [2, 7], "_output": true, "value_inputs": []}], "answer": true, "template_filename": "compare_integer.json", "question_family_index": 2, "question_index": 2}, {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Is the number of large red cubes that are on the right side of the left boundary the same as the number of black right boundarys?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_shape", "inputs": [0], "_output": [5], "value_inputs": ["left boundary"]}, {"type": "unique", "inputs": [1], "_output": 5, "value_inputs": []}, {"type": "relate", "inputs": [2], "_output": [0], "value_inputs": ["right"]}, {"type": "filter_size", "inputs": [3], "_output": [], "value_inputs": ["large"]}, {"type": "filter_color", "inputs": [4], "_output": [], "value_inputs": ["red"]}, {"type": "filter_shape", "inputs": [5], "_output": [], "value_inputs": ["cube"]}, {"type": "count", "inputs": [6], "_output": 0, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [8], "_output": [3, 4, 5], "value_inputs": ["black"]}, {"type": "filter_shape", "inputs": [9], "_output": [4], "value_inputs": ["right boundary"]}, {"type": "count", "inputs": [10], "_output": 1, "value_inputs": []}, {"type": "equal_integer", "inputs": [7, 11], "_output": false, "value_inputs": []}], "answer": false, "template_filename": "compare_integer.json", "question_family_index": 3, "question_index": 3}, {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Is the number of bottom boundarys left of the left boundary less than the number of big red objects?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_shape", "inputs": [0], "_output": [5], "value_inputs": ["left boundary"]}, {"type": "unique", "inputs": [1], "_output": 5, "value_inputs": []}, {"type": "relate", "inputs": [2], "_output": [1, 2], "value_inputs": ["left"]}, {"type": "filter_shape", "inputs": [3], "_output": [], "value_inputs": ["bottom boundary"]}, {"type": "count", "inputs": [4], "_output": 0, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_size", "inputs": [6], "_output": [1, 3, 4, 5], "value_inputs": ["large"]}, {"type": "filter_color", "inputs": [7], "_output": [1], "value_inputs": ["red"]}, {"type": "count", "inputs": [8], "_output": 1, "value_inputs": []}, {"type": "less_than", "inputs": [5, 9], "_output": true, "value_inputs": []}], "answer": true, "template_filename": "compare_integer.json", "question_family_index": 4, "question_index": 4}, {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Is the number of black bottom boundarys that are below the large bottom boundary greater than the number of red objects?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_size", "inputs": [0], "_output": [1, 3, 4, 5], "value_inputs": ["large"]}, {"type": "filter_shape", "inputs": [1], "_output": [3], "value_inputs": ["bottom boundary"]}, {"type": "unique", "inputs": [2], "_output": 3, "value_inputs": []}, {"type": "relate", "inputs": [3], "_output": [], "value_inputs": ["below"]}, {"type": "filter_color", "inputs": [4], "_output": [], "value_inputs": ["black"]}, {"type": "filter_shape", "inputs": [5], "_output": [], "value_inputs": ["bottom boundary"]}, {"type": "count", "inputs": [6], "_output": 0, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [8], "_output": [1], "value_inputs": ["red"]}, {"type": "count", "inputs": [9], "_output": 1, "value_inputs": []}, {"type": "greater_than", "inputs": [7, 10], "_output": false, "value_inputs": []}], "answer": false, "template_filename": "compare_integer.json", "question_family_index": 5, "question_index": 5}, {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Are there an equal number of small blue circles right of the brown thing and big black left boundarys that are to the left of the black bottom boundary?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [0], "_output": [2], "value_inputs": ["brown"]}, {"type": "unique", "inputs": [1], "_output": 2, "value_inputs": []}, {"type": "relate", "inputs": [2], "_output": [0, 1, 3, 4, 5], "value_inputs": ["right"]}, {"type": "filter_size", "inputs": [3], "_output": [0], "value_inputs": ["small"]}, {"type": "filter_color", "inputs": [4], "_output": [0], "value_inputs": ["blue"]}, {"type": "filter_shape", "inputs": [5], "_output": [0], "value_inputs": ["circle"]}, {"type": "count", "inputs": [6], "_output": 1, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [8], "_output": [3, 4, 5], "value_inputs": ["black"]}, {"type": "filter_shape", "inputs": [9], "_output": [3], "value_inputs": ["bottom boundary"]}, {"type": "unique", "inputs": [10], "_output": 3, "value_inputs": []}, {"type": "relate", "inputs": [11], "_output": [1, 2], "value_inputs": ["left"]}, {"type": "filter_size", "inputs": [12], "_output": [1], "value_inputs": ["large"]}, {"type": "filter_color", "inputs": [13], "_output": [], "value_inputs": ["black"]}, {"type": "filter_shape", "inputs": [14], "_output": [], "value_inputs": ["left boundary"]}, {"type": "count", "inputs": [15], "_output": 0, "value_inputs": []}, {"type": "equal_integer", "inputs": [7, 16], "_output": false, "value_inputs": []}], "answer": false, "template_filename": "compare_integer.json", "question_family_index": 6, "question_index": 6}, {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Are there fewer tiny objects on the left side of the black bottom boundary than small things that are above the large red object?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [0], "_output": [3, 4, 5], "value_inputs": ["black"]}, {"type": "filter_shape", "inputs": [1], "_output": [3], "value_inputs": ["bottom boundary"]}, {"type": "unique", "inputs": [2], "_output": 3, "value_inputs": []}, {"type": "relate", "inputs": [3], "_output": [1, 2], "value_inputs": ["left"]}, {"type": "filter_size", "inputs": [4], "_output": [2], "value_inputs": ["small"]}, {"type": "count", "inputs": [5], "_output": 1, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_size", "inputs": [7], "_output": [1, 3, 4, 5], "value_inputs": ["large"]}, {"type": "filter_color", "inputs": [8], "_output": [1], "value_inputs": ["red"]}, {"type": "unique", "inputs": [9], "_output": 1, "value_inputs": []}, {"type": "relate", "inputs": [10], "_output": [], "value_inputs": ["above"]}, {"type": "filter_size", "inputs": [11], "_output": [], "value_inputs": ["small"]}, {"type": "count", "inputs": [12], "_output": 0, "value_inputs": []}, {"type": "less_than", "inputs": [6, 13], "_output": false, "value_inputs": []}], "answer": false, "template_filename": "compare_integer.json", "question_family_index": 7, "question_index": 7}, {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Are there more red things that are left of the small brown circle than big red things on the left side of the black right boundary?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_size", "inputs": [0], "_output": [0, 2], "value_inputs": ["small"]}, {"type": "filter_color", "inputs": [1], "_output": [2], "value_inputs": ["brown"]}, {"type": "filter_shape", "inputs": [2], "_output": [2], "value_inputs": ["circle"]}, {"type": "unique", "inputs": [3], "_output": 2, "value_inputs": []}, {"type": "relate", "inputs": [4], "_output": [], "value_inputs": ["left"]}, {"type": "filter_color", "inputs": [5], "_output": [], "value_inputs": ["red"]}, {"type": "count", "inputs": [6], "_output": 0, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [8], "_output": [3, 4, 5], "value_inputs": ["black"]}, {"type": "filter_shape", "inputs": [9], "_output": [4], "value_inputs": ["right boundary"]}, {"type": "unique", "inputs": [10], "_output": 4, "value_inputs": []}, {"type": "relate", "inputs": [11], "_output": [1, 2], "value_inputs": ["left"]}, {"type": "filter_size", "inputs": [12], "_output": [1], "value_inputs": ["large"]}, {"type": "filter_color", "inputs": [13], "_output": [1], "value_inputs": ["red"]}, {"type": "count", "inputs": [14], "_output": 1, "value_inputs": []}, {"type": "greater_than", "inputs": [7, 15], "_output": false, "value_inputs": []}], "answer": false, "template_filename": "compare_integer.json", "question_family_index": 8, "question_index": 8}, {"split": "test", "video_filename": "outputs/SVQA_test_000000.mpg", "video_index": 0, "video": "outputs/SVQA_test_000000", "question": "Do the blue circle and the brown circle have the same size?", "program": [{"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [0], "_output": [0], "value_inputs": ["blue"]}, {"type": "filter_shape", "inputs": [1], "_output": [0], "value_inputs": ["circle"]}, {"type": "unique", "inputs": [2], "_output": 0, "value_inputs": []}, {"type": "scene", "inputs": [], "_output": [0, 1, 2, 3, 4, 5], "value_inputs": []}, {"type": "filter_color", "inputs": [4], "_output": [2], "value_inputs": ["brown"]}, {"type": "filter_shape", "inputs": [5], "_output": [2], "value_inputs": ["circle"]}, {"type": "unique", "inputs": [6], "_output": 2, "value_inputs": []}, {"type": "query_size", "inputs": [3], "_output": "small", "value_inputs": []}, {"type": "query_size", "inputs": [7], "_output": "small", "value_inputs": []}, {"type": "equal_size", "inputs": [8, 9], "_output": true, "value_inputs": []}], "answer": true, "template_filename": "comparison.json", "question_family_index": 0, "question_index": 9}]}
+{
+  "info": {
+    "split": "test",
+    "video_filename": "outputs/SVQA_test_000000.mpg",
+    "video_index": 0
+  },
+  "questions": [
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Is the number of purple hexagons the same as the number of brown things?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            0
+          ],
+          "_output": [],
+          "value_inputs": [
+            "purple"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            1
+          ],
+          "_output": [],
+          "value_inputs": [
+            "hexagon"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            2
+          ],
+          "_output": 0,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            4
+          ],
+          "_output": [
+            2
+          ],
+          "value_inputs": [
+            "brown"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            5
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "equal_integer",
+          "inputs": [
+            3,
+            6
+          ],
+          "_output": false,
+          "value_inputs": []
+        }
+      ],
+      "answer": false,
+      "template_filename": "compare_integer.json",
+      "question_family_index": 0,
+      "question_index": 0
+    },
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Are there fewer black left boundarys than big objects?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            0
+          ],
+          "_output": [
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "black"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            1
+          ],
+          "_output": [
+            5
+          ],
+          "value_inputs": [
+            "left boundary"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            2
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            4
+          ],
+          "_output": [
+            1,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "large"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            5
+          ],
+          "_output": 4,
+          "value_inputs": []
+        },
+        {
+          "type": "less_than",
+          "inputs": [
+            3,
+            6
+          ],
+          "_output": true,
+          "value_inputs": []
+        }
+      ],
+      "answer": true,
+      "template_filename": "compare_integer.json",
+      "question_family_index": 1,
+      "question_index": 1
+    },
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Are there more bottom boundarys than large gray circles?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            0
+          ],
+          "_output": [
+            3
+          ],
+          "value_inputs": [
+            "bottom boundary"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            1
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            3
+          ],
+          "_output": [
+            1,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "large"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            4
+          ],
+          "_output": [],
+          "value_inputs": [
+            "gray"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            5
+          ],
+          "_output": [],
+          "value_inputs": [
+            "circle"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            6
+          ],
+          "_output": 0,
+          "value_inputs": []
+        },
+        {
+          "type": "greater_than",
+          "inputs": [
+            2,
+            7
+          ],
+          "_output": true,
+          "value_inputs": []
+        }
+      ],
+      "answer": true,
+      "template_filename": "compare_integer.json",
+      "question_family_index": 2,
+      "question_index": 2
+    },
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Is the number of large red cubes that are on the right side of the left boundary the same as the number of black right boundarys?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            0
+          ],
+          "_output": [
+            5
+          ],
+          "value_inputs": [
+            "left boundary"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            1
+          ],
+          "_output": 5,
+          "value_inputs": []
+        },
+        {
+          "type": "relate",
+          "inputs": [
+            2
+          ],
+          "_output": [
+            0
+          ],
+          "value_inputs": [
+            "right"
+          ]
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            3
+          ],
+          "_output": [],
+          "value_inputs": [
+            "large"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            4
+          ],
+          "_output": [],
+          "value_inputs": [
+            "red"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            5
+          ],
+          "_output": [],
+          "value_inputs": [
+            "cube"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            6
+          ],
+          "_output": 0,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            8
+          ],
+          "_output": [
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "black"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            9
+          ],
+          "_output": [
+            4
+          ],
+          "value_inputs": [
+            "right boundary"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            10
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "equal_integer",
+          "inputs": [
+            7,
+            11
+          ],
+          "_output": false,
+          "value_inputs": []
+        }
+      ],
+      "answer": false,
+      "template_filename": "compare_integer.json",
+      "question_family_index": 3,
+      "question_index": 3
+    },
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Is the number of bottom boundarys left of the left boundary less than the number of big red objects?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            0
+          ],
+          "_output": [
+            5
+          ],
+          "value_inputs": [
+            "left boundary"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            1
+          ],
+          "_output": 5,
+          "value_inputs": []
+        },
+        {
+          "type": "relate",
+          "inputs": [
+            2
+          ],
+          "_output": [
+            1,
+            2
+          ],
+          "value_inputs": [
+            "left"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            3
+          ],
+          "_output": [],
+          "value_inputs": [
+            "bottom boundary"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            4
+          ],
+          "_output": 0,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            6
+          ],
+          "_output": [
+            1,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "large"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            7
+          ],
+          "_output": [
+            1
+          ],
+          "value_inputs": [
+            "red"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            8
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "less_than",
+          "inputs": [
+            5,
+            9
+          ],
+          "_output": true,
+          "value_inputs": []
+        }
+      ],
+      "answer": true,
+      "template_filename": "compare_integer.json",
+      "question_family_index": 4,
+      "question_index": 4
+    },
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Is the number of black bottom boundarys that are below the large bottom boundary greater than the number of red objects?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            0
+          ],
+          "_output": [
+            1,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "large"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            1
+          ],
+          "_output": [
+            3
+          ],
+          "value_inputs": [
+            "bottom boundary"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            2
+          ],
+          "_output": 3,
+          "value_inputs": []
+        },
+        {
+          "type": "relate",
+          "inputs": [
+            3
+          ],
+          "_output": [],
+          "value_inputs": [
+            "below"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            4
+          ],
+          "_output": [],
+          "value_inputs": [
+            "black"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            5
+          ],
+          "_output": [],
+          "value_inputs": [
+            "bottom boundary"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            6
+          ],
+          "_output": 0,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            8
+          ],
+          "_output": [
+            1
+          ],
+          "value_inputs": [
+            "red"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            9
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "greater_than",
+          "inputs": [
+            7,
+            10
+          ],
+          "_output": false,
+          "value_inputs": []
+        }
+      ],
+      "answer": false,
+      "template_filename": "compare_integer.json",
+      "question_family_index": 5,
+      "question_index": 5
+    },
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Are there an equal number of small blue circles right of the brown thing and big black left boundarys that are to the left of the black bottom boundary?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            0
+          ],
+          "_output": [
+            2
+          ],
+          "value_inputs": [
+            "brown"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            1
+          ],
+          "_output": 2,
+          "value_inputs": []
+        },
+        {
+          "type": "relate",
+          "inputs": [
+            2
+          ],
+          "_output": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "right"
+          ]
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            3
+          ],
+          "_output": [
+            0
+          ],
+          "value_inputs": [
+            "small"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            4
+          ],
+          "_output": [
+            0
+          ],
+          "value_inputs": [
+            "blue"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            5
+          ],
+          "_output": [
+            0
+          ],
+          "value_inputs": [
+            "circle"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            6
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            8
+          ],
+          "_output": [
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "black"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            9
+          ],
+          "_output": [
+            3
+          ],
+          "value_inputs": [
+            "bottom boundary"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            10
+          ],
+          "_output": 3,
+          "value_inputs": []
+        },
+        {
+          "type": "relate",
+          "inputs": [
+            11
+          ],
+          "_output": [
+            1,
+            2
+          ],
+          "value_inputs": [
+            "left"
+          ]
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            12
+          ],
+          "_output": [
+            1
+          ],
+          "value_inputs": [
+            "large"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            13
+          ],
+          "_output": [],
+          "value_inputs": [
+            "black"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            14
+          ],
+          "_output": [],
+          "value_inputs": [
+            "left boundary"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            15
+          ],
+          "_output": 0,
+          "value_inputs": []
+        },
+        {
+          "type": "equal_integer",
+          "inputs": [
+            7,
+            16
+          ],
+          "_output": false,
+          "value_inputs": []
+        }
+      ],
+      "answer": false,
+      "template_filename": "compare_integer.json",
+      "question_family_index": 6,
+      "question_index": 6
+    },
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Are there fewer tiny objects on the left side of the black bottom boundary than small things that are above the large red object?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            0
+          ],
+          "_output": [
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "black"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            1
+          ],
+          "_output": [
+            3
+          ],
+          "value_inputs": [
+            "bottom boundary"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            2
+          ],
+          "_output": 3,
+          "value_inputs": []
+        },
+        {
+          "type": "relate",
+          "inputs": [
+            3
+          ],
+          "_output": [
+            1,
+            2
+          ],
+          "value_inputs": [
+            "left"
+          ]
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            4
+          ],
+          "_output": [
+            2
+          ],
+          "value_inputs": [
+            "small"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            5
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            7
+          ],
+          "_output": [
+            1,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "large"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            8
+          ],
+          "_output": [
+            1
+          ],
+          "value_inputs": [
+            "red"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            9
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "relate",
+          "inputs": [
+            10
+          ],
+          "_output": [],
+          "value_inputs": [
+            "above"
+          ]
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            11
+          ],
+          "_output": [],
+          "value_inputs": [
+            "small"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            12
+          ],
+          "_output": 0,
+          "value_inputs": []
+        },
+        {
+          "type": "less_than",
+          "inputs": [
+            6,
+            13
+          ],
+          "_output": false,
+          "value_inputs": []
+        }
+      ],
+      "answer": false,
+      "template_filename": "compare_integer.json",
+      "question_family_index": 7,
+      "question_index": 7
+    },
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Are there more red things that are left of the small brown circle than big red things on the left side of the black right boundary?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            0
+          ],
+          "_output": [
+            0,
+            2
+          ],
+          "value_inputs": [
+            "small"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            1
+          ],
+          "_output": [
+            2
+          ],
+          "value_inputs": [
+            "brown"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            2
+          ],
+          "_output": [
+            2
+          ],
+          "value_inputs": [
+            "circle"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            3
+          ],
+          "_output": 2,
+          "value_inputs": []
+        },
+        {
+          "type": "relate",
+          "inputs": [
+            4
+          ],
+          "_output": [],
+          "value_inputs": [
+            "left"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            5
+          ],
+          "_output": [],
+          "value_inputs": [
+            "red"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            6
+          ],
+          "_output": 0,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            8
+          ],
+          "_output": [
+            3,
+            4,
+            5
+          ],
+          "value_inputs": [
+            "black"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            9
+          ],
+          "_output": [
+            4
+          ],
+          "value_inputs": [
+            "right boundary"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            10
+          ],
+          "_output": 4,
+          "value_inputs": []
+        },
+        {
+          "type": "relate",
+          "inputs": [
+            11
+          ],
+          "_output": [
+            1,
+            2
+          ],
+          "value_inputs": [
+            "left"
+          ]
+        },
+        {
+          "type": "filter_size",
+          "inputs": [
+            12
+          ],
+          "_output": [
+            1
+          ],
+          "value_inputs": [
+            "large"
+          ]
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            13
+          ],
+          "_output": [
+            1
+          ],
+          "value_inputs": [
+            "red"
+          ]
+        },
+        {
+          "type": "count",
+          "inputs": [
+            14
+          ],
+          "_output": 1,
+          "value_inputs": []
+        },
+        {
+          "type": "greater_than",
+          "inputs": [
+            7,
+            15
+          ],
+          "_output": false,
+          "value_inputs": []
+        }
+      ],
+      "answer": false,
+      "template_filename": "compare_integer.json",
+      "question_family_index": 8,
+      "question_index": 8
+    },
+    {
+      "split": "test",
+      "video_filename": "outputs/SVQA_test_000000.mpg",
+      "video_index": 0,
+      "video": "outputs/SVQA_test_000000",
+      "question": "Do the blue circle and the brown circle have the same size?",
+      "program": [
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            0
+          ],
+          "_output": [
+            0
+          ],
+          "value_inputs": [
+            "blue"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            1
+          ],
+          "_output": [
+            0
+          ],
+          "value_inputs": [
+            "circle"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            2
+          ],
+          "_output": 0,
+          "value_inputs": []
+        },
+        {
+          "type": "scene",
+          "inputs": [],
+          "_output": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "value_inputs": []
+        },
+        {
+          "type": "filter_color",
+          "inputs": [
+            4
+          ],
+          "_output": [
+            2
+          ],
+          "value_inputs": [
+            "brown"
+          ]
+        },
+        {
+          "type": "filter_shape",
+          "inputs": [
+            5
+          ],
+          "_output": [
+            2
+          ],
+          "value_inputs": [
+            "circle"
+          ]
+        },
+        {
+          "type": "unique",
+          "inputs": [
+            6
+          ],
+          "_output": 2,
+          "value_inputs": []
+        },
+        {
+          "type": "query_size",
+          "inputs": [
+            3
+          ],
+          "_output": "small",
+          "value_inputs": []
+        },
+        {
+          "type": "query_size",
+          "inputs": [
+            7
+          ],
+          "_output": "small",
+          "value_inputs": []
+        },
+        {
+          "type": "equal_size",
+          "inputs": [
+            8,
+            9
+          ],
+          "_output": true,
+          "value_inputs": []
+        }
+      ],
+      "answer": true,
+      "template_filename": "comparison.json",
+      "question_family_index": 0,
+      "question_index": 9
+    }
+  ]
+}

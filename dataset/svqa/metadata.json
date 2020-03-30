@@ -3,6 +3,8 @@
   "types": {
     "Object": null,
     "ObjectSet": null,
+    "Event": null,
+    "EventSet": null,
     "Integer": null,
     "Bool": null,
     "Shape": [
@@ -353,6 +355,46 @@
       "output": "Bool",
       "terminal": false,
       "template_only": true
+    },
+    {
+      "name": "events",
+      "inputs": [],
+      "output": "EventSet",
+      "terminal": false
+    },
+    {
+      "name": "filter_events",
+      "inputs": [
+        "EventSet",
+        "Object"
+      ],
+      "output": "EventSet",
+      "terminal": false
+    },
+    {
+      "name": "filter_collision",
+      "inputs": [
+        "EvenSet"
+      ],
+      "output": "EventSet",
+      "terminal": false
+    },
+    {
+      "name": "filter_first",
+      "inputs": [
+        "EvenSet"
+      ],
+      "output": "Event",
+      "terminal": false
+    },
+    {
+      "name": "event_partner",
+      "inputs": [
+        "Object",
+        "Event"
+      ],
+      "output": "Object",
+      "terminal": false
     }
   ]
 }

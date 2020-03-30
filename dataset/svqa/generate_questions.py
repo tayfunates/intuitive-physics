@@ -6,6 +6,7 @@
 # of patent rights can be found in the PATENTS file in the same directory.
 
 from __future__ import print_function
+from svqa.causal_graph import CausalGraph
 import argparse, json, os, itertools, random, shutil
 import time
 import re
@@ -14,6 +15,8 @@ from svqa.simulation import Simulation
 import svqa.question_engine as qeng
 
 """
+TODO: Comment here if we release the code with the dataset
+
 Generate synthetic questions and answers for CLEVR images. Input is a single
 JSON file containing ground-truth scene information for all images, and output
 is a single JSON file containing all generated questions, answers, and programs.
@@ -269,7 +272,7 @@ def other_heuristic(text, param_vals):
     return text
 
 
-def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
+def instantiate_templates_dfs(scene_struct, causal_graph, template, metadata, answer_counts,
                               synonyms, max_instances=None, verbose=False):
     param_name_to_type = {p['name']: p['type'] for p in template['params']}
 
@@ -286,7 +289,7 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
 
         # Check to make sure the current state is valid
         q = {'nodes': state['nodes']}
-        outputs = qeng.answer_question(q, metadata, scene_struct, all_outputs=True)
+        outputs = qeng.answer_question(q, metadata, scene_struct, causal_graph, all_outputs=True)
         answer = outputs[-1]
         if answer == '__INVALID__': continue
 
@@ -376,7 +379,7 @@ def instantiate_templates_dfs(scene_struct, template, metadata, answer_counts,
         special_nodes = {
             'filter_unique', 'filter_count', 'filter_exist', 'filter',
             'relate_filter', 'relate_filter_unique', 'relate_filter_count',
-            'relate_filter_exist',
+            'relate_filter_exist'
         }
         if next_node['type'] in special_nodes:
             if next_node['type'].startswith('relate_filter'):
@@ -697,9 +700,12 @@ def main(args):
     for i, simulation in enumerate(all_simulations):
 
         scene_fn = simulation['video_filename']
+        # Gets start state of the simulation
         scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 0][
-            0]  # Gets start state of the simulation
-        print('starting image %s (%d / %d)'
+            0]
+        causal_graph = CausalGraph(simulation['causal_graph'])
+
+        print('starting video %s (%d / %d)'
               % (scene_fn, i + 1, len(all_simulations)))
 
         if scene_count % args.reset_counts_every == 0:
@@ -721,6 +727,7 @@ def main(args):
                 tic = time.time()
             ts, qs, ans = instantiate_templates_dfs(
                 scene_struct,
+                causal_graph,
                 template,
                 metadata,
                 template_answer_counts[(fn, idx)],

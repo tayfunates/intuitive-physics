@@ -8,6 +8,8 @@
 import json, os, math
 from collections import defaultdict
 
+from svqa.causal_graph import CausalGraph
+
 """
 Utilities for working with function program representations of questions.
 
@@ -21,14 +23,12 @@ in a JSON metadata file.
 # from each of the node's inputs; the handler should return the computed output
 # value from this node.
 
-
-def scene_handler(scene_struct, inputs, side_inputs):
+def scene_handler(scene_struct, causal_graph, inputs, side_inputs):
     # Just return all objects in the scene
     return list(range(len(scene_struct['objects'])))
 
-
 def make_filter_handler(attribute):
-    def filter_handler(scene_struct, inputs, side_inputs):
+    def filter_handler(scene_struct, causal_graph, inputs, side_inputs):
         assert len(inputs) == 1
         assert len(side_inputs) == 1
         value = side_inputs[0]
@@ -42,14 +42,14 @@ def make_filter_handler(attribute):
     return filter_handler
 
 
-def unique_handler(scene_struct, inputs, side_inputs):
+def unique_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     if len(inputs[0]) != 1:
         return '__INVALID__'
     return inputs[0][0]
 
 
-def vg_relate_handler(scene_struct, inputs, side_inputs):
+def vg_relate_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     assert len(side_inputs) == 1
     output = set()
@@ -59,32 +59,32 @@ def vg_relate_handler(scene_struct, inputs, side_inputs):
     return sorted(list(output))
 
 
-def relate_handler(scene_struct, inputs, side_inputs):
+def relate_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     assert len(side_inputs) == 1
     relation = side_inputs[0]
     return scene_struct['relationships'][relation][inputs[0]]
 
 
-def union_handler(scene_struct, inputs, side_inputs):
+def union_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return sorted(list(set(inputs[0]) | set(inputs[1])))
 
 
-def intersect_handler(scene_struct, inputs, side_inputs):
+def intersect_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return sorted(list(set(inputs[0]) & set(inputs[1])))
 
 
-def count_handler(scene_struct, inputs, side_inputs):
+def count_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     return len(inputs[0])
 
 
 def make_same_attr_handler(attribute):
-    def same_attr_handler(scene_struct, inputs, side_inputs):
+    def same_attr_handler(scene_struct, causal_graph, inputs, side_inputs):
         cache_key = '_same_%s' % attribute
         if cache_key not in scene_struct:
             cache = {}
@@ -105,7 +105,7 @@ def make_same_attr_handler(attribute):
 
 
 def make_query_handler(attribute):
-    def query_handler(scene_struct, inputs, side_inputs):
+    def query_handler(scene_struct, causal_graph, inputs, side_inputs):
         assert len(inputs) == 1
         assert len(side_inputs) == 0
         idx = inputs[0]
@@ -122,28 +122,58 @@ def make_query_handler(attribute):
     return query_handler
 
 
-def exist_handler(scene_struct, inputs, side_inputs):
+def exist_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     assert len(side_inputs) == 0
     return len(inputs[0]) > 0
 
 
-def equal_handler(scene_struct, inputs, side_inputs):
+def equal_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return inputs[0] == inputs[1]
 
 
-def less_than_handler(scene_struct, inputs, side_inputs):
+def less_than_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return inputs[0] < inputs[1]
 
 
-def greater_than_handler(scene_struct, inputs, side_inputs):
+def greater_than_handler(scene_struct, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return inputs[0] > inputs[1]
+
+def events_handler(scene_struct, causal_graph, inputs, side_inputs):
+    return causal_graph.events
+
+def filter_events_handler(scene_struct, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 2
+    return [event for event in inputs[0] if inputs[1] in event['objects']]
+
+def make_filter_events_handler(event_type):
+    def event_type_filter_handler(scene_struct, causal_graph, inputs, side_inputs):
+        assert len(inputs) == 1
+        assert len(side_inputs) == 0
+        return [event for event in inputs[0] if event['type'] == 'Collision']
+
+    return event_type_filter_handler
+
+def filter_first_handler(scene_struct, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    assert len(inputs[0]) > 0
+    return inputs[0][0]
+
+def event_partner_handler(scene_struct, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 2
+    assert len(inputs[1]['objects']) == 2
+    assert len(side_inputs) == 0
+    if inputs[1]['objects'][0] != inputs[0]:
+        return inputs[1]['objects'][0]
+    return inputs[1]['objects'][1]
+
 
 
 # Register all of the answering handlers here.
@@ -175,10 +205,15 @@ execute_handlers = {
     'same_color': make_same_attr_handler('color'),
     'same_shape': make_same_attr_handler('shape'),
     'same_size': make_same_attr_handler('size'),
+    'events': events_handler,
+    'filter_events': filter_events_handler,
+    'filter_collision': make_filter_events_handler('Collision'),
+    'filter_first': filter_first_handler,
+    'event_partner': event_partner_handler
 }
 
 
-def answer_question(question, metadata, scene_struct, all_outputs=False,
+def answer_question(question, metadata, scene_struct, causal_graph, all_outputs=False,
                     cache_outputs=True):
     """
     Use structured scene information to answer a structured question. Most of the
@@ -201,7 +236,7 @@ def answer_question(question, metadata, scene_struct, all_outputs=False,
             handler = execute_handlers[node_type]
             node_inputs = [node_outputs[idx] for idx in node['inputs']]
             side_inputs = node.get('side_inputs', [])
-            node_output = handler(scene_struct, node_inputs, side_inputs)
+            node_output = handler(scene_struct, causal_graph, node_inputs, side_inputs)
             if cache_outputs:
                 node['_output'] = node_output
         node_outputs.append(node_output)

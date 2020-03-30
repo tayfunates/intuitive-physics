@@ -1,6 +1,3 @@
-from svqa.event import Event
-
-
 class CausalGraph:
 
     def __init__(self, graph_dict):
@@ -10,18 +7,18 @@ class CausalGraph:
         self.__from_id_to_ids = {}  # Mapping integer event IDs to connected event IDs. Represents edges.
 
         for event_dict in graph_dict["nodes"]:
-            self.__id_to_event[event_dict["id"]] = Event(event_dict)
+            self.__id_to_event[event_dict["id"]] = event_dict
         for edge_dict in graph_dict["edges"]:
             self.__from_id_to_ids[edge_dict["from"]] = edge_dict["to"]
 
         self.__graph = {}
 
         for event in self.__id_to_event.values():
-            self.__graph[event] = [self.__id_to_event[event_id] for event_id in self.__from_id_to_ids[event.id]]
+            self.__graph[event["id"]] = [self.__id_to_event[event_id] for event_id in self.__from_id_to_ids[event["id"]]]
 
     @property
     def events(self):
-        return [key for key in self.__graph.keys()]
+        return [value for value in self.__id_to_event.values()]
 
     def events_after(self, step_count):
         return [event for event in self.events if event.step > step_count]
@@ -29,17 +26,17 @@ class CausalGraph:
     def events_before(self, step_count):
         return [event for event in self.events if event.step < step_count]
 
-    def immediate_outcome_events(self, event: Event):
-        return self.__graph[event]
+    def immediate_outcome_events(self, event):
+        return self.__graph[event["id"]]
 
-    def immediate_cause_events(self, event: Event):
+    def immediate_cause_events(self, event):
         causes = []
         for e in self.events:
             if event in self.immediate_outcome_events(e):
                 causes.append(e)
         return causes
 
-    def outcome_events(self, cause: Event):
+    def outcome_events(self, cause):
         all_outcomes = set()
         outcomes = self.immediate_outcome_events(cause)
         all_outcomes.update(outcomes)
@@ -47,7 +44,7 @@ class CausalGraph:
             all_outcomes.update(self.outcome_events(e))
         return list(all_outcomes)
 
-    def cause_events(self, event: Event):
+    def cause_events(self, event):
         all_causes = set()
         causes = self.immediate_cause_events(event)
         all_causes.update(causes)

@@ -72,7 +72,7 @@ Internal tagging information:
 
 ## Side Inputs
 
-### Object Size Inputs
+### Object Side Inputs
 
 - **Z**: Size
 - **C**: Color

@@ -19,8 +19,6 @@
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
-.idea/dataset.iml
-.idea/misc.xml
 
 # Gradle
 .idea/**/gradle.xml
@@ -75,7 +73,3 @@ fabric.properties
 venv
 *cache*
 graph.json
-
-svqa/SVQA_questions.json
-
-svqa/input

@@ -1,1 +1,133 @@
+# Simulated Visual Question Answering Dataset
+
 Includes general information about visual question answering dataset (Simulated Visual Question Answering, SVQA) that we have generated from our Box2D simulated environment. 
+
+Internal tagging information:
+
+[RED]: https://placehold.it/15/f03c15/000000?text=+
+[GREEN]: https://placehold.it/15/3cf015/000000?text=+
+[BLUE]: https://placehold.it/15/3c15f0/000000?text=+
+[PURPLE]: https://placehold.it/15/f015f0/000000?text=+
+
+- ![RED] Shows properties that CLEVRER has and we do not consider yet.
+- ![GREEN] Shows questions or functional modules whose implementation has been completed in our backend.
+- ![BLUE] Shows questions or functional modules whose implementation has NOT been completed in our backend, but it can be completed without any design updates.
+- ![PURPLE] Shows questions or functional modules whose implementation has NOT been completed in our backend. Implementing such properties is not easy now, and needs discussing.
+
+## Objects
+
+### Shapes
+
+- Cube
+- Triangle
+- Hexagon
+- Circle
+
+### Sizes
+
+- Small
+- Large
+
+### Colors
+
+- Gray
+- Red
+- Blue
+- Green
+- Brown
+- Purple
+- Cyan
+- Yellow
+- Black (Only static objects are black, and they cannot be covered by any other color.)
+
+### Static Objects
+
+- Ramp
+- Platform
+- Basket
+- Left Wall
+- Right Wall
+- Ground
+
+## Events
+
+- Start Event (SE)
+- End Event (EE)
+- Collision Event (CE)
+- Start Touching Event (STE)
+- End Touching Event (ETE)
+
+## Input and Output Data Types of Functional Modules
+
+- Object: A dictionary holding static and dynamic properties of an object at a time step
+- ObjectSet: A list of unique objects
+- Event: A dictionary holding information of a specific event: id, type, time step, participating objects
+- EventSet: A list of unique events
+- ![RED] Order: A tag indicating chronological ordering of events: such as first, second and last
+- Color: A tag indicating the color of an object
+- Shape: A tag indicating the shape of an object
+- ![RED] Frame or Step: An integer representing when an event happened 
+- Integer: An integer type
+- Bool: A boolean type
+
+## Side Inputs
+
+### Object Size Inputs
+
+- **Z**: Size
+- **C**: Color
+- **S**: Shape
+  
+We do not have any other side inputs now, but there may some in the future, such as Order type in Clevrer.
+
+## Functional Modules
+
+| Name  | Description  | Input Types  | Output Types  | Implementation Status |
+|---|---|---|---|---|
+| SceneAtStart  | Returns all object properties at the start of the simulation  | None | ObjectSet | ![GREEN] |
+| SceneAtEnd | Returns all object properties at the end of the simulation | None  | ObjectSet  | ![BLUE]   |
+| Events  | Returns all events between video start and end  | None  | EventSet  | ![GREEN]  |
+| StartEvent  | Returns start event  | None  | Event  | ![BLUE]  |
+| EndEvent  | Returns end event  | None  | Event  | ![BLUE]  |
+| FilterColor  | Returns objects from input list which has the color of input color  | ObjectSet, Color  | ObjectSet  | ![GREEN]  |
+| FilterShape  | Returns objects from input list which has the shape of input shape  | ObjectSet, Shape  | ObjectSet  | ![GREEN]  |
+| FilterCollision  | Returns collision events from the input list | EventSet | EventSet | ![GREEN]  |
+| FilterStartTouching  | Returns start touching events from the input list | EventSet | EventSet | ![BLUE]  |
+| FilterEndTouching  | Returns end touching events from the input list | EventSet | EventSet | ![BLUE]  |
+| FilterBefore  | Returns events from the input list that happened before input event  | EventSet, Event  | EventSet  | ![BLUE]  |
+| FilterAfter  | Returns events from the input list that happened after input event  | EventSet, Event  | EventSet  | ![BLUE]  |
+| FilterFirst  | Returns the first event from the input list  | EventSet  | Event  | ![GREEN]  |
+| FilterUnique  | Returns unique object from input list with possible side inputs Size, Color, Shape  | Objects, ObjectSideInputs | Object  | ![GREEN]  |
+| Unique  | Returns the single object from the input list, if list has more than one elements returns INVALID  | Objects | Object  | ![GREEN]  |
+| EventPartner (CE, STE, ETE) | Returns object from the object list of the input event which is not input object  | Event, Object  | Object  | ![GREEN]  |
+| QueryColor  | Returns the color of the input object  | Object  | Color  | ![GREEN]  |
+| QueryShape  | Returns the shape of the input object  | Object  | Shape  | ![GREEN]  |
+| Count  | Returns size of the input list  | ObjectSet, EventSet  | Integer  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
+| Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
+
+Other clevrer filters that are needed to be discussed.
+- ![RED]: FilterMoving: Selects all moving objects in the input frame
+or the entire video (when input frame is “null”)
+- ![RED]: FilterStationary: Selects all stationary objects in the input frame
+or the entire video (when input frame is “null”)
+- ![RED]: FilterIn: Selects all incoming events of the input objects
+- ![RED]: FilterOut: Selects all exiting events of the input objects
+
+## Questions
+
+### Structures Provided to Question Generation Engine
+
+- Scene information at start (SceneAtStart): Holds objects' static and dynamic information at start of the video, color, position, shape, velocity etc.
+- Scene information at end (SceneAtEnd): Holds objects' static and dynamic information at end of the video, color, position, shape, velocity etc.
+- Causal graph (CausalGraph): Graph constructed by events of objects as nodes. All events causing a specific event are the ancestors of that event.
+
+### Samples
+
+#### Descriptive
+
+##### Query Color
+
+| Question | Input Structs To Answer  |  Program | Output Type  | Implementation Status |
+|---|---|---|---|---|
+| "What color is the object that first collides with **Z** **C** **S**?", "What is the color of object that first collides with **Z** **C** **S**?", "There is an object that first collides with **Z** **C** **S**; what color is it?", "There is an object that first collides with **Z** **C** **S**; what is its color?" | SceneAtStart and (SceneAtStart or SceneAtEnd)  | QueryColor( EventPartner( FilterFirst( FilterCollision( Events, FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ), FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ) | Color | ![GREEN] |
+

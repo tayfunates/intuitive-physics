@@ -374,7 +374,7 @@
     {
       "name": "filter_collision",
       "inputs": [
-        "EvenSet"
+        "EventSet"
       ],
       "output": "EventSet",
       "terminal": false
@@ -382,7 +382,7 @@
     {
       "name": "filter_first",
       "inputs": [
-        "EvenSet"
+        "EventSet"
       ],
       "output": "Event",
       "terminal": false

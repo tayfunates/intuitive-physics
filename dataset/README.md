@@ -136,5 +136,5 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "How many **S**s are moving when the video ends?" | Count( FilterMoving( SceneAtEnd, EndSceneStep ) ) | Integer | ![GREEN] |
+| "How many **S**s are moving when the video ends?" | Count( FilterMoving( FilterShape( SceneAtEnd, **S**) , EndSceneStep ) ) | Integer | ![GREEN] |
 

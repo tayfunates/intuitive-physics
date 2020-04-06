@@ -85,7 +85,9 @@ We do not have any other side inputs now, but there may some in the future, such
 | Name  | Description  | Input Types  | Output Types  | Implementation Status |
 |---|---|---|---|---|
 | SceneAtStart  | Returns all object properties at the start of the simulation  | None | ObjectSet | ![GREEN] |
-| SceneAtEnd | Returns all object properties at the end of the simulation | None  | ObjectSet  | ![BLUE]   |
+| SceneAtEnd | Returns all object properties at the end of the simulation | None  | ObjectSet  | ![GREEN]   |
+| StartSceneStep  | Returns 0  | None | Integer | ![GREEN] |
+| EndSceneStep  | Returns -1  | None | Integer | ![GREEN] |
 | Events  | Returns all events between video start and end  | None  | EventSet  | ![GREEN]  |
 | StartEvent  | Returns start event  | None  | Event  | ![BLUE]  |
 | EndEvent  | Returns end event  | None  | Event  | ![BLUE]  |
@@ -95,6 +97,7 @@ We do not have any other side inputs now, but there may some in the future, such
 | FilterStartTouching  | Returns start touching events from the input list | EventSet | EventSet | ![BLUE]  |
 | FilterEndTouching  | Returns end touching events from the input list | EventSet | EventSet | ![BLUE]  |
 | FilterBefore  | Returns events from the input list that happened before input event  | EventSet, Event  | EventSet  | ![BLUE]  |
+| FilterMoving  | Returns objects if they are moving at step specified by an Integer   | ObjectSet, Integer  | ObjectSet  | ![Green]  |
 | FilterAfter  | Returns events from the input list that happened after input event  | EventSet, Event  | EventSet  | ![BLUE]  |
 | FilterFirst  | Returns the first event from the input list  | EventSet  | Event  | ![GREEN]  |
 | FilterUnique  | Returns unique object from input list with possible side inputs Size, Color, Shape  | Objects, ObjectSideInputs | Object  | ![GREEN]  |
@@ -106,8 +109,6 @@ We do not have any other side inputs now, but there may some in the future, such
 | Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
 
 Other clevrer filters that are needed to be discussed.
-- ![RED]: FilterMoving: Selects all moving objects in the input frame
-or the entire video (when input frame is “null”)
 - ![RED]: FilterStationary: Selects all stationary objects in the input frame
 or the entire video (when input frame is “null”)
 - ![RED]: FilterIn: Selects all incoming events of the input objects
@@ -130,4 +131,10 @@ or the entire video (when input frame is “null”)
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
 | "What color is the object that first collides with **Z** **C** **S**?", "What is the color of object that first collides with **Z** **C** **S**?", "There is an object that first collides with **Z** **C** **S**; what color is it?", "There is an object that first collides with **Z** **C** **S**; what is its color?" | QueryColor( EventPartner( FilterFirst( FilterCollision( Events, FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ), FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ) | Color | ![GREEN] |
+
+##### Counting
+
+| Question  |  Program | Output Type  | Implementation Status |
+|---|---|---|---|
+| "How many **S**s are moving when the video ends?" | Count( FilterMoving( SceneAtEnd, EndSceneStep ) ) | Integer | ![GREEN] |
 

@@ -9,31 +9,32 @@
         "type": "end_scene"
       },
       {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_shape"
+      },
+      {
         "inputs": [],
         "type": "end_scene_step"
       },
       {
         "inputs": [
-          0, 1
+          1, 2
         ],
         "type": "filter_moving"
       },
       {
         "inputs": [
-          2
+          3
         ],
         "type": "count"
       }
     ],
     "params": [
-      {
-        "type": "Size",
-        "name": "<Z>"
-      },
-      {
-        "type": "Color",
-        "name": "<C>"
-      },
       {
         "type": "Shape",
         "name": "<S>"

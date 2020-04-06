@@ -180,16 +180,15 @@ def event_partner_handler(scene_structs, causal_graph, inputs, side_inputs):
 
 
 def is_object_moving(obj):
-    eps = 0.0
-    if obj['bodyType']!= 0 and obj['2dLinearVelocity'][0]>eps or obj['2dLinearVelocity'][1]>eps or obj['angularVelocity']>eps: #0 is a static body
+    eps = 0.001
+    if obj['bodyType']!= 0 and (math.fabs(obj['2dLinearVelocity'][0])>eps or math.fabs(obj['2dLinearVelocity'][1])>eps or math.fabs(obj['angularVelocity']))>eps: #0 is a static body
         return True
     return False
 
 def filter_moving_handler(scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     scene_struct = scene_structs[inputs[1]]
-    objs = scene_struct['objects']
-    return [obj['uniqueID'] for obj in scene_struct['objects'] if is_object_moving(obj)]
+    return [objIdx for objIdx in inputs[0] if is_object_moving(scene_struct['objects'][objIdx])]
 
 def start_scene_step_handler(scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 0

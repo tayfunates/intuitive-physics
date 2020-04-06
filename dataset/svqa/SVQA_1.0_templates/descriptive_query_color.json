@@ -9,7 +9,7 @@
     "nodes": [
       {
         "inputs": [],
-        "type": "scene"
+        "type": "start_scene"
       },
       {
         "side_inputs": [

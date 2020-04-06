@@ -21,8 +21,7 @@
       "brown",
       "purple",
       "cyan",
-      "yellow",
-      "black"
+      "yellow"
     ],
     "Relation": [
       "left",
@@ -37,7 +36,13 @@
   },
   "functions": [
     {
-      "name": "scene",
+      "name": "start_scene",
+      "inputs": [],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
+      "name": "end_scene",
       "inputs": [],
       "output": "ObjectSet",
       "terminal": false
@@ -394,6 +399,29 @@
         "Event"
       ],
       "output": "Object",
+      "terminal": false
+    },
+        {
+      "name": "filter_moving",
+      "inputs": [
+        "ObjectSet",
+        "Integer"
+      ],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
+      "name": "start_scene_step",
+      "inputs": [
+      ],
+      "output": "Integer",
+      "terminal": false
+    },
+    {
+      "name": "end_scene_step",
+      "inputs": [
+      ],
+      "output": "Integer",
       "terminal": false
     }
   ]

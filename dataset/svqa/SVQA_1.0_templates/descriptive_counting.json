@@ -1,0 +1,44 @@
+[
+  {
+    "text": [
+      "How many <S>s are moving when the video ends?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "end_scene"
+      },
+      {
+        "inputs": [],
+        "type": "end_scene_step"
+      },
+      {
+        "inputs": [
+          0, 1
+        ],
+        "type": "filter_moving"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  }
+]

@@ -95,7 +95,7 @@ parser.add_argument('--profile', action='store_true',
 # args = parser.parse_args()
 
 
-def precompute_filter_options(scene_struct, metadata):
+def precompute_filter_options(start_scene_struct, metadata):
     # Keys are tuples (size, color, shape, material) (where some may be None)
     # and values are lists of object idxs that match the filter criterion
     attribute_map = {}
@@ -113,7 +113,7 @@ def precompute_filter_options(scene_struct, metadata):
             mask.append((i // (2 ** j)) % 2)
         masks.append(mask)
 
-    for object_idx, obj in enumerate(scene_struct['objects']):
+    for object_idx, obj in enumerate(start_scene_struct['objects']):
         if metadata['dataset'] == 'SVQA-v1.0':
             keys = [tuple(obj[k] for k in attr_keys)]
 
@@ -130,19 +130,19 @@ def precompute_filter_options(scene_struct, metadata):
                     attribute_map[masked_key] = set()
                 attribute_map[masked_key].add(object_idx)
 
-    scene_struct['_filter_options'] = attribute_map
+    start_scene_struct['_filter_options'] = attribute_map
 
 
-def find_filter_options(object_idxs, scene_struct, metadata):
+def find_filter_options(object_idxs, start_scene_struct, metadata):
     # Keys are tuples (size, color, shape, material) (where some may be None)
     # and values are lists of object idxs that match the filter criterion
 
-    if '_filter_options' not in scene_struct:
-        precompute_filter_options(scene_struct, metadata)
+    if '_filter_options' not in start_scene_struct:
+        precompute_filter_options(start_scene_struct, metadata)
 
     attribute_map = {}
     object_idxs = set(object_idxs)
-    for k, vs in scene_struct['_filter_options'].items():
+    for k, vs in start_scene_struct['_filter_options'].items():
         attribute_map[k] = sorted(list(object_idxs & vs))
     return attribute_map
 
@@ -272,7 +272,7 @@ def other_heuristic(text, param_vals):
     return text
 
 
-def instantiate_templates_dfs(scene_struct, causal_graph, template, metadata, answer_counts,
+def instantiate_templates_dfs(scene_structs, causal_graph, template, metadata, answer_counts,
                               synonyms, max_instances=None, verbose=False):
     param_name_to_type = {p['name']: p['type'] for p in template['params']}
 
@@ -289,7 +289,7 @@ def instantiate_templates_dfs(scene_struct, causal_graph, template, metadata, an
 
         # Check to make sure the current state is valid
         q = {'nodes': state['nodes']}
-        outputs = qeng.answer_question(q, metadata, scene_struct, causal_graph, all_outputs=True)
+        outputs = qeng.answer_question(q, metadata, scene_structs, causal_graph, all_outputs=True)
         answer = outputs[-1]
         if answer == '__INVALID__': continue
 
@@ -386,10 +386,10 @@ def instantiate_templates_dfs(scene_struct, causal_graph, template, metadata, an
                 unique = (next_node['type'] == 'relate_filter_unique')
                 include_zero = (next_node['type'] == 'relate_filter_count'
                                 or next_node['type'] == 'relate_filter_exist')
-                filter_options = find_relate_filter_options(answer, scene_struct, metadata,
+                filter_options = find_relate_filter_options(answer, scene_structs, metadata,
                                                             unique=unique, include_zero=include_zero)
             else:
-                filter_options = find_filter_options(answer, scene_struct, metadata)
+                filter_options = find_filter_options(answer, scene_structs[0], metadata)
                 if next_node['type'] == 'filter':
                     # Remove null filter
                     filter_options.pop((None, None, None, None), None)
@@ -701,8 +701,15 @@ def main(args):
 
         scene_fn = simulation['video_filename']
         # Gets start state of the simulation
-        scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 0][
+        start_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 0][
             0]
+        #TODO: 400 should not be hardcoded
+        end_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 400][
+            0]
+        #TODO: Maybe fill all scene structs in sorted order
+
+        scene_structs = [start_scene_struct, end_scene_struct]
+
         causal_graph = CausalGraph(simulation['causal_graph'])
 
         print('starting video %s (%d / %d)'
@@ -726,7 +733,7 @@ def main(args):
             if args.time_dfs and args.verbose:
                 tic = time.time()
             ts, qs, ans = instantiate_templates_dfs(
-                scene_struct,
+                scene_structs,
                 causal_graph,
                 template,
                 metadata,

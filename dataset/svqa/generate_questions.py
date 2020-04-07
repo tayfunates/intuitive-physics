@@ -359,7 +359,7 @@ def instantiate_templates_dfs(scene_structs, causal_graph, template, metadata, a
             # degeneracy at the end
             has_relate = any(n['type'] == 'relate' for n in template['nodes'])
             if has_relate:
-                degen = qeng.is_degenerate(q, metadata, scene_struct, answer=answer,
+                degen = qeng.is_degenerate(q, metadata, scene_structs, causal_graph, answer=answer,
                                            verbose=verbose)
                 if degen:
                     continue
@@ -575,8 +575,9 @@ def discard_material_from_nodes(nodes):
         if side_inputs != None:
             discard_material_from_side_inputs(side_inputs)
 
-        # This is some how hacky, if the question is about to filter or query material
-        # We switch to the color since we cannot remove the node type
+        # TODO:
+        #   This is some how hacky, if the question is about to filter or query material
+        #   We switch to the color since we cannot remove the node type
         if node['type'] == 'filter_material':
             node['type'] = 'filter_color'
         if node['type'] == 'query_material':
@@ -701,11 +702,9 @@ def main(args):
 
         scene_fn = simulation['video_filename']
         # Gets start state of the simulation
-        start_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 0][
-            0]
+        start_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 0][0]
         #TODO: 400 should not be hardcoded
-        end_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 400][
-            0]
+        end_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 600][0]
         #TODO: Maybe fill all scene structs in sorted order
 
         scene_structs = [start_scene_struct, end_scene_struct]

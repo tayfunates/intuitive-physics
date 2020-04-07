@@ -1,0 +1,76 @@
+[
+  {
+    "text": [
+      "What shape is the object that first collides with <Z> <C> <S>?",
+      "What is the shape of object that first collides with <Z> <C> <S>?",
+      "There is an object that first collides with <Z> <C> <S>; what shape is it?",
+      "There is an object that first collides with <Z> <C> <S>; what is its shape?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "side_inputs": [
+          "<Z>",
+          "<C>",
+          "<S>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_unique"
+      },
+      {
+        "inputs": [],
+        "type": "events"
+      },
+      {
+        "inputs": [
+          2, 1
+        ],
+        "type": "filter_events"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "filter_collision"
+      },
+      {
+        "inputs": [
+          4
+        ],
+        "type": "filter_first"
+      },
+      {
+        "inputs": [
+          1, 5
+        ],
+        "type": "event_partner"
+      },
+      {
+        "inputs": [
+          6
+        ],
+        "type": "query_shape"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  }
+]

@@ -319,20 +319,20 @@ def insert_scene_node(nodes, idx):
     return new_nodes_trimmed
 
 
-def is_degenerate(question, metadata, scene_struct, answer=None, verbose=False):
+def is_degenerate(question, metadata, scene_structs, causal_graph, answer=None, verbose=False):
     """
     A question is degenerate if replacing any of its relate nodes with a scene
     node results in a question with the same answer.
     """
     if answer is None:
-        answer = answer_question(question, metadata, scene_struct)
+        answer = answer_question(question, metadata, scene_structs, causal_graph)
 
     for idx, node in enumerate(question['nodes']):
         if node['type'] == 'relate':
             new_question = {
                 'nodes': insert_scene_node(question['nodes'], idx)
             }
-            new_answer = answer_question(new_question, metadata, scene_struct)
+            new_answer = answer_question(new_question, metadata, scene_structs, causal_graph)
             if verbose:
                 print('here is truncated question:')
                 for i, n in enumerate(new_question['nodes']):

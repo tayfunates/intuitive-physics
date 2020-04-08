@@ -8,11 +8,13 @@ Internal tagging information:
 [GREEN]: https://placehold.it/15/3cf015/000000?text=+
 [BLUE]: https://placehold.it/15/3c15f0/000000?text=+
 [PURPLE]: https://placehold.it/15/f015f0/000000?text=+
+[CYAN]: https://placehold.it/15/15f0f0/000000?text=+
 
 - ![RED] Shows properties that CLEVRER has and we do not consider yet.
 - ![GREEN] Shows questions or functional modules whose implementation has been completed in our backend.
 - ![BLUE] Shows questions or functional modules whose implementation has NOT been completed in our backend, but it can be completed without any design updates.
 - ![PURPLE] Shows questions or functional modules whose implementation has NOT been completed in our backend. Implementing such properties is not easy now, and needs discussing.
+- ![CYAN] Internal discussion tag.
 
 ## Objects
 
@@ -137,4 +139,8 @@ or the entire video (when input frame is “null”)
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
 | "How many **S**s are moving when the video ends?" | Count( FilterMoving( FilterShape( SceneAtEnd, **S**) , EndSceneStep ) ) | Integer | ![GREEN] |
+| "How many **C** objects are moving when the video ends?" | Count( FilterMoving( FilterColor( SceneAtEnd, **C**) , EndSceneStep ) ) | Integer | ![GREEN] |
+| "How many **Z** objects are moving when the video ends?" | Count( FilterMoving( FilterColor( SceneAtEnd, **Z**) , EndSceneStep ) ) | Integer | ![GREEN] |
+
+![CYAN] Counting için, oluşturalacak sahnelerde hardcoded shape, color, size kullanmamak gerekiyor, atıyorum sadece circlelardan oluşan simulation gibi. Çünkü sahnede olmayan elemanların sayısı çok olmaya başlayınca 0 cevabının yoğunluğu artıyor olacak. 
 

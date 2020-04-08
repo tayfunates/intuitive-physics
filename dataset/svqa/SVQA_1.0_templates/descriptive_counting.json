@@ -41,5 +41,91 @@
       }
     ],
     "constraints": []
+  },
+    {
+    "text": [
+      "How many <C> objects are moving when the video ends?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "end_scene"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_color"
+      },
+      {
+        "inputs": [],
+        "type": "end_scene_step"
+      },
+      {
+        "inputs": [
+          1, 2
+        ],
+        "type": "filter_moving"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+      {
+        "type": "Color",
+        "name": "<C>"
+      }
+    ],
+    "constraints": []
+  },
+      {
+    "text": [
+      "How many <Z> objects are moving when the video ends?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "end_scene"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "inputs": [],
+        "type": "end_scene_step"
+      },
+      {
+        "inputs": [
+          1, 2
+        ],
+        "type": "filter_moving"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      }
+    ],
+    "constraints": []
   }
 ]

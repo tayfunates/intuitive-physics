@@ -118,6 +118,8 @@ or the entire video (when input frame is “null”)
 
 ## Questions
 
+![CYAN] Cevap çeşidine bir an önce karar vermek gerekiyor. CLEVR'dan farklı bir yol izleyeceksek (CLEVRER gibi mesela), şimdiden onunla uğraşmalıyız, soru yaratmadan önce.
+
 ### Structures Provided to Question Generation Engine
 
 - Scene information at start (SceneAtStart): Holds objects' static and dynamic information at start of the video, color, position, shape, velocity etc.

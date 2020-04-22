@@ -10,6 +10,7 @@ import os
 import glob
 import copy
 from autorun import run_simulation
+from svqa.causal_graph import CausalGraph
 
 args = None
 
@@ -45,6 +46,68 @@ def create_controller_variations(controller: json, name: str) -> str:
     return name
 
 
+def get_variation_output(controller: str):
+    with open(controller) as controller_json_file:
+        controller_data = json.load(controller_json_file)
+        with open(controller_data["outputJSONPath"]) as output_json_file:
+            output_data = json.load(output_json_file)
+
+    return output_data
+
+def is_equal_without_step(event1, event2):
+    return (set(event1["objects"]) == set(event2["objects"]) and event1["type"] == event2["type"])
+
+
+def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare: CausalGraph):
+    src_events = causal_graph_src.events
+    compare_events = causal_graph_compare.events
+
+    res = []
+    for src_event in src_events:
+        found_equal = False
+        for compare_event in compare_events:
+            if is_equal_without_step(src_event, compare_event):
+                found_equal = True
+                break
+        if not found_equal :
+            res.append(src_event["id"])
+
+    return res
+
+def write_enables_prevents(output_dict: dict):
+    original_causal_graph = CausalGraph(output_dict["original_video_output"]["causal_graph"])
+    variation_outputs = output_dict["variations_outputs"]
+
+    output_dict_enables = []
+    output_dict_prevents = []
+    for removed_object_key in variation_outputs:
+        variation_causal_graph = CausalGraph(variation_outputs[removed_object_key]["causal_graph"])
+        enables = get_different_event_list(original_causal_graph, variation_causal_graph)
+        prevents = get_different_event_list(variation_causal_graph, original_causal_graph)
+
+        output_dict_enables.extend([{removed_object_key: enabled_event_id} for enabled_event_id in enables])
+        output_dict_prevents.extend([{removed_object_key: prevent_event_id} for prevent_event_id in prevents])
+
+    output_dict["enables"] = output_dict_enables
+    output_dict["prevents"] = output_dict_prevents
+
+def run_variations():
+    final_output_json = {}
+    original_output_path = json.load(open(args.path, "r"))
+    final_output_json["original_video_output"] = original_output_path
+    variation_outputs = {}
+
+    controller_paths = create_variations(json.load(open(args.controller_path, "r")), original_output_path)
+    for c in controller_paths:
+        run_simulation(args.exec_path, c[1])
+        variation_outputs[str(c[0])] = get_variation_output(c[1])
+    final_output_json["variations_outputs"] = variation_outputs
+
+    write_enables_prevents(final_output_json)
+
+    json.dump(final_output_json, open(args.variations_output_path, "w"))
+
+
 def init_args():
     global args
 
@@ -60,29 +123,6 @@ def init_args():
                         help='Simulation\'s output JSON path.')
 
     args = parser.parse_args()
-
-def get_variation_output(controller: str):
-    with open(controller) as controller_json_file:
-        controller_data = json.load(controller_json_file)
-        with open(controller_data["outputJSONPath"]) as output_json_file:
-            output_data = json.load(output_json_file)
-
-    return output_data
-
-
-def run_variations():
-    final_output_json = {}
-    original_output_path = json.load(open(args.path, "r"))
-    final_output_json["original_video_output"] = original_output_path
-    variation_outputs = {}
-
-    controller_paths = create_variations(json.load(open(args.controller_path, "r")), original_output_path)
-    for c in controller_paths:
-        run_simulation(args.exec_path, c[1])
-        variation_outputs[str(c[0])] = get_variation_output(c[1])
-    final_output_json["variations_outputs"] = variation_outputs
-
-    json.dump(final_output_json, open(args.variations_output_path, "w"))
 
 
 if __name__ == '__main__':

@@ -83,7 +83,7 @@ def main():
 
 def init_args():
     parser.add_argument('--executable-path', action='store', dest='exec_path', required=False, nargs='?', type=str,
-                        default="\"../../Build/bin/x86_64/Release/Testbed\"",
+                        default="\"../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed\"",
                         help='Testbed executable path.')
 
     parser.add_argument('--simulation-id', action='store', dest='simulation_id', required=True,

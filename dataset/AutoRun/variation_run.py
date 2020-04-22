@@ -16,9 +16,13 @@ args = None
 
 
 def new_output_json(output: json, i: int):
-    output = copy.deepcopy(output)
-    del output["scene_states"][0]["scene"]["objects"][i]
-    return output
+    ret = copy.deepcopy(output)
+    del ret["scene_states"][0]["scene"]["objects"][i]
+    del ret["causal_graph"]
+    for i in range(len(ret["scene_states"])):
+        if ret["scene_states"][i]["step"] != 0:
+            del ret["scene_states"][i]
+    return ret
 
 
 def create_variations(controller: json, output: json) -> list:

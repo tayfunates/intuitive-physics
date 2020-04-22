@@ -1,0 +1,6 @@
+*.json
+outputs/
+controllers/
+.idea/
+venv/
+*cache*

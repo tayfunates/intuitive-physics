@@ -26,7 +26,7 @@ def new_output_json(output: json, i: int):
 
 
 def create_variations(controller: json, output: json) -> list:
-    start_scene_state = output["scene_states"][0]
+    start_scene_state = output["scene_states"][0] #best to check step count
     objects = start_scene_state["scene"]["objects"]
     variations = [(objects[i]["uniqueID"], new_output_json(output, i)) for i in range(len(objects)) if objects[i]["bodyType"] != 0] #0 for static objects
     controller_paths = []
@@ -61,16 +61,27 @@ def get_variation_output(controller: str):
 def is_equal_without_step(event1, event2):
     return (set(event1["objects"]) == set(event2["objects"]) and event1["type"] == event2["type"])
 
-
-def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare: CausalGraph, discarded_object_id: int):
+def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare: CausalGraph, object_props: dict, discarded_object_id: int):
     src_events = causal_graph_src.events
     compare_events = causal_graph_compare.events
 
+    discarded_shapes = ['platform']
+    objects_ids_discarded = [object['uniqueID'] for object in object_props if object['shape'] in discarded_shapes]
+
     res = []
     for src_event in src_events:
+        objects_of_event = src_event['objects']
         #discard events including object to be discarded
-        if discarded_object_id in src_event['objects']:
+        if discarded_object_id in objects_of_event:
             continue
+        found_discarded_shape = False
+        for object_of_event in objects_of_event:
+            if object_of_event in objects_ids_discarded:
+                found_discarded_shape = True
+                break
+        if found_discarded_shape:
+            continue
+
         found_equal = False
         for compare_event in compare_events:
             if is_equal_without_step(src_event, compare_event):
@@ -90,8 +101,8 @@ def write_enables_prevents(output_dict: dict):
     for removed_object_key in variation_outputs:
         removed_object_id = int(removed_object_key)
         variation_causal_graph = CausalGraph(variation_outputs[removed_object_key]["causal_graph"])
-        enables = get_different_event_list(original_causal_graph, variation_causal_graph, removed_object_id)
-        prevents = get_different_event_list(variation_causal_graph, original_causal_graph, removed_object_id)
+        enables = get_different_event_list(original_causal_graph, variation_causal_graph, output_dict['original_video_output']['scene_states'][0]['scene']['objects'], removed_object_id)
+        prevents = get_different_event_list(variation_causal_graph, original_causal_graph, output_dict['original_video_output']['scene_states'][0]['scene']['objects'], removed_object_id)
 
         output_dict_enables.extend([{removed_object_key: enabled_event_id} for enabled_event_id in enables])
         output_dict_prevents.extend([{removed_object_key: prevent_event_id} for prevent_event_id in prevents])

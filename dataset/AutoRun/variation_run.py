@@ -62,12 +62,15 @@ def is_equal_without_step(event1, event2):
     return (set(event1["objects"]) == set(event2["objects"]) and event1["type"] == event2["type"])
 
 
-def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare: CausalGraph):
+def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare: CausalGraph, discarded_object_id: int):
     src_events = causal_graph_src.events
     compare_events = causal_graph_compare.events
 
     res = []
     for src_event in src_events:
+        #discard events including object to be discarded
+        if discarded_object_id in src_event['objects']:
+            continue
         found_equal = False
         for compare_event in compare_events:
             if is_equal_without_step(src_event, compare_event):
@@ -85,9 +88,10 @@ def write_enables_prevents(output_dict: dict):
     output_dict_enables = []
     output_dict_prevents = []
     for removed_object_key in variation_outputs:
+        removed_object_id = int(removed_object_key)
         variation_causal_graph = CausalGraph(variation_outputs[removed_object_key]["causal_graph"])
-        enables = get_different_event_list(original_causal_graph, variation_causal_graph)
-        prevents = get_different_event_list(variation_causal_graph, original_causal_graph)
+        enables = get_different_event_list(original_causal_graph, variation_causal_graph, removed_object_id)
+        prevents = get_different_event_list(variation_causal_graph, original_causal_graph, removed_object_id)
 
         output_dict_enables.extend([{removed_object_key: enabled_event_id} for enabled_event_id in enables])
         output_dict_prevents.extend([{removed_object_key: prevent_event_id} for prevent_event_id in prevents])

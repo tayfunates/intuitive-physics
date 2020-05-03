@@ -9,41 +9,74 @@
         "type": "start_scene"
       },
       {
+        "inputs": [],
+        "type": "events"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          2
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          3
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_collide_ground"
+      },
+      {
         "side_inputs": [
           "<Z>",
           "<C>",
           "<S>"
         ],
         "inputs": [
-          0
+          5
         ],
         "type": "filter_unique"
       },
       {
-        "inputs": [],
-        "type": "events"
-      },
-      {
         "inputs": [
-          2
+          5, 4
         ],
-        "type": "filter_collide_ground"
+        "type": "difference"
       },
       {
         "inputs": [
-          1
+          6
         ],
         "type": "counterfact_events"
       },
       {
         "inputs": [
-          4
+          8
         ],
         "type": "filter_collide_ground"
       },
       {
         "inputs": [
-          3, 5
+          5, 9
         ],
         "type": "difference"
       },
@@ -61,7 +94,7 @@
           "<C2>"
         ],
         "inputs": [
-          7
+          11
         ],
         "type": "filter_color"
       },
@@ -70,7 +103,7 @@
           "<S2>"
         ],
         "inputs": [
-          8
+          12
         ],
         "type": "filter_shape"
       },
@@ -81,19 +114,19 @@
           "<S2>"
         ],
         "inputs": [
-          9
+          13
         ],
         "type": "filter_unique"
       },
       {
         "inputs": [
-          9, 6
+          13, 10
         ],
         "type": "intersect"
       },
       {
         "inputs": [
-          11
+          15
         ],
         "type": "exist"
       }

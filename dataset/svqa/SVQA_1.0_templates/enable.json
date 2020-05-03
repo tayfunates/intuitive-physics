@@ -1,7 +1,7 @@
 [
   {
     "text": [
-      "Did a <Z> <C> <S> enables a <Z2> <C2> <S2> to collide with the ground?"
+      "Did any <Z> <C> <S> enable any <Z2> <C2> <S2> to collide with the ground?"
     ],
     "nodes": [
       {
@@ -11,6 +11,12 @@
       {
         "inputs": [],
         "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_collide_ground"
       },
       {
         "side_inputs": [
@@ -26,7 +32,7 @@
           "<C>"
         ],
         "inputs": [
-          2
+          3
         ],
         "type": "filter_color"
       },
@@ -35,30 +41,25 @@
           "<S>"
         ],
         "inputs": [
-          3
+          4
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          1
-        ],
-        "type": "filter_collide_ground"
-      },
-      {
-        "side_inputs": [
-          "<Z>",
-          "<C>",
-          "<S>"
-        ],
-        "inputs": [
           5
         ],
-        "type": "filter_unique"
+        "type": "unique"
       },
       {
         "inputs": [
-          5, 4
+          6
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          2, 7
         ],
         "type": "difference"
       },
@@ -70,13 +71,13 @@
       },
       {
         "inputs": [
-          8
+          9
         ],
         "type": "filter_collide_ground"
       },
       {
         "inputs": [
-          5, 9
+          2, 10
         ],
         "type": "difference"
       },
@@ -85,7 +86,7 @@
           "<Z2>"
         ],
         "inputs": [
-          0
+          8
         ],
         "type": "filter_size"
       },
@@ -94,7 +95,7 @@
           "<C2>"
         ],
         "inputs": [
-          11
+          12
         ],
         "type": "filter_color"
       },
@@ -103,30 +104,31 @@
           "<S2>"
         ],
         "inputs": [
-          12
+          13
         ],
         "type": "filter_shape"
       },
       {
-        "side_inputs": [
-          "<Z2>",
-          "<C2>",
-          "<S2>"
-        ],
         "inputs": [
-          13
+          14
         ],
-        "type": "filter_unique"
+        "type": "unique"
       },
       {
         "inputs": [
-          13, 10
+          15
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          11, 16
         ],
         "type": "intersect"
       },
       {
         "inputs": [
-          15
+          17
         ],
         "type": "exist"
       }

@@ -233,6 +233,10 @@ def counterfact_events_handler(variations_outputs, scene_structs, causal_graph, 
     variation_causal_graph = CausalGraph(object_removed_variation_simulation['causal_graph'])
     return variation_causal_graph.events
 
+def as_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    return [inputs[0]]
+
 
 # Register all of the answering handlers here.
 # TODO maybe this would be cleaner with a function decorator that takes
@@ -274,7 +278,8 @@ execute_handlers = {
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,
     'filter_collide_ground': filter_collide_ground_handler,
-    'counterfact_events': counterfact_events_handler
+    'counterfact_events': counterfact_events_handler,
+    'as_list': as_list_handler
 }
 
 

@@ -48,8 +48,7 @@ parser = argparse.ArgumentParser()
 
 # Inputs
 parser.add_argument('--input-scene-file',
-                    help="JSON file containing ground-truth scene information for all images " +
-                         "from render_images.py")
+                    help="JSON file containing ground-truth scene video information with all variations of objects removed")
 parser.add_argument('--metadata-file', default='metadata.json',
                     help="JSON file containing metadata about functions")
 parser.add_argument('--synonyms-json', default='synonyms.json',
@@ -698,13 +697,13 @@ def main(args):
 
     questions = []
     scene_count = 0
-    for i, simulation in enumerate(all_simulations):
+    for i, simulation_with_variations in enumerate(all_simulations):
 
+        simulation = simulation_with_variations['original_video_output']
         scene_fn = simulation['video_filename']
         # Gets start state of the simulation
         start_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 0][0]
-        #TODO: 400 should not be hardcoded
-        end_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 600][0]
+        end_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] != 0][0]
         #TODO: Maybe fill all scene structs in sorted order
 
         scene_structs = [start_scene_struct, end_scene_struct]

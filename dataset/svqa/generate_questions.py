@@ -114,7 +114,8 @@ def precompute_filter_options(start_scene_struct, metadata):
 
     for object_idx, obj in enumerate(start_scene_struct['objects']):
         if metadata['dataset'] == 'SVQA-v1.0':
-            keys = [tuple(obj[k] for k in attr_keys)]
+            if (obj['bodyType'] == 2): #Only dynamic objects
+                keys = [tuple(obj[k] for k in attr_keys)]
 
         for mask in masks:
             for key in keys:
@@ -271,7 +272,7 @@ def other_heuristic(text, param_vals):
     return text
 
 
-def instantiate_templates_dfs(scene_structs, causal_graph, template, metadata, answer_counts,
+def instantiate_templates_dfs(variations_outputs, scene_structs, causal_graph, template, metadata, answer_counts,
                               synonyms, max_instances=None, verbose=False):
     param_name_to_type = {p['name']: p['type'] for p in template['params']}
 
@@ -288,7 +289,7 @@ def instantiate_templates_dfs(scene_structs, causal_graph, template, metadata, a
 
         # Check to make sure the current state is valid
         q = {'nodes': state['nodes']}
-        outputs = qeng.answer_question(q, metadata, scene_structs, causal_graph, all_outputs=True)
+        outputs = qeng.answer_question(q, metadata, variations_outputs, scene_structs, causal_graph, all_outputs=True)
         answer = outputs[-1]
         if answer == '__INVALID__': continue
 
@@ -731,6 +732,7 @@ def main(args):
             if args.time_dfs and args.verbose:
                 tic = time.time()
             ts, qs, ans = instantiate_templates_dfs(
+                simulation_with_variations,
                 scene_structs,
                 causal_graph,
                 template,

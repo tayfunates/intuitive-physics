@@ -119,6 +119,15 @@
       "terminal": false
     },
     {
+      "name": "difference",
+      "inputs": [
+        "ObjectSet",
+        "ObjectSet"
+      ],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
       "name": "count",
       "inputs": [
         "ObjectSet"
@@ -401,7 +410,7 @@
       "output": "Object",
       "terminal": false
     },
-        {
+    {
       "name": "filter_moving",
       "inputs": [
         "ObjectSet",
@@ -422,6 +431,22 @@
       "inputs": [
       ],
       "output": "Integer",
+      "terminal": false
+    },
+    {
+      "name": "filter_collide_ground",
+      "inputs": [
+        "EventSet"
+      ],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
+      "name": "counterfact_events",
+      "inputs": [
+        "Object"
+      ],
+      "output": "EventSet",
       "terminal": false
     }
   ]

@@ -17,22 +17,42 @@ Some of the metadata about what question node types are available etc are stored
 in a JSON metadata file.
 """
 
+#Helpers
+
+def object_with_unique_id(scene_structs, unique_object_id):
+    objs = [o for o in scene_structs[0]['objects'] if o['uniqueID']==unique_object_id]
+    assert(len(objs)==1)
+    return objs[0]
+
+def is_ground(scene_structs, unique_object_id):
+    return unique_object_id == get_ground_unique_id(scene_structs)
+
+def get_ground_unique_id(scene_structs):
+    objs = [o for o in scene_structs[0]['objects'] if o['shape'] == 'ground']
+    assert (len(objs) == 1)
+    return objs[0]['uniqueID']
+
+def is_object_moving(obj):
+    eps = 0.001
+    if obj['bodyType']!= 0 and (math.fabs(obj['2dLinearVelocity'][0])>eps or math.fabs(obj['2dLinearVelocity'][1])>eps or math.fabs(obj['angularVelocity']))>eps: #0 is a static body
+        return True
+    return False
 
 # Handlers for answering questions. Each handler receives the scene structure
 # that was output from Blender, the node, and a list of values that were output
 # from each of the node's inputs; the handler should return the computed output
 # value from this node.
 
-def start_scene_handler(scene_structs, causal_graph, inputs, side_inputs):
+def start_scene_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     # Just return all objects in the scene
     return list(range(len(scene_structs[0]['objects'])))
 
-def end_scene_handler(scene_structs, causal_graph, inputs, side_inputs):
+def end_scene_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     # Just return all objects in the scene
     return list(range(len(scene_structs[-1]['objects'])))
 
 def make_filter_handler(attribute):
-    def filter_handler(scene_structs, causal_graph, inputs, side_inputs):
+    def filter_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
         assert len(inputs) == 1
         assert len(side_inputs) == 1
         value = side_inputs[0]
@@ -46,14 +66,14 @@ def make_filter_handler(attribute):
     return filter_handler
 
 
-def unique_handler(scene_structs, causal_graph, inputs, side_inputs):
+def unique_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     if len(inputs[0]) != 1:
         return '__INVALID__'
     return inputs[0][0]
 
 
-def vg_relate_handler(scene_structs, causal_graph, inputs, side_inputs):
+def vg_relate_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     assert len(side_inputs) == 1
     output = set()
@@ -63,32 +83,37 @@ def vg_relate_handler(scene_structs, causal_graph, inputs, side_inputs):
     return sorted(list(output))
 
 
-def relate_handler(scene_structs, causal_graph, inputs, side_inputs):
+def relate_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     assert len(side_inputs) == 1
     relation = side_inputs[0]
     return scene_structs[0]['relationships'][relation][inputs[0]]
 
 
-def union_handler(scene_structs, causal_graph, inputs, side_inputs):
+def union_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return sorted(list(set(inputs[0]) | set(inputs[1])))
 
 
-def intersect_handler(scene_structs, causal_graph, inputs, side_inputs):
+def intersect_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return sorted(list(set(inputs[0]) & set(inputs[1])))
 
+def difference_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 2
+    assert len(side_inputs) == 0
+    return sorted(list(set(inputs[0]) - set(inputs[1])))
 
-def count_handler(scene_structs, causal_graph, inputs, side_inputs):
+
+def count_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     return len(inputs[0])
 
 
 def make_same_attr_handler(attribute):
-    def same_attr_handler(scene_structs, causal_graph, inputs, side_inputs):
+    def same_attr_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
         cache_key = '_same_%s' % attribute
         if cache_key not in scene_structs[0]:
             cache = {}
@@ -109,7 +134,7 @@ def make_same_attr_handler(attribute):
 
 
 def make_query_handler(attribute):
-    def query_handler(scene_structs, causal_graph, inputs, side_inputs):
+    def query_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
         assert len(inputs) == 1
         assert len(side_inputs) == 0
         idx = inputs[0]
@@ -125,52 +150,50 @@ def make_query_handler(attribute):
 
     return query_handler
 
-
-def exist_handler(scene_structs, causal_graph, inputs, side_inputs):
+def exist_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     assert len(side_inputs) == 0
     return len(inputs[0]) > 0
 
-
-def equal_handler(scene_structs, causal_graph, inputs, side_inputs):
+def equal_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return inputs[0] == inputs[1]
 
 
-def less_than_handler(scene_structs, causal_graph, inputs, side_inputs):
+def less_than_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return inputs[0] < inputs[1]
 
 
-def greater_than_handler(scene_structs, causal_graph, inputs, side_inputs):
+def greater_than_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
     return inputs[0] > inputs[1]
 
-def events_handler(scene_structs, causal_graph, inputs, side_inputs):
+def events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     return causal_graph.events
 
-def filter_events_handler(scene_structs, causal_graph, inputs, side_inputs):
+def filter_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     return [event for event in inputs[0] if inputs[1] in event['objects']]
 
 def make_filter_events_handler(event_type):
-    def event_type_filter_handler(scene_structs, causal_graph, inputs, side_inputs):
+    def event_type_filter_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
         assert len(inputs) == 1
         assert len(side_inputs) == 0
         return [event for event in inputs[0] if event['type'] == 'Collision']
 
     return event_type_filter_handler
 
-def filter_first_handler(scene_structs, causal_graph, inputs, side_inputs):
+def filter_first_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     assert len(side_inputs) == 0
     assert len(inputs[0]) > 0
     return inputs[0][0]
 
-def event_partner_handler(scene_structs, causal_graph, inputs, side_inputs):
+def event_partner_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(inputs[1]['objects']) == 2
     assert len(side_inputs) == 0
@@ -178,25 +201,37 @@ def event_partner_handler(scene_structs, causal_graph, inputs, side_inputs):
         return inputs[1]['objects'][0]
     return inputs[1]['objects'][1]
 
-
-def is_object_moving(obj):
-    eps = 0.001
-    if obj['bodyType']!= 0 and (math.fabs(obj['2dLinearVelocity'][0])>eps or math.fabs(obj['2dLinearVelocity'][1])>eps or math.fabs(obj['angularVelocity']))>eps: #0 is a static body
-        return True
-    return False
-
-def filter_moving_handler(scene_structs, causal_graph, inputs, side_inputs):
+def filter_moving_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     scene_struct = scene_structs[inputs[1]]
     return [objIdx for objIdx in inputs[0] if is_object_moving(scene_struct['objects'][objIdx])]
 
-def start_scene_step_handler(scene_structs, causal_graph, inputs, side_inputs):
+def start_scene_step_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 0
     return 0
 
-def end_scene_step_handler(scene_structs, causal_graph, inputs, side_inputs):
+def end_scene_step_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 0
     return -1
+
+def filter_collide_ground_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    ground_id = get_ground_unique_id(scene_structs)
+    collision_events = [event for event in inputs[0] if event['type'] == 'Collision']
+    ground_collision_events = [event for event in collision_events if is_ground(scene_structs, event['objects'][0]) or is_ground(scene_structs, event['objects'][1])]
+    ret = set()
+    for event in ground_collision_events:
+        if event['objects'][0] != ground_id:
+            ret.add(event['objects'][0])
+        else:
+            ret.add(event['objects'][1])
+    return list(ret)
+
+def counterfact_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    object_removed_variation_simulation = variations_outputs['variations_outputs'][str(inputs[0])]
+    variation_causal_graph = CausalGraph(object_removed_variation_simulation['causal_graph'])
+    return variation_causal_graph.events
 
 
 # Register all of the answering handlers here.
@@ -214,6 +249,7 @@ execute_handlers = {
     'relate': relate_handler,
     'union': union_handler,
     'intersect': intersect_handler,
+    'difference': difference_handler,
     'count': count_handler,
     'query_color': make_query_handler('color'),
     'query_shape': make_query_handler('shape'),
@@ -237,10 +273,12 @@ execute_handlers = {
     'filter_moving': filter_moving_handler,
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,
+    'filter_collide_ground': filter_collide_ground_handler,
+    'counterfact_events': counterfact_events_handler
 }
 
 
-def answer_question(question, metadata, scene_structs, causal_graph, all_outputs=False,
+def answer_question(question, metadata, variations_outputs, scene_structs, causal_graph, all_outputs=False,
                     cache_outputs=True):
     """
     Use structured scene information to answer a structured question. Most of the
@@ -263,7 +301,7 @@ def answer_question(question, metadata, scene_structs, causal_graph, all_outputs
             handler = execute_handlers[node_type]
             node_inputs = [node_outputs[idx] for idx in node['inputs']]
             side_inputs = node.get('side_inputs', [])
-            node_output = handler(scene_structs, causal_graph, node_inputs, side_inputs)
+            node_output = handler(variations_outputs, scene_structs, causal_graph, node_inputs, side_inputs)
             if cache_outputs:
                 node['_output'] = node_output
         node_outputs.append(node_output)

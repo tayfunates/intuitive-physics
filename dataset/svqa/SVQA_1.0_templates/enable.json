@@ -1,0 +1,90 @@
+[
+  {
+    "text": [
+      "Did <Z> <C> <S> enables <Z2> <C2> <S2> to collide with the ground?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "side_inputs": [
+          "<Z>",
+          "<C>",
+          "<S>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_unique"
+      },
+      {
+        "inputs": [],
+        "type": "events"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_collide_ground"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "counterfact_events"
+      },
+      {
+        "inputs": [
+          4
+        ],
+        "type": "filter_collide_ground"
+      },
+      {
+        "inputs": [
+          3, 5
+        ],
+        "type": "difference"
+      },
+      {
+        "side_inputs": [
+          "<Z2>",
+          "<C2>",
+          "<S2>"
+        ],
+        "inputs": [
+          6
+        ],
+        "type": "filter_exist"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      },
+            {
+        "type": "Size",
+        "name": "<Z2>"
+      },
+      {
+        "type": "Color",
+        "name": "<C2>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S2>"
+      }
+    ],
+    "constraints": []
+  }
+]

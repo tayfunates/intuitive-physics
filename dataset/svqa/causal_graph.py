@@ -55,3 +55,6 @@ class CausalGraph:
         for e in causes:
             all_causes.update(self.cause_events(e))
         return list(all_causes)
+
+    def event(self, event_id):
+        return self.__id_to_event[event_id]

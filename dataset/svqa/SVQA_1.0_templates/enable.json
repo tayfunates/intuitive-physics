@@ -49,14 +49,53 @@
       },
       {
         "side_inputs": [
+          "<Z2>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C2>"
+        ],
+        "inputs": [
+          7
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S2>"
+        ],
+        "inputs": [
+          8
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "side_inputs": [
           "<Z2>",
           "<C2>",
           "<S2>"
         ],
         "inputs": [
-          6
+          9
         ],
-        "type": "filter_exist"
+        "type": "filter_unique"
+      },
+      {
+        "inputs": [
+          9, 6
+        ],
+        "type": "intersect"
+      },
+      {
+        "inputs": [
+          11
+        ],
+        "type": "exist"
       }
     ],
     "params": [
@@ -72,7 +111,7 @@
         "type": "Shape",
         "name": "<S>"
       },
-            {
+      {
         "type": "Size",
         "name": "<Z2>"
       },

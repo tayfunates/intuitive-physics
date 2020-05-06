@@ -1,7 +1,10 @@
 [
   {
     "text": [
-      "Did any <Z> <C> <S> enable any <Z2> <C2> <S2> to collide with the ground?"
+      "Does the <Z> <C> <S> enable the <Z2> <C2> <S2> to collide with the ground?",
+      "Does the <Z> <C> <S> enable the collision between the <Z2> <C2> <S2> and the ground?",
+      "There is a <Z> <C> <S>, does it enable <Z2> <C2> <S2> to collide with the ground?",
+      "Is the <Z> <C> <S> responsible for the collision between the <Z2> <C2> <S2> and the ground?"
     ],
     "nodes": [
       {

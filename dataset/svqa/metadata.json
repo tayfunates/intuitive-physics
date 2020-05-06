@@ -411,10 +411,18 @@
       "terminal": false
     },
     {
-      "name": "filter_moving",
+      "name": "filter_moving_objects",
       "inputs": [
         "ObjectSet",
         "Integer"
+      ],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
+      "name": "filter_dynamic_objects",
+      "inputs": [
+        "ObjectSet"
       ],
       "output": "ObjectSet",
       "terminal": false
@@ -447,6 +455,14 @@
         "Object"
       ],
       "output": "EventSet",
+      "terminal": false
+    },
+    {
+      "name": "as_list",
+      "inputs": [
+        "Object"
+      ],
+      "output": "ObjectSet",
       "terminal": false
     }
   ]

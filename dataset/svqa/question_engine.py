@@ -38,6 +38,9 @@ def is_object_moving(obj):
         return True
     return False
 
+def is_object_dynamic(obj):
+    return obj['bodyType'] != 0
+
 # Handlers for answering questions. Each handler receives the scene structure
 # that was output from Blender, the node, and a list of values that were output
 # from each of the node's inputs; the handler should return the computed output
@@ -201,10 +204,14 @@ def event_partner_handler(variations_outputs, scene_structs, causal_graph, input
         return inputs[1]['objects'][0]
     return inputs[1]['objects'][1]
 
-def filter_moving_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+def filter_moving_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs): #This is false
     assert len(inputs) == 2
     scene_struct = scene_structs[inputs[1]]
     return [objIdx for objIdx in inputs[0] if is_object_moving(scene_struct['objects'][objIdx])]
+
+def filter_dynamic_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    return [objIdx for objIdx in inputs[0] if is_object_dynamic(scene_structs[0]['objects'][objIdx])]
 
 def start_scene_step_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 0
@@ -274,7 +281,8 @@ execute_handlers = {
     'filter_collision': make_filter_events_handler('Collision'),
     'filter_first': filter_first_handler,
     'event_partner': event_partner_handler,
-    'filter_moving': filter_moving_handler,
+    'filter_moving_objects': filter_moving_objects_handler,
+    'filter_dynamic_objects': filter_dynamic_objects_handler,
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,
     'filter_collide_ground': filter_collide_ground_handler,

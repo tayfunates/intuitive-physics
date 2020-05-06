@@ -109,6 +109,10 @@ We do not have any other side inputs now, but there may some in the future, such
 | QueryShape  | Returns the shape of the input object  | Object  | Shape  | ![GREEN]  |
 | Count  | Returns size of the input list  | ObjectSet, EventSet  | Integer  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
 | Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
+| FilterCollideGround  | Returns objects which collided to ground in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
+| GetCounterfactEvents  | Returns event list if a specific object is removed from the scene   | Object  | EventSet  | ![Green]  |
+| FilterDynamic  | Returns dynamic objects from an object set   | ObjectSet  | ObjectSet  | ![Green]  |
+| AsList  | Returns single elemen object set created with a specific object | Object | ObjectSet  | ![GREEN] |
 
 Other clevrer filters that are needed to be discussed.
 - ![RED]: FilterStationary: Selects all stationary objects in the input frame
@@ -154,4 +158,16 @@ or the entire video (when input frame is “null”)
 ![CYAN] Counting için, oluşturalacak sahnelerde hardcoded shape, color, size kullanmamak gerekiyor, atıyorum sadece circlelardan oluşan simulation gibi. Çünkü sahnede olmayan elemanların sayısı çok olmaya başlayınca 0 cevabının yoğunluğu artıyor olacak. 
 
 ![CYAN] Prevent/enable için ne gibi assumption olacak? Bu assumptionlar farklı sahneler için yeterince genericlik sağlayacak mı yoksa her simulation için farklı set of questions mı olacak?
+
+##### Enable
+
+| Question  |  Program | Output Type  | Implementation Status |
+|---|---|---|---|
+| "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to collide with the ground?", "Does the **Z** **C** **S** enable the collision between the **Z2** **C2** **S2** and the ground?", "There is a **Z** **C** **S**, does it enable **Z2** **C2** **S2** to collide with the ground?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the ground?" | **TODO**  | Bool | ![GREEN] |
+  
+##### Prevent
+
+| Question  |  Program | Output Type  | Implementation Status |
+|---|---|---|---|
+| "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from colliding with the ground?" | **TODO**  | Bool | ![GREEN] |
 

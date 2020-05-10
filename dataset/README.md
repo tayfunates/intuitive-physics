@@ -168,7 +168,9 @@ or the entire video (when input frame is “null”)
 - **Question**: "Is the large green block responsible for the collision between the tiny blue block and the ground?"
 - **Answer**: "true"
 
-![Enable1](/dataset/examples/ExampleScene1.gif)
+| Original Video| Variation Video |
+|---|---|
+|![Enable1](/dataset/examples/ExampleScene1.gif)|![Enable1](/dataset/examples/ExampleScene1Variation1.gif)|
   
 ##### Prevent
 
@@ -179,6 +181,8 @@ or the entire video (when input frame is “null”)
 - **Question**: "Does the large green block prevent the small red block from colliding with the ground?"
 - **Answer**: "true"
 
-![Prevent1](/dataset/examples/ExampleScene1.gif)
+| Original Video| Variation Video |
+|---|---|
+|![Enable1](/dataset/examples/ExampleScene1.gif)|![Enable1](/dataset/examples/ExampleScene1Variation1.gif)|
 
 

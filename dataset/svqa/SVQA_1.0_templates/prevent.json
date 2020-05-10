@@ -166,5 +166,173 @@
       }
     ],
     "constraints": []
+  },
+  {
+    "text": [
+      "Does the <Z> <C> <S> prevent the <Z2> <C2> <S2> from entering to the basket?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "inputs": [],
+        "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          0, 2
+        ],
+        "type": "difference"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          4
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          5
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          6
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          0, 8
+        ],
+        "type": "difference"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "counterfact_events"
+      },
+      {
+        "inputs": [
+          10
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          11, 2
+        ],
+        "type": "difference"
+      },
+      {
+        "side_inputs": [
+          "<Z2>"
+        ],
+        "inputs": [
+          9
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C2>"
+        ],
+        "inputs": [
+          13
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S2>"
+        ],
+        "inputs": [
+          14
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          15
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          16
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          12, 17
+        ],
+        "type": "intersect"
+      },
+      {
+        "inputs": [
+          18
+        ],
+        "type": "exist"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      },
+      {
+        "type": "Size",
+        "name": "<Z2>"
+      },
+      {
+        "type": "Color",
+        "name": "<C2>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S2>"
+      }
+    ],
+    "constraints": []
   }
 ]

@@ -25,12 +25,6 @@
         "type": "difference"
       },
       {
-        "inputs": [
-          3
-        ],
-        "type": "filter_dynamic_objects"
-      },
-      {
         "side_inputs": [
           "<Z>"
         ],
@@ -44,7 +38,7 @@
           "<C>"
         ],
         "inputs": [
-          5
+          4
         ],
         "type": "filter_color"
       },
@@ -53,43 +47,43 @@
           "<S>"
         ],
         "inputs": [
-          6
+          5
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          7
+          6
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          8
+          7
         ],
         "type": "as_list"
       },
       {
         "inputs": [
-          4, 9
+          0, 8
         ],
         "type": "difference"
       },
       {
         "inputs": [
-          8
+          7
         ],
         "type": "counterfact_events"
       },
       {
         "inputs": [
-          11
+          10
         ],
         "type": "filter_collide_ground"
       },
       {
         "inputs": [
-          12, 2
+          11, 2
         ],
         "type": "difference"
       },
@@ -98,7 +92,7 @@
           "<Z2>"
         ],
         "inputs": [
-          10
+          9
         ],
         "type": "filter_size"
       },
@@ -107,7 +101,7 @@
           "<C2>"
         ],
         "inputs": [
-          14
+          13
         ],
         "type": "filter_color"
       },
@@ -116,31 +110,31 @@
           "<S2>"
         ],
         "inputs": [
-          15
+          14
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          16
+          15
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          17
+          16
         ],
         "type": "as_list"
       },
       {
         "inputs": [
-          13, 18
+          12, 17
         ],
         "type": "intersect"
       },
       {
         "inputs": [
-          19
+          18
         ],
         "type": "exist"
       }

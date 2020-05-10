@@ -179,11 +179,8 @@ or the entire video (when input frame is “null”)
 |---|---|---|---|
 | "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from colliding with the ground?" | **TODO**  | Bool | ![GREEN] |
 
-- **Question**: "Does the large green block prevent the small red block from colliding with the ground?"
-- **Answer**: "true"
-
-| Original Video| Variation Video |
-|---|---|
-|![](/dataset/examples/ExampleScene1.gif)|![](/dataset/examples/ExampleScene1Variation1.gif)|
+| Question | Answer | Original Video| Variation Video |
+|---|---|---|---|
+|"Does the large green block prevent the small red block from colliding with the ground?"|"true"|![](/dataset/examples/ExampleScene1.gif)|![](/dataset/examples/ExampleScene1Variation1.gif)|
 
 

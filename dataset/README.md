@@ -170,7 +170,7 @@ or the entire video (when input frame is “null”)
 | Question | Answer | Original Video| Variation Video |
 |---|---|---|---|
 |"Is the large green block responsible for the collision between the tiny blue block and the ground?"|"true"|![](/dataset/examples/ExampleScene1.gif)|![](/dataset/examples/ExampleScene1Variation1.gif)|
-|"Does the big brown block enable the large cyan circle to enter the basket?"|"true"|![](/dataset/examples/ExampleScene2.gif)|![](/dataset/examples/ExampleScene2Variation1.gif)|
+|"Does the big brown block enable the large cyan circle to enter the basket?"|"true"|![](/dataset/examples/ExampleScene2.gif)|![](/dataset/examples/ExampleScene2.gif)|
   
 ##### Prevent
 

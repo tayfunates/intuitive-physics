@@ -3,7 +3,7 @@
     "text": [
       "Does the <Z> <C> <S> enable the <Z2> <C2> <S2> to collide with the ground?",
       "Does the <Z> <C> <S> enable the collision between the <Z2> <C2> <S2> and the ground?",
-      "There is a <Z> <C> <S>, does it enable <Z2> <C2> <S2> to collide with the ground?",
+      "There is a <Z> <C> <S>, does it enable the <Z2> <C2> <S2> to collide with the ground?",
       "Is the <Z> <C> <S> responsible for the collision between the <Z2> <C2> <S2> and the ground?"
     ],
     "nodes": [
@@ -77,6 +77,169 @@
           9
         ],
         "type": "filter_collide_ground"
+      },
+      {
+        "inputs": [
+          2, 10
+        ],
+        "type": "difference"
+      },
+      {
+        "side_inputs": [
+          "<Z2>"
+        ],
+        "inputs": [
+          8
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C2>"
+        ],
+        "inputs": [
+          12
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S2>"
+        ],
+        "inputs": [
+          13
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          14
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          15
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          11, 16
+        ],
+        "type": "intersect"
+      },
+      {
+        "inputs": [
+          17
+        ],
+        "type": "exist"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      },
+      {
+        "type": "Size",
+        "name": "<Z2>"
+      },
+      {
+        "type": "Color",
+        "name": "<C2>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S2>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "Does the <Z> <C> <S> enable the <Z2> <C2> <S2> to enter the basket?",
+      "There is a <Z> <C> <S>, does it enable the <Z2> <C2> <S2> to enter the basket?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "inputs": [],
+        "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          3
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          4
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          6
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          2, 7
+        ],
+        "type": "difference"
+      },
+      {
+        "inputs": [
+          6
+        ],
+        "type": "counterfact_events"
+      },
+      {
+        "inputs": [
+          9
+        ],
+        "type": "filter_enter_container"
       },
       {
         "inputs": [

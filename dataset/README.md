@@ -178,9 +178,11 @@ or the entire video (when input frame is “null”)
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
 | "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from colliding with the ground?" | **TODO**  | Bool | ![GREEN] |
+| "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from entering to the basket?" | **TODO**  | Bool | ![GREEN] |
 
 | Question | Answer | Original Video| Variation Video |
 |---|---|---|---|
 |"Does the large green block prevent the small red block from colliding with the ground?"|"true"|![](/dataset/examples/ExampleScene1.gif)|![](/dataset/examples/ExampleScene1Variation1.gif)|
+|"Does the big yellow cube prevent the small blue triangle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene2.gif)|![](/dataset/examples/ExampleScene2Variation3.gif)|
 
 

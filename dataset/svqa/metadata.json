@@ -450,6 +450,14 @@
       "terminal": false
     },
     {
+      "name": "filter_enter_container",
+      "inputs": [
+        "EventSet"
+      ],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
       "name": "counterfact_events",
       "inputs": [
         "Object"

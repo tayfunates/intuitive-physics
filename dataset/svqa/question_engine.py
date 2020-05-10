@@ -19,8 +19,8 @@ in a JSON metadata file.
 
 #Helpers
 
-def object_with_unique_id(scene_structs, unique_object_id):
-    objs = [o for o in scene_structs[0]['objects'] if o['uniqueID']==unique_object_id]
+def object_with_unique_id(scene_struct, unique_object_id):
+    objs = [o for o in scene_struct['objects'] if o['uniqueID']==unique_object_id]
     assert(len(objs)==1)
     return objs[0]
 
@@ -29,6 +29,11 @@ def is_ground(scene_structs, unique_object_id):
 
 def get_ground_unique_id(scene_structs):
     objs = [o for o in scene_structs[0]['objects'] if o['shape'] == 'ground']
+    assert (len(objs) == 1)
+    return objs[0]['uniqueID']
+
+def get_basket_unique_id(scene_structs):
+    objs = [o for o in scene_structs[0]['objects'] if o['shape'] == 'basket']
     assert (len(objs) == 1)
     return objs[0]['uniqueID']
 
@@ -41,18 +46,13 @@ def is_object_moving(obj):
 def is_object_dynamic(obj):
     return obj['bodyType'] != 0
 
-# Handlers for answering questions. Each handler receives the scene structure
-# that was output from Blender, the node, and a list of values that were output
-# from each of the node's inputs; the handler should return the computed output
-# value from this node.
-
 def start_scene_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
-    # Just return all objects in the scene
-    return list(range(len(scene_structs[0]['objects'])))
+    # Just return all objects in the start scene
+    return [o['uniqueID'] for o in scene_structs[0]['objects']]
 
 def end_scene_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
-    # Just return all objects in the scene
-    return list(range(len(scene_structs[-1]['objects'])))
+    # Just return all objects in the end scene
+    return [o['uniqueID'] for o in scene_structs[-1]['objects']]
 
 def make_filter_handler(attribute):
     def filter_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
@@ -61,7 +61,7 @@ def make_filter_handler(attribute):
         value = side_inputs[0]
         output = []
         for idx in inputs[0]:
-            atr = scene_structs[0]['objects'][idx][attribute]
+            atr = object_with_unique_id(scene_structs[0], idx)[attribute]
             if value == atr or value in atr:
                 output.append(idx)
         return output
@@ -141,7 +141,7 @@ def make_query_handler(attribute):
         assert len(inputs) == 1
         assert len(side_inputs) == 0
         idx = inputs[0]
-        obj = scene_structs[0]['objects'][idx]
+        obj = object_with_unique_id(scene_structs[0], idx)
         assert attribute in obj
         val = obj[attribute]
         if type(val) == list and len(val) != 1:
@@ -211,7 +211,7 @@ def filter_moving_objects_handler(variations_outputs, scene_structs, causal_grap
 
 def filter_dynamic_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
-    return [objIdx for objIdx in inputs[0] if is_object_dynamic(scene_structs[0]['objects'][objIdx])]
+    return [objIdx for objIdx in inputs[0] if is_object_dynamic(object_with_unique_id(scene_structs[0], objIdx))]
 
 def start_scene_step_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 0
@@ -229,6 +229,19 @@ def filter_collide_ground_handler(variations_outputs, scene_structs, causal_grap
     ret = set()
     for event in ground_collision_events:
         if event['objects'][0] != ground_id:
+            ret.add(event['objects'][0])
+        else:
+            ret.add(event['objects'][1])
+    return list(ret)
+
+def filter_enter_container_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    # Assumes single container
+    basket_id = get_basket_unique_id(scene_structs)
+    container_end_up_events = [event for event in inputs[0] if event['type'] == 'ContainerEndUp']
+    ret = set()
+    for event in container_end_up_events:
+        if event['objects'][0] != basket_id:
             ret.add(event['objects'][0])
         else:
             ret.add(event['objects'][1])
@@ -286,6 +299,7 @@ execute_handlers = {
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,
     'filter_collide_ground': filter_collide_ground_handler,
+    'filter_enter_container': filter_enter_container_handler,
     'counterfact_events': counterfact_events_handler,
     'as_list': as_list_handler
 }

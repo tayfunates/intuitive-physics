@@ -164,6 +164,11 @@ or the entire video (when input frame is “null”)
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
 | "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to collide with the ground?", "Does the **Z** **C** **S** enable the collision between the **Z2** **C2** **S2** and the ground?", "There is a **Z** **C** **S**, does it enable **Z2** **C2** **S2** to collide with the ground?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the ground?" | **TODO**  | Bool | ![GREEN] |
+
+- **Question**: "Is the large green block responsible for the collision between the tiny blue block and the ground?"
+- **Answer**: "true"
+
+![Enable1](/dataset/examples/ExampleScene1.gif)
   
 ##### Prevent
 
@@ -171,8 +176,8 @@ or the entire video (when input frame is “null”)
 |---|---|---|---|
 | "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from colliding with the ground?" | **TODO**  | Bool | ![GREEN] |
 
-- Question: "Does the large green block prevent the small red block from colliding with the ground?"
-- Answer: "true"
+- **Question**: "Does the large green block prevent the small red block from colliding with the ground?"
+- **Answer**: "true"
 
 ![Prevent1](/dataset/examples/ExampleScene1.gif)
 

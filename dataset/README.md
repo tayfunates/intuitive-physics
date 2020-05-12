@@ -63,14 +63,17 @@ Internal tagging information:
 
 - Object: A dictionary holding static and dynamic properties of an object at a time step
 - ObjectSet: A list of unique objects
+- ObjectSetList: A list of ObjectSet
 - Event: A dictionary holding information of a specific event: id, type, time step, participating objects
 - EventSet: A list of unique events
+- EventSetList: A list of EventSet
 - ![RED] Order: A tag indicating chronological ordering of events: such as first, second and last
 - Color: A tag indicating the color of an object
 - Shape: A tag indicating the shape of an object
 - ![RED] Frame or Step: An integer representing when an event happened 
 - Integer: An integer type
 - Bool: A boolean type
+- BoolList: A list of Bool
 
 ## Side Inputs
 
@@ -90,6 +93,8 @@ We do not have any other side inputs now, but there may some in the future, such
 | SceneAtEnd | Returns all object properties at the end of the simulation | None  | ObjectSet  | ![GREEN]   |
 | StartSceneStep  | Returns 0  | None | Integer | ![GREEN] |
 | EndSceneStep  | Returns -1  | None | Integer | ![GREEN] |
+| Intersect  | Intersects two sets of objects | ObjectSet, ObjectSet | ObjectSet | ![GREEN]  |
+| IntersectList  | Intersects an object set with all object sets in a list of ObjectSet | ObjectSetList, ObjectSet | ObjectSetList | ![GREEN]  |
 | Events  | Returns all events between video start and end  | None  | EventSet  | ![GREEN]  |
 | StartEvent  | Returns start event  | None  | Event  | ![BLUE]  |
 | EndEvent  | Returns end event  | None  | Event  | ![BLUE]  |
@@ -109,9 +114,13 @@ We do not have any other side inputs now, but there may some in the future, such
 | QueryShape  | Returns the shape of the input object  | Object  | Shape  | ![GREEN]  |
 | Count  | Returns size of the input list  | ObjectSet, EventSet  | Integer  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
 | Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
+| ExistList  | Applies Exist to each item in input list returning a list of Bool | ObjectSetList | BoolList  | ![GREEN] for ObjectSetList ![BLUE] for EventSetList |
+| AnyFalse  | Returns true if there is at least one false in a bool list | BoolList  | Bool | ![GREEN] |
 | FilterCollideGround  | Returns objects which collides to ground in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
 | FilterEnterContainer  | Returns objects which enters to unique container in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
+| FilterEnterContainerList  | Applies FilterEnterContainer to each item in a list of event set | EventSetList  | ObjectSetList  | ![Green]  |
 | GetCounterfactEvents  | Returns event list if a specific object is removed from the scene   | Object  | EventSet  | ![Green]  |
+| GetCounterfactEventsList  | Returns event list for all objects in an object set | ObjectSet  | EventSetList  | ![Green]  |
 | FilterDynamic  | Returns dynamic objects from an object set   | ObjectSet  | ObjectSet  | ![Green]  |
 | AsList  | Returns single elemen object set created with a specific object | Object | ObjectSet  | ![GREEN] |
 
@@ -166,6 +175,7 @@ or the entire video (when input frame is “null”)
 |---|---|---|---|
 | "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to collide with the ground?", "Does the **Z** **C** **S** enable the collision between the **Z2** **C2** **S2** and the ground?", "There is a **Z** **C** **S**, does it enable **Z2** **C2** **S2** to collide with the ground?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the ground?" | **TODO**  | Bool | ![GREEN] |
 | "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to enter the basket?", "There is a **Z** **C** **S**, does it enable the **Z2** **C2** **S2** to enter the basket?" | **TODO**  | Bool | ![GREEN] |
+| "Is there any other object which enables the **Z** **C** **S** to enter the basket?", "Are there any other objects which enable the **Z** **C** **S** to enter the basket?" | **TODO**  | Bool | ![GREEN] |
 
 | Question | Answer | Original Video| Variation Video |
 |---|---|---|---|

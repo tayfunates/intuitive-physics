@@ -183,6 +183,7 @@ or the entire video (when input frame is “null”)
 |"Does the big brown block enable the large cyan circle to enter the basket?"|"true"|![](/dataset/examples/ExampleScene2.gif)|![](/dataset/examples/ExampleScene2Variation1.gif)|
 |"There is a tiny purple cube, does it enable the big cyan circle to enter the basket?"|"false"|![](/dataset/examples/ExampleScene2.gif)|![](/dataset/examples/ExampleScene2Variation2.gif)|
 |"Is there any other object which enables the big red circle to enter the basket?"|"false"|![](/dataset/examples/ExampleScene3.gif)| <table> <tbody>  <tr>  <td>![](/dataset/examples/ExampleScene3Variation1.gif)</td>  <td>![](/dataset/examples/ExampleScene3Variation3.gif)</td>  </tr>  <tr>  <td>![](/dataset/examples/ExampleScene3Variation4.gif)</td>  <td>![](/dataset/examples/ExampleScene3Variation5.gif)</td>  </tr>  <tr>  </tbody>  </table> |
+|"Are there any other objects which enable the small brown cube to enter the basket?"|"true"|![](/dataset/examples/ExampleScene3.gif)|![](/dataset/examples/ExampleScene3Variation2.gif)|
   
 ##### Prevent
 

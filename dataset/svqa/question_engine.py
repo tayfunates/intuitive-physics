@@ -104,6 +104,14 @@ def intersect_handler(variations_outputs, scene_structs, causal_graph, inputs, s
     assert len(side_inputs) == 0
     return sorted(list(set(inputs[0]) & set(inputs[1])))
 
+def intersect_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 2
+    assert len(side_inputs) == 0
+    ret = []
+    for objectList in inputs[0]:
+        ret.append(sorted(list(set(objectList) & set(inputs[1]))))
+    return ret
+
 def difference_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
@@ -157,6 +165,20 @@ def exist_handler(variations_outputs, scene_structs, causal_graph, inputs, side_
     assert len(inputs) == 1
     assert len(side_inputs) == 0
     return len(inputs[0]) > 0
+
+def exist_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    ret = []
+    for li in inputs[0]:
+        ret.append(len(li) > 0)
+    return ret
+
+def any_false_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    ret = False in inputs[0]
+    return ret
 
 def equal_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
@@ -247,11 +269,35 @@ def filter_enter_container_handler(variations_outputs, scene_structs, causal_gra
             ret.add(event['objects'][1])
     return list(ret)
 
+def filter_enter_container_from_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    # Assumes single container
+    basket_id = get_basket_unique_id(scene_structs)
+    ret = []
+    for eventList in inputs[0]:
+        container_end_up_events = [event for event in eventList if event['type'] == 'ContainerEndUp']
+        retObjects = set()
+        for event in container_end_up_events:
+            if event['objects'][0] != basket_id:
+                retObjects.add(event['objects'][0])
+            else:
+                retObjects.add(event['objects'][1])
+        ret.append(list(retObjects))
+    return ret
+
 def counterfact_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     object_removed_variation_simulation = variations_outputs['variations_outputs'][str(inputs[0])]
     variation_causal_graph = CausalGraph(object_removed_variation_simulation['causal_graph'])
     return variation_causal_graph.events
+
+def counterfact_events_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    ret = []
+    for uniqueObjectIdx in inputs[0]:
+        object_removed_variation_simulation = variations_outputs['variations_outputs'][str(uniqueObjectIdx)]
+        ret.append(CausalGraph(object_removed_variation_simulation['causal_graph']).events)
+    return ret
 
 def as_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
@@ -273,12 +319,15 @@ execute_handlers = {
     'relate': relate_handler,
     'union': union_handler,
     'intersect': intersect_handler,
+    'intersect_list': intersect_list_handler,
     'difference': difference_handler,
     'count': count_handler,
     'query_color': make_query_handler('color'),
     'query_shape': make_query_handler('shape'),
     'query_size': make_query_handler('size'),
     'exist': exist_handler,
+    'exist_list': exist_list_handler,
+    'any_false': any_false_handler,
     'equal_color': equal_handler,
     'equal_shape': equal_handler,
     'equal_integer': equal_handler,
@@ -300,7 +349,9 @@ execute_handlers = {
     'end_scene_step': end_scene_step_handler,
     'filter_collide_ground': filter_collide_ground_handler,
     'filter_enter_container': filter_enter_container_handler,
+    'filter_enter_container_from_list': filter_enter_container_from_list_handler,
     'counterfact_events': counterfact_events_handler,
+    'counterfact_events_list': counterfact_events_list_handler,
     'as_list': as_list_handler
 }
 

@@ -326,5 +326,124 @@
       }
     ],
     "constraints": []
+  },
+  {
+    "text": [
+      "Is there any other object which enables the <Z> <C> <S> to enter the basket?",
+      "Are there any other objects which enable the <Z> <C> <S> to enter the basket?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "inputs": [],
+        "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          2
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          3
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          4
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "unique"
+      },
+
+      {
+        "inputs": [
+          6
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          0
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          8, 7
+        ],
+        "type": "difference"
+      },
+      {
+        "inputs": [
+          9
+        ],
+        "type": "counterfact_events_list"
+      },
+      {
+        "inputs": [
+          10
+        ],
+        "type": "filter_enter_container_from_list"
+      },
+      {
+        "inputs": [
+          11, 7
+        ],
+        "type": "intersect_list"
+      },
+      {
+        "inputs": [
+          12
+        ],
+        "type": "exist_list"
+      },
+      {
+        "inputs": [
+          13
+        ],
+        "type": "any_false"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
   }
 ]

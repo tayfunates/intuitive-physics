@@ -3,10 +3,13 @@
   "types": {
     "Object": null,
     "ObjectSet": null,
+    "ObjectSetList": null,
     "Event": null,
     "EventSet": null,
+    "EventSetList": null,
     "Integer": null,
     "Bool": null,
+    "BoolList": null,
     "Shape": [
       "cube",
       "triangle",
@@ -119,6 +122,15 @@
       "terminal": false
     },
     {
+      "name": "intersect_list",
+      "inputs": [
+        "ObjectSetList",
+        "ObjectSet"
+      ],
+      "output": "ObjectSetList",
+      "terminal": false
+    },
+    {
       "name": "difference",
       "inputs": [
         "ObjectSet",
@@ -163,6 +175,22 @@
       "name": "exist",
       "inputs": [
         "ObjectSet"
+      ],
+      "output": "Bool",
+      "terminal": true
+    },
+    {
+      "name": "exist_list",
+      "inputs": [
+        "ObjectSetList"
+      ],
+      "output": "BoolList",
+      "terminal": false
+    },
+    {
+      "name": "any_false",
+      "inputs": [
+        "BoolList"
       ],
       "output": "Bool",
       "terminal": true
@@ -458,11 +486,27 @@
       "terminal": false
     },
     {
+      "name": "filter_enter_container_from_list",
+      "inputs": [
+        "EventSetList"
+      ],
+      "output": "ObjectSetList",
+      "terminal": false
+    },
+    {
       "name": "counterfact_events",
       "inputs": [
         "Object"
       ],
       "output": "EventSet",
+      "terminal": false
+    },
+    {
+      "name": "counterfact_events_list",
+      "inputs": [
+        "ObjectSet"
+      ],
+      "output": "EventSetList",
       "terminal": false
     },
     {

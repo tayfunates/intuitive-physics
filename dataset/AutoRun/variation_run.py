@@ -9,7 +9,7 @@ import subprocess
 import os
 import glob
 import copy
-from autorun import run_simulation
+from AutoRun.generate_dataset import run_simulation
 from svqa.causal_graph import CausalGraph
 
 

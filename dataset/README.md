@@ -177,6 +177,8 @@ or the entire video (when input frame is “null”)
 | "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to enter the basket?", "There is a **Z** **C** **S**, does it enable the **Z2** **C2** **S2** to enter the basket?" | **TODO**  | Bool | ![GREEN] |
 | "Is there any object which enables the **Z** **C** **S** to enter the basket?", "Are there any objects which enable the **Z** **C** **S** to enter the basket?" | **TODO**  | Bool | ![GREEN] |
 | "How many objects does the **Z** **C** **S** enable to enter the basket?", "What is the number of objects that the **Z** **C** **S** enable to enter the basket?" | **TODO**  | Integer | ![GREEN] |
+| "How many objects does the **Z** **C** **S** enable to collide with the ground?", "What is the number of objects that the **Z** **C** **S** enable to collide with the ground?" | **TODO**  | Integer | ![GREEN] |
+
 
 | Question | Answer | Original Video| Variation Video |
 |---|---|---|---|
@@ -186,6 +188,7 @@ or the entire video (when input frame is “null”)
 |"Is there any object which enables the big red circle to enter the basket?"|"false"|![](/dataset/examples/ExampleScene3.gif)| <table> <tbody>  <tr>  <td>![](/dataset/examples/ExampleScene3Variation1.gif)</td>  <td>![](/dataset/examples/ExampleScene3Variation3.gif)</td>  </tr>  <tr>  <td>![](/dataset/examples/ExampleScene3Variation4.gif)</td>  <td>![](/dataset/examples/ExampleScene3Variation5.gif)</td>  </tr>  <tr>  </tbody>  </table> |
 |"Are there any objects which enable the small brown cube to enter the basket?"|"true"|![](/dataset/examples/ExampleScene3.gif)|![](/dataset/examples/ExampleScene3Variation2.gif)|
 |"How many objects does the big yellow circle enable to enter the basket?"|"2"|![](/dataset/examples/ExampleScene4.gif)|![](/dataset/examples/ExampleScene4Variation1.gif)|
+|"What is the number of objects that the big red circle enable to collide with the ground?"|"0"|![](/dataset/examples/ExampleScene5.gif)|![](/dataset/examples/ExampleScene5Variation1.gif)|
   
 ##### Prevent
 

@@ -65,7 +65,7 @@
       },
       {
         "inputs": [
-          0, 8
+          3, 8
         ],
         "type": "difference"
       },
@@ -233,7 +233,7 @@
       },
       {
         "inputs": [
-          0, 8
+          3, 8
         ],
         "type": "difference"
       },

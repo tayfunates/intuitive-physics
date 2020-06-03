@@ -189,6 +189,7 @@ or the entire video (when input frame is “null”)
 |"Are there any objects which enable the small brown cube to enter the basket?"|"true"|![](/dataset/examples/ExampleScene3.gif)|![](/dataset/examples/ExampleScene3Variation2.gif)|
 |"How many objects does the big yellow circle enable to enter the basket?"|"2"|![](/dataset/examples/ExampleScene4.gif)|![](/dataset/examples/ExampleScene4Variation1.gif)|
 |"What is the number of objects that the big red circle enable to collide with the ground?"|"0"|![](/dataset/examples/ExampleScene5.gif)|![](/dataset/examples/ExampleScene5Variation1.gif)|
+|"Is there any object which enables the small green circle to enter the basket?"|"**true**"|![](/dataset/examples/ExampleScene7.gif)|![](/dataset/examples/ExampleScene7Variation1.gif)|
   
 ##### Prevent
 

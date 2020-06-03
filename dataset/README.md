@@ -205,5 +205,6 @@ or the entire video (when input frame is “null”)
 |"Does the big yellow cube prevent the small blue triangle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene2.gif)|![](/dataset/examples/ExampleScene2Variation3.gif)|
 |"Does the tiny purple circle prevent the big blue circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene6.gif)|![](/dataset/examples/ExampleScene6Variation1.gif)|
 |"Does the large cyan circle prevent the tiny brown circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene8.gif)|![](/dataset/examples/ExampleScene8Variation1.gif)|
+|"Does the large purple circle prevent the small green circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene9.gif)|![](/dataset/examples/ExampleScene9Variation1.gif)|
 
 

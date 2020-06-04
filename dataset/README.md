@@ -151,7 +151,13 @@ or the entire video (when input frame is “null”)
 |**1. "Before entering the basket, does big yellow circle collide with other objects?"<br>2. "Before colliding with big purple circle, does green circle collide with other objects?"**|**1. "false"<br>2. "false"**|![](/dataset/examples/ExampleScene9.gif)|
 |**1. "Does the big blue ball collide with another object after colliding with the purple ball?"<br>2. "Does the yellow circle collide with an object after ending up in the container?"<br>3. "Are there any collisions after brown ball ended up in the basket?"**|**1. "false"<br>2. "true"<br>3. "false"**|![](/dataset/examples/ExampleScene6.gif)|
 |**1. "Does the small green ball collide with an object before colliding with large red ball?"<br>2. "Does the big red circle collide with tiny brown cube before colliding with small blue ball?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene5.gif)|
-|**1. "Does the big cyan ball end up in the basket after colliding with the large yellow ball?"<br>2. "Does any other object end up in the basket before tiny brown ball ended up in the basket?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene5.gif)|
+|**1. "Does the big cyan ball end up in the basket after colliding with the large yellow ball?"<br>2. "Does any other object end up in the basket before tiny brown ball ended up in the basket?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene4.gif)|
+
+##### Counting
+
+| Question | Answer | Original Video|
+|---|---|---|
+|**1. "How many objects enters the basket after tiny brown ball ends up in the basket?"<br>2. "How many objects ends up in the basket before big yellow ball ends up in the basket?"**|**1. "2"<br>2. "2"**|![](/dataset/examples/ExampleScene4.gif)|
 
 #### Descriptive
 
@@ -185,7 +191,7 @@ or the entire video (when input frame is “null”)
 |---|---|---|
 |"How many circles are moving when the video ends?"|"2"|![](/dataset/examples/ExampleScene9.gif)|
 |**"How many circles enter the basket?"**|**"1"**|![](/dataset/examples/ExampleScene9.gif)|
-|**1. "How many circles collides with red circle before it enters the basket?"<br>2. "How many circles collides with red circle before entering the basket?"**|**1. "2"<br>2. "2"**|![](/dataset/examples/ExampleScene7.gif)|
+|**1. "How many circles collide with red circle before it enters the basket?"<br>2. "How many circles collide with red circle before entering the basket?"**|**1. "2"<br>2. "2"**|![](/dataset/examples/ExampleScene7.gif)|
 |"**How many objects either enter the basket or collide with the ground?**"|"**2**"|![](/dataset/examples/ExampleScene2.gif)|
 
 ![CYAN] Counting için, oluşturalacak sahnelerde hardcoded shape, color, size kullanmamak gerekiyor, atıyorum sadece circlelardan oluşan simulation gibi. Çünkü sahnede olmayan elemanların sayısı çok olmaya başlayınca 0 cevabının yoğunluğu artıyor olacak. 

@@ -148,7 +148,7 @@ or the entire video (when input frame is “null”)
 
 | Question | Answer | Original Video|
 |---|---|---|
-|"**1. Before entering the basket, did big yellow circle collide with other objects?**", "**2. Before colliding with big purple circle, did green circle collide with other objects?**"|"**1. false**", "**2. false**"|![](/dataset/examples/ExampleScene9.gif)|
+|"**1. Before entering the basket, does big yellow circle collide with other objects?**", "**2. Before colliding with big purple circle, does green circle collide with other objects?**"|"**1. false**", "**2. false**"|![](/dataset/examples/ExampleScene9.gif)|
 
 #### Descriptive
 
@@ -182,6 +182,7 @@ or the entire video (when input frame is “null”)
 |---|---|---|
 |"How many circles are moving when the video ends?"|"2"|![](/dataset/examples/ExampleScene9.gif)|
 |"**How many circles enter the basket?**"|"1"|![](/dataset/examples/ExampleScene9.gif)|
+|"**1. How many circles collides with red circle before it enters the basket?**", "**1. How many circles collides with red circle before entering the basket?**"|"**1. 2**", "**2. 2**"|![](/dataset/examples/ExampleScene7.gif)|
 
 ![CYAN] Counting için, oluşturalacak sahnelerde hardcoded shape, color, size kullanmamak gerekiyor, atıyorum sadece circlelardan oluşan simulation gibi. Çünkü sahnede olmayan elemanların sayısı çok olmaya başlayınca 0 cevabının yoğunluğu artıyor olacak. 
 

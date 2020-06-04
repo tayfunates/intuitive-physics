@@ -142,14 +142,15 @@ or the entire video (when input frame is “null”)
 
 ### Samples
 
-#### Descriptive
+#### Temporal
 
 ##### Yes/No
-
 
 | Question | Answer | Original Video|
 |---|---|---|
 |"**Before entering the basket, did big yellow circle collide with other objects?**"|"false"|![](/dataset/examples/ExampleScene9.gif)|
+
+#### Descriptive
 
 ##### Query Color
 

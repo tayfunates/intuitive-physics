@@ -148,7 +148,7 @@ or the entire video (when input frame is “null”)
 
 | Question | Answer | Original Video|
 |---|---|---|
-|"**Before entering the basket, did big yellow circle collide with other objects?**"|"false"|![](/dataset/examples/ExampleScene9.gif)|
+|"**1. Before entering the basket, did big yellow circle collide with other objects?**", "**2. Before colliding with big purple circle, did green circle collide with other objects?**"|"**1. false**", "**2. false**"|![](/dataset/examples/ExampleScene9.gif)|
 
 #### Descriptive
 

@@ -150,6 +150,11 @@ or the entire video (when input frame is “null”)
 |---|---|---|---|
 | "What color is the object that first collides with **Z** **C** **S**?", "What is the color of object that first collides with **Z** **C** **S**?", "There is an object that first collides with **Z** **C** **S**; what color is it?", "There is an object that first collides with **Z** **C** **S**; what is its color?" | QueryColor( EventPartner( FilterFirst( FilterCollision( Events, FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ), FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ) | Color | ![GREEN] |
 
+
+| Question | Answer | Original Video|
+|---|---|---|
+|"What color is the object that first collides with big purple circle?"|"green"|![](/dataset/examples/ExampleScene9.gif)|
+
 ##### Query Shape
 
 | Question  |  Program | Output Type  | Implementation Status |

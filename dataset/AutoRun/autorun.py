@@ -5,30 +5,28 @@ import subprocess
 import os
 import glob
 
+# This script runs a number of simulations, but does not generate a dataset of videos-questions.
+# It may be used for debugging purposes.
+
 parser = argparse.ArgumentParser()
 
 args = None
 
-sim_id_to_step_count = {
-    0: 600,
-    1: 1200
-}
 
-
-def get_json(data_type: str, simulation_id: int, controller_id: int):
+def get_json(data_type: str, simulation_id: int, controller_id: str):
     return json.loads(
         f"""{{
                 "simulationID": {simulation_id},
                 "offline": true,
                 "outputVideoPath": "outputs/{data_type}_{controller_id}.mpg",
                 "outputJSONPath":  "outputs/{data_type}_{controller_id}.json",
-                "width": 1024,
-                "height": 640,
+                "width": 256,
+                "height": 256,
                 "inputScenePath":  "",
                 "numberOfObjects": 2,
                 "numberOfObstacles": 1,
                 "numberOfPendulums": 1,
-                "stepCount": {sim_id_to_step_count[simulation_id]}
+                "stepCount": 600
             }}""")
 
 
@@ -86,20 +84,20 @@ def init_args():
                         default="\"../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed\"",
                         help='Testbed executable path.')
 
-    parser.add_argument('--simulation-id', action='store', dest='simulation_id', required=True,
+    parser.add_argument('-id', '--simulation-id', action='store', dest='simulation_id', required=True,
                         help='Simulation id.')
 
-    parser.add_argument('--number-of-runs', action='store', dest='number_of_runs', required=True,
+    parser.add_argument('-n', '--number-of-runs', action='store', dest='number_of_runs', required=True,
                         help='Number of simulation runs.')
 
-    parser.add_argument('--test-set-ratio', action='store', dest='test_set_ratio', required=True,
-                        help='Test dataset ratio.')
+    parser.add_argument('-test', '--test-set-ratio', action='store', dest='test_set_ratio', required=True,
+                        help='Test set ratio.')
 
-    parser.add_argument('--validation-set-ratio', action='store', dest='validation_set_ratio', required=True,
-                        help='Validation dataset ratio.')
+    parser.add_argument('-val', '--validation-set-ratio', action='store', dest='validation_set_ratio', required=True,
+                        help='Validation set ratio.')
 
-    parser.add_argument('--train-set-ratio', action='store', dest='train_set_ratio', required=True,
-                        help='Train dataset ratio.')
+    parser.add_argument('-train', '--train-set-ratio', action='store', dest='train_set_ratio', required=True,
+                        help='Train set ratio.')
 
     parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 

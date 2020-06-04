@@ -149,6 +149,9 @@ or the entire video (when input frame is “null”)
 | Question | Answer | Original Video|
 |---|---|---|
 |**1. "Before entering the basket, does big yellow circle collide with other objects?"<br>2. "Before colliding with big purple circle, does green circle collide with other objects?"**|**1. "false"<br>2. "false"**|![](/dataset/examples/ExampleScene9.gif)|
+|**1. "Does the big blue ball collide with another object after colliding with the purple ball?"<br>2. "Does the yellow circle collide with an object after ending up in the container?"<br>3. "Are there any collisions after brown ball ended up in the basket?"**|**1. "false"<br>2. "true"<br>3. "false"**|![](/dataset/examples/ExampleScene6.gif)|
+|**1. "Does the small green ball collide with an object before colliding with large red ball?"<br>2. "Does the big red circle collide with tiny brown cube before colliding with small blue ball?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene5.gif)|
+|**1. "Does the big cyan ball end up in the basket after colliding with the large yellow ball?"<br>2. "Does any other object end up in the basket before tiny brown ball ended up in the basket?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene5.gif)|
 
 #### Descriptive
 

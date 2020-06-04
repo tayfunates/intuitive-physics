@@ -183,6 +183,7 @@ or the entire video (when input frame is “null”)
 |"How many circles are moving when the video ends?"|"2"|![](/dataset/examples/ExampleScene9.gif)|
 |"**How many circles enter the basket?**"|"1"|![](/dataset/examples/ExampleScene9.gif)|
 |"**1. How many circles collides with red circle before it enters the basket?**", "**1. How many circles collides with red circle before entering the basket?**"|"**1. 2**", "**2. 2**"|![](/dataset/examples/ExampleScene7.gif)|
+|"**How many objects either enter the basket or collide with the ground?**"|"**2**"|![](/dataset/examples/ExampleScene2.gif)|
 
 ![CYAN] Counting için, oluşturalacak sahnelerde hardcoded shape, color, size kullanmamak gerekiyor, atıyorum sadece circlelardan oluşan simulation gibi. Çünkü sahnede olmayan elemanların sayısı çok olmaya başlayınca 0 cevabının yoğunluğu artıyor olacak. 
 

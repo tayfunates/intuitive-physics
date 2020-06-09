@@ -101,9 +101,11 @@ We do not have any other side inputs now, but there may some in the future, such
 | FilterColor  | Returns objects from input list which has the color of input color  | ObjectSet, Color  | ObjectSet  | ![GREEN]  |
 | FilterShape  | Returns objects from input list which has the shape of input shape  | ObjectSet, Shape  | ObjectSet  | ![GREEN]  |
 | FilterCollision  | Returns collision events from the input list | EventSet | EventSet | ![GREEN]  |
+| FilterCollisionWithDynamics  | Returns collision events including only dynamic objects from the input list | EventSet | EventSet | ![GREEN]  |
+| FilterEnterContainer | Returns container end up events from the input list | EventSet | EventSet | ![GREEN]  |
 | FilterStartTouching  | Returns start touching events from the input list | EventSet | EventSet | ![BLUE]  |
 | FilterEndTouching  | Returns end touching events from the input list | EventSet | EventSet | ![BLUE]  |
-| FilterBefore  | Returns events from the input list that happened before input event  | EventSet, Event  | EventSet  | ![BLUE]  |
+| FilterBefore  | Returns events from the input list that happened before input event  | EventSet, Event  | EventSet  | ![Green]  |
 | FilterMoving  | Returns objects if they are moving at step specified by an Integer   | ObjectSet, Integer  | ObjectSet  | ![Green]  |
 | FilterAfter  | Returns events from the input list that happened after input event  | EventSet, Event  | EventSet  | ![BLUE]  |
 | FilterFirst  | Returns the first event from the input list  | EventSet  | Event  | ![GREEN]  |
@@ -113,12 +115,12 @@ We do not have any other side inputs now, but there may some in the future, such
 | QueryColor  | Returns the color of the input object  | Object  | Color  | ![GREEN]  |
 | QueryShape  | Returns the shape of the input object  | Object  | Shape  | ![GREEN]  |
 | Count  | Returns size of the input list  | ObjectSet, EventSet  | Integer  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
-| Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
+| Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] |
 | ExistList  | Applies Exist to each item in input list returning a list of Bool | ObjectSetList | BoolList  | ![GREEN] for ObjectSetList ![BLUE] for EventSetList |
 | AnyFalse  | Returns true if there is at least one false in a bool list | BoolList  | Bool | ![GREEN] |
 | FilterCollideGround  | Returns objects which collides to ground in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
-| FilterEnterContainer  | Returns objects which enters to unique container in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
-| FilterEnterContainerList  | Applies FilterEnterContainer to each item in a list of event set | EventSetList  | ObjectSetList  | ![Green]  |
+| FilterObjectFromEnterContainerEvents  | Returns objects which enters to unique container in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
+| FilterObjectFromEnterContainerEventsList  | Applies FilterObjectFromEnterContainerEvents to each item in a list of event set | EventSetList  | ObjectSetList  | ![Green]  |
 | GetCounterfactEvents  | Returns event list if a specific object is removed from the scene   | Object  | EventSet  | ![Green]  |
 | GetCounterfactEventsList  | Returns event list for all objects in an object set | ObjectSet  | EventSetList  | ![Green]  |
 | FilterDynamic  | Returns dynamic objects from an object set   | ObjectSet  | ObjectSet  | ![Green]  |
@@ -148,7 +150,7 @@ or the entire video (when input frame is “null”)
 
 | Question | Answer | Original Video|
 |---|---|---|
-|**1. "Before entering the basket, does big yellow circle collide with other objects?"<br>2. "Before colliding with big purple circle, does green circle collide with other objects?"**|**1. "false"<br>2. "false"**|![](/dataset/examples/ExampleScene9.gif)|
+|**"Before colliding with big purple circle, does green circle collide with other objects?"**|**"false"**|![](/dataset/examples/ExampleScene9.gif)|
 |**1. "Does the big blue ball collide with another object after colliding with the purple ball?"<br>2. "Does the yellow circle collide with an object after ending up in the container?"<br>3. "Are there any collisions after brown ball ended up in the basket?"**|**1. "false"<br>2. "true"<br>3. "false"**|![](/dataset/examples/ExampleScene6.gif)|
 |**1. "Does the small green ball collide with an object before colliding with large red ball?"<br>2. "Does the big red circle collide with tiny brown cube before colliding with small blue ball?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene5.gif)|
 |**1. "Does the big cyan ball end up in the basket after colliding with the large yellow ball?"<br>2. "Does any other object end up in the basket before tiny brown ball ended up in the basket?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene4.gif)|
@@ -197,6 +199,16 @@ or the entire video (when input frame is “null”)
 ![CYAN] Counting için, oluşturalacak sahnelerde hardcoded shape, color, size kullanmamak gerekiyor, atıyorum sadece circlelardan oluşan simulation gibi. Çünkü sahnede olmayan elemanların sayısı çok olmaya başlayınca 0 cevabının yoğunluğu artıyor olacak. 
 
 ![CYAN] Prevent/enable için ne gibi assumption olacak? Bu assumptionlar farklı sahneler için yeterince genericlik sağlayacak mı yoksa her simulation için farklı set of questions mı olacak?
+
+##### Yes/No
+
+| Question  |  Program | Output Type  | Implementation Status |
+|---|---|---|---|
+| "Before entering the basket, does **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
+
+| Question | Answer | Original Video |
+|---|---|---|
+|"Before entering the basket, does tiny cyan circle collide with other objects?"|"true"|![](/dataset/examples/ExampleScene11.gif)|
 
 ##### Enable
 

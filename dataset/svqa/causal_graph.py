@@ -18,7 +18,8 @@ class CausalGraph:
 
     @property
     def events(self):
-        return [value for value in self.__id_to_event.values()]
+        temp_events = [value for value in self.__id_to_event.values()]
+        return sorted(temp_events, key = lambda e: e['step'])
 
     @property
     def collision_events(self):

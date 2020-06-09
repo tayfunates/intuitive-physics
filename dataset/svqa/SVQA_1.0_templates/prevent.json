@@ -184,7 +184,7 @@
         "inputs": [
           1
         ],
-        "type": "filter_enter_container"
+        "type": "filter_objects_from_enter_container_events"
       },
       {
         "inputs": [
@@ -247,7 +247,7 @@
         "inputs": [
           10
         ],
-        "type": "filter_enter_container"
+        "type": "filter_objects_from_enter_container_events"
       },
       {
         "inputs": [

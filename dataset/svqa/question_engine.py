@@ -21,7 +21,10 @@ in a JSON metadata file.
 
 def object_with_unique_id(scene_struct, unique_object_id):
     objs = [o for o in scene_struct['objects'] if o['uniqueID']==unique_object_id]
-    assert(len(objs)==1)
+    try:
+        assert(len(objs)==1)
+    except:
+        val = 2
     return objs[0]
 
 def is_ground(scene_structs, unique_object_id):
@@ -208,7 +211,15 @@ def make_filter_events_handler(event_type):
     def event_type_filter_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
         assert len(inputs) == 1
         assert len(side_inputs) == 0
-        return [event for event in inputs[0] if event['type'] == 'Collision']
+        return [event for event in inputs[0] if event['type'] == event_type]
+
+    return event_type_filter_handler
+
+def make_filter_events_with_dynamics_handler(event_type):
+    def event_type_filter_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+        assert len(inputs) == 1
+        assert len(side_inputs) == 0
+        return [event for event in inputs[0] if event['type'] == event_type and is_object_dynamic(object_with_unique_id(scene_structs[0], event['objects'][0])) and (len(event['objects']) == 1 or is_object_dynamic(object_with_unique_id(scene_structs[0], event['objects'][1])))]
 
     return event_type_filter_handler
 
@@ -256,7 +267,7 @@ def filter_collide_ground_handler(variations_outputs, scene_structs, causal_grap
             ret.add(event['objects'][1])
     return list(ret)
 
-def filter_enter_container_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+def filter_objects_from_enter_container_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     # Assumes single container
     basket_id = get_basket_unique_id(scene_structs)
@@ -269,7 +280,7 @@ def filter_enter_container_handler(variations_outputs, scene_structs, causal_gra
             ret.add(event['objects'][1])
     return list(ret)
 
-def filter_enter_container_from_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+def filter_objects_from_enter_container_events_from_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     # Assumes single container
     basket_id = get_basket_unique_id(scene_structs)
@@ -299,6 +310,10 @@ def counterfact_events_list_handler(variations_outputs, scene_structs, causal_gr
         ret.append(CausalGraph(object_removed_variation_simulation['causal_graph']).events)
     return ret
 
+def filter_before_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 2
+    return [event for event in inputs[0] if event['step'] < inputs[1]['step']]
+
 def as_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     return [inputs[0]]
@@ -326,6 +341,7 @@ execute_handlers = {
     'query_shape': make_query_handler('shape'),
     'query_size': make_query_handler('size'),
     'exist': exist_handler,
+    'event_exist': exist_handler,
     'exist_list': exist_list_handler,
     'any_false': any_false_handler,
     'equal_color': equal_handler,
@@ -341,6 +357,8 @@ execute_handlers = {
     'events': events_handler,
     'filter_events': filter_events_handler,
     'filter_collision': make_filter_events_handler('Collision'),
+    'filter_collision_with_dynamics': make_filter_events_with_dynamics_handler('Collision'),
+    'filter_enter_container': make_filter_events_handler('ContainerEndUp'),
     'filter_first': filter_first_handler,
     'event_partner': event_partner_handler,
     'filter_moving_objects': filter_moving_objects_handler,
@@ -348,10 +366,11 @@ execute_handlers = {
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,
     'filter_collide_ground': filter_collide_ground_handler,
-    'filter_enter_container': filter_enter_container_handler,
-    'filter_enter_container_from_list': filter_enter_container_from_list_handler,
+    'filter_objects_from_enter_container_events': filter_objects_from_enter_container_events_handler,
+    'filter_objects_from_enter_container_events_from_list': filter_objects_from_enter_container_events_from_list_handler,
     'counterfact_events': counterfact_events_handler,
     'counterfact_events_list': counterfact_events_list_handler,
+    'filter_before': filter_before_handler,
     'as_list': as_list_handler
 }
 

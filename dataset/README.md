@@ -168,7 +168,7 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "What color is the object that first collides with **Z** **C** **S**?", "What is the color of object that first collides with **Z** **C** **S**?", "There is an object that first collides with **Z** **C** **S**; what color is it?", "There is an object that first collides with **Z** **C** **S**; what is its color?" | QueryColor( EventPartner( FilterFirst( FilterCollision( Events, FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ), FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ) | Color | ![GREEN] |
+| "What color is the object that first collides with the **Z** **C** **S**?", "What is the color of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what color is it?", "There is an object that first collides with the **Z** **C** **S**; what is its color?" | **TODO** | Color | ![GREEN] |
 
 
 | Question | Answer | Original Video|

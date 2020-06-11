@@ -480,6 +480,14 @@
       "terminal": false
     },
     {
+      "name": "filter_objects_from_events",
+      "inputs": [
+        "ObjectSet"
+      ],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
       "name": "filter_dynamic_objects",
       "inputs": [
         "ObjectSet"
@@ -499,14 +507,6 @@
       "inputs": [
       ],
       "output": "Integer",
-      "terminal": false
-    },
-    {
-      "name": "filter_objects_from_dynamic_object_collision_events",
-      "inputs": [
-        "EventSet"
-      ],
-      "output": "ObjectSet",
       "terminal": false
     },
     {

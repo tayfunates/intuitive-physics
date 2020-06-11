@@ -260,12 +260,10 @@ def end_scene_step_handler(variations_outputs, scene_structs, causal_graph, inpu
     assert len(inputs) == 0
     return -1
 
-def filter_objects_from_dynamic_object_collision_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+def filter_objects_from_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
-    collision_events = [event for event in inputs[0] if event['type'] == 'Collision']
-    dynamic_objects_collision_events = [event for event in collision_events if is_object_dynamic(object_with_unique_id(scene_structs[0], event['objects'][0])) and is_object_dynamic(object_with_unique_id(scene_structs[0], event['objects'][1]))]
     ret = set()
-    for event in dynamic_objects_collision_events:
+    for event in inputs[0]:
         ret.add(event['objects'][0])
         ret.add(event['objects'][1])
     return list(ret)
@@ -383,10 +381,10 @@ execute_handlers = {
     'filter_first': filter_first_handler,
     'event_partner': event_partner_handler,
     'filter_moving_objects': filter_moving_objects_handler,
+    'filter_objects_from_events': filter_objects_from_events_handler,
     'filter_dynamic_objects': filter_dynamic_objects_handler,
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,
-    'filter_objects_from_dynamic_object_collision_events': filter_objects_from_dynamic_object_collision_events_handler,
     'filter_objects_from_collide_ground_events': filter_objects_from_collide_ground_events_handler,
     'filter_objects_from_enter_container_events': filter_objects_from_enter_container_events_handler,
     'filter_objects_from_enter_container_events_from_list': filter_objects_from_enter_container_events_from_list_handler,

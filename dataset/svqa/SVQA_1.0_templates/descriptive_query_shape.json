@@ -19,14 +19,20 @@
         "inputs": [
           1
         ],
-        "type": "filter_objects_from_dynamic_object_collision_events"
+        "type": "filter_collision_with_dynamics"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_objects_from_events"
       },
       {
         "side_inputs": [
           "<Z>"
         ],
         "inputs": [
-          2
+          3
         ],
         "type": "filter_size"
       },
@@ -35,7 +41,7 @@
           "<C>"
         ],
         "inputs": [
-          3
+          4
         ],
         "type": "filter_color"
       },
@@ -44,43 +50,43 @@
           "<S>"
         ],
         "inputs": [
-          4
+          5
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          5
+          6
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          1, 6
+          1, 7
         ],
         "type": "filter_events"
       },
       {
         "inputs": [
-          7
+          8
         ],
         "type": "filter_collision_with_dynamics"
       },
       {
         "inputs": [
-          8
+          9
         ],
         "type": "filter_first"
       },
       {
         "inputs": [
-          6, 9
+          7, 10
         ],
         "type": "event_partner"
       },
       {
         "inputs": [
-          10
+          11
         ],
         "type": "query_shape"
       }

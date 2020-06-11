@@ -186,9 +186,9 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "How many **S**s are moving when the video ends?" | Count( FilterMoving( FilterShape( SceneAtEnd, **S**) , EndSceneStep ) ) | Integer | ![GREEN] |
-| "How many **C** objects are moving when the video ends?" | Count( FilterMoving( FilterColor( SceneAtEnd, **C**) , EndSceneStep ) ) | Integer | ![GREEN] |
-| "How many **Z** objects are moving when the video ends?" | Count( FilterMoving( FilterColor( SceneAtEnd, **Z**) , EndSceneStep ) ) | Integer | ![GREEN] |
+| "How many **S**s are moving when the video ends?" | **TODO** | ![GREEN] |
+| "How many **C** objects are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
+| "How many **Z** objects are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
 
 | Question | Answer | Original Video|
 |---|---|---|

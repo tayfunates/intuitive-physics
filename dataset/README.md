@@ -58,6 +58,7 @@ Internal tagging information:
 - Collision Event (CE)
 - Start Touching Event (STE)
 - End Touching Event (ETE)
+- Basket En Up Event (BEUE)
 
 ## Input and Output Data Types of Functional Modules
 
@@ -119,6 +120,7 @@ We do not have any other side inputs now, but there may some in the future, such
 | Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] |
 | ExistList  | Applies Exist to each item in input list returning a list of Bool | ObjectSetList | BoolList  | ![GREEN] for ObjectSetList ![BLUE] for EventSetList |
 | AnyFalse  | Returns true if there is at least one false in a bool list | BoolList  | Bool | ![GREEN] |
+| FilterObjectsFromDynamicObjectCollisionEvents  | Returns objects from collision events including only dynamic objects   | EventSet  | ObjectSet  | ![Green]  |
 | FilterObjectsFromCollideGroundEvents  | Returns objects which collides to ground in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
 | FilterObjectsFromEnterContainerEvents  | Returns objects which enters to unique container in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
 | FilterObjectFromEnterContainerEventsList  | Applies FilterObjectFromEnterContainerEvents to each item in a list of event set | EventSetList  | ObjectSetList  | ![Green]  |
@@ -179,7 +181,7 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "What shape is the object that first collides with **Z** **C** **S**?", "What is the shape of object that first collides with **Z** **C** **S**?", "There is an object that first collides with **Z** **C** **S**; what shape is it?", "There is an object that first collides with **Z** **C** **S**; what is its shape?" | QueryShape( EventPartner( FilterFirst( FilterCollision( Events, FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ), FilterUnique( SceneAtStart, **Z** **C** **S** ) ) ) | Shape | ![GREEN] |
+| "What shape is the object that first collides with the **Z** **C** **S**?", "What is the shape of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what shape is it?", "There is an object that first collides with the **Z** **C** **S**; what is its shape?" | **TODO** | Shape | ![GREEN] |
 
 
 ##### Counting

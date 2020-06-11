@@ -16,7 +16,7 @@
         "inputs": [
           1
         ],
-        "type": "filter_collide_ground"
+        "type": "filter_objects_from_collide_ground_events"
       },
       {
         "inputs": [
@@ -79,7 +79,7 @@
         "inputs": [
           10
         ],
-        "type": "filter_collide_ground"
+        "type": "filter_objects_from_collide_ground_events"
       },
       {
         "inputs": [

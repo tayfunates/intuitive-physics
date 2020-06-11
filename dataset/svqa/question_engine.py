@@ -215,6 +215,12 @@ def make_filter_events_handler(event_type):
 
     return event_type_filter_handler
 
+def filter_collide_ground_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    collision_events = [event for event in inputs[0] if event['type'] == 'Collision']
+    return [event for event in collision_events if is_ground(scene_structs, event['objects'][0]) or is_ground(scene_structs, event['objects'][1])]
+
 def make_filter_events_with_dynamics_handler(event_type):
     def event_type_filter_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
         assert len(inputs) == 1
@@ -254,7 +260,7 @@ def end_scene_step_handler(variations_outputs, scene_structs, causal_graph, inpu
     assert len(inputs) == 0
     return -1
 
-def filter_collide_ground_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+def filter_objects_from_collide_ground_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     ground_id = get_ground_unique_id(scene_structs)
     collision_events = [event for event in inputs[0] if event['type'] == 'Collision']
@@ -359,13 +365,14 @@ execute_handlers = {
     'filter_collision': make_filter_events_handler('Collision'),
     'filter_collision_with_dynamics': make_filter_events_with_dynamics_handler('Collision'),
     'filter_enter_container': make_filter_events_handler('ContainerEndUp'),
+    'filter_collide_ground': filter_collide_ground_handler,
     'filter_first': filter_first_handler,
     'event_partner': event_partner_handler,
     'filter_moving_objects': filter_moving_objects_handler,
     'filter_dynamic_objects': filter_dynamic_objects_handler,
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,
-    'filter_collide_ground': filter_collide_ground_handler,
+    'filter_objects_from_collide_ground_events': filter_objects_from_collide_ground_events_handler,
     'filter_objects_from_enter_container_events': filter_objects_from_enter_container_events_handler,
     'filter_objects_from_enter_container_events_from_list': filter_objects_from_enter_container_events_from_list_handler,
     'counterfact_events': counterfact_events_handler,

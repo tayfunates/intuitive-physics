@@ -446,6 +446,14 @@
       "terminal": false
     },
     {
+      "name": "filter_collide_ground",
+      "inputs": [
+        "EventSet"
+      ],
+      "output": "EventSet",
+      "terminal": false
+    },
+    {
       "name": "filter_first",
       "inputs": [
         "EventSet"
@@ -494,7 +502,7 @@
       "terminal": false
     },
     {
-      "name": "filter_collide_ground",
+      "name": "filter_objects_from_collide_ground_events",
       "inputs": [
         "EventSet"
       ],

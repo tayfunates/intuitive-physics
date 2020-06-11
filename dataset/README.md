@@ -107,8 +107,8 @@ We do not have any other side inputs now, but there may some in the future, such
 | FilterStartTouching  | Returns start touching events from the input list | EventSet | EventSet | ![BLUE]  |
 | FilterEndTouching  | Returns end touching events from the input list | EventSet | EventSet | ![BLUE]  |
 | FilterBefore  | Returns events from the input list that happened before input event  | EventSet, Event  | EventSet  | ![Green]  |
+| FilterAfter  | Returns events from the input list that happened after input event  | EventSet, Event  | EventSet  | ![GREEN]  |
 | FilterMoving  | Returns objects if they are moving at step specified by an Integer   | ObjectSet, Integer  | ObjectSet  | ![Green]  |
-| FilterAfter  | Returns events from the input list that happened after input event  | EventSet, Event  | EventSet  | ![BLUE]  |
 | FilterFirst  | Returns the first event from the input list  | EventSet  | Event  | ![GREEN]  |
 | FilterUnique  | Returns unique object from input list with possible side inputs Size, Color, Shape  | Objects, ObjectSideInputs | Object  | ![GREEN]  |
 | Unique  | Returns the single object from the input list, if list has more than one elements returns INVALID  | Objects | Object  | ![GREEN]  |
@@ -152,7 +152,7 @@ or the entire video (when input frame is “null”)
 | Question | Answer | Original Video|
 |---|---|---|
 |**"Before colliding with big purple circle, does green circle collide with other objects?"**|**"false"**|![](/dataset/examples/ExampleScene9.gif)|
-|**1. "Does the big blue ball collide with another object after colliding with the purple ball?"<br>2. "Does the yellow circle collide with an object after ending up in the container?"<br>3. "Are there any collisions after brown ball ended up in the basket?"**|**1. "false"<br>2. "true"<br>3. "false"**|![](/dataset/examples/ExampleScene6.gif)|
+|**1. "Does the big blue ball collide with another object after colliding with the purple ball?"<br>2. "Does the yellow circle collide with an object after ending up in the container?"|**1. "false"<br>2. "true"**|![](/dataset/examples/ExampleScene6.gif)|
 |**1. "Does the small green ball collide with an object before colliding with large red ball?"<br>2. "Does the big red circle collide with tiny brown cube before colliding with small blue ball?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene5.gif)|
 |**1. "Does the big cyan ball end up in the basket after colliding with the large yellow ball?"<br>2. "Does any other object end up in the basket before tiny brown ball ended up in the basket?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene4.gif)|
 
@@ -205,12 +205,15 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "Before entering the basket, does **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
-| "Before colliding with the ground, does **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
+| "Before entering the basket, does the **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
+| "Before colliding with the ground, does the **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
+| "Are there any collisions after the **Z** **C** **S** enters the basket?" | **TODO** | Bool | ![GREEN] |
+| "Are there any collisions after the **Z** **C** **S** collides with the ground?" | **TODO** | Bool | ![GREEN] |
 
 | Question | Answer | Original Video |
 |---|---|---|
 |"Before entering the basket, does tiny cyan circle collide with other objects?"|"true"|![](/dataset/examples/ExampleScene11.gif)|
+|"Are there any collisions after the brown ball enters the basket?"|"true"|![](/dataset/examples/ExampleScene6.gif)|
 
 ##### Enable
 

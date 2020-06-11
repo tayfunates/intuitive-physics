@@ -482,7 +482,7 @@
     {
       "name": "filter_objects_from_events",
       "inputs": [
-        "ObjectSet"
+        "EventSet"
       ],
       "output": "ObjectSet",
       "terminal": false

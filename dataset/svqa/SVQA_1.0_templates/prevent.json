@@ -26,7 +26,13 @@
       },
       {
         "inputs": [
-          0, 3
+          3
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          0, 4
         ],
         "type": "difference"
       },
@@ -44,7 +50,7 @@
           "<C>"
         ],
         "inputs": [
-          5
+          6
         ],
         "type": "filter_color"
       },
@@ -53,49 +59,55 @@
           "<S>"
         ],
         "inputs": [
-          6
+          7
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          7
+          8
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          8
+          9
         ],
         "type": "as_list"
       },
       {
         "inputs": [
-          4, 9
+          5, 10
         ],
         "type": "difference"
       },
       {
         "inputs": [
-          8
+          9
         ],
         "type": "counterfact_events"
       },
       {
         "inputs": [
-          11
+          12
         ],
         "type": "filter_collide_ground"
       },
       {
         "inputs": [
-          12
+          13
         ],
         "type": "filter_objects_from_events"
       },
       {
         "inputs": [
-          13, 3
+          14
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          15, 4
         ],
         "type": "difference"
       },
@@ -104,7 +116,7 @@
           "<Z2>"
         ],
         "inputs": [
-          10
+          11
         ],
         "type": "filter_size"
       },
@@ -113,7 +125,7 @@
           "<C2>"
         ],
         "inputs": [
-          15
+          17
         ],
         "type": "filter_color"
       },
@@ -122,31 +134,31 @@
           "<S2>"
         ],
         "inputs": [
-          16
+          18
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          17
+          19
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          18
+          20
         ],
         "type": "as_list"
       },
       {
         "inputs": [
-          14, 19
+          16, 21
         ],
         "type": "intersect"
       },
       {
         "inputs": [
-          20
+          22
         ],
         "type": "exist"
       }

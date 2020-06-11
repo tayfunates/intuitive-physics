@@ -557,6 +557,15 @@
       ],
       "output": "EventSet",
       "terminal": false
+    },
+    {
+      "name": "filter_after",
+      "inputs": [
+        "EventSet",
+        "Event"
+      ],
+      "output": "EventSet",
+      "terminal": false
     }
   ]
 }

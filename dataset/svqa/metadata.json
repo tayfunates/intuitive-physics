@@ -502,6 +502,14 @@
       "terminal": false
     },
     {
+      "name": "filter_objects_from_dynamic_object_collision_events",
+      "inputs": [
+        "EventSet"
+      ],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
       "name": "filter_objects_from_collide_ground_events",
       "inputs": [
         "EventSet"

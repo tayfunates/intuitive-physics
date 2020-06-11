@@ -102,6 +102,7 @@ We do not have any other side inputs now, but there may some in the future, such
 | FilterShape  | Returns objects from input list which has the shape of input shape  | ObjectSet, Shape  | ObjectSet  | ![GREEN]  |
 | FilterCollision  | Returns collision events from the input list | EventSet | EventSet | ![GREEN]  |
 | FilterCollisionWithDynamics  | Returns collision events including only dynamic objects from the input list | EventSet | EventSet | ![GREEN]  |
+| FilterCollideGround | Returns collision events including the ground from the input list | EventSet | EventSet | ![GREEN]  |
 | FilterEnterContainer | Returns container end up events from the input list | EventSet | EventSet | ![GREEN]  |
 | FilterStartTouching  | Returns start touching events from the input list | EventSet | EventSet | ![BLUE]  |
 | FilterEndTouching  | Returns end touching events from the input list | EventSet | EventSet | ![BLUE]  |
@@ -118,8 +119,8 @@ We do not have any other side inputs now, but there may some in the future, such
 | Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] |
 | ExistList  | Applies Exist to each item in input list returning a list of Bool | ObjectSetList | BoolList  | ![GREEN] for ObjectSetList ![BLUE] for EventSetList |
 | AnyFalse  | Returns true if there is at least one false in a bool list | BoolList  | Bool | ![GREEN] |
-| FilterCollideGround  | Returns objects which collides to ground in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
-| FilterObjectFromEnterContainerEvents  | Returns objects which enters to unique container in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
+| FilterObjectsFromCollideGroundEvents  | Returns objects which collides to ground in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
+| FilterObjectsFromEnterContainerEvents  | Returns objects which enters to unique container in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
 | FilterObjectFromEnterContainerEventsList  | Applies FilterObjectFromEnterContainerEvents to each item in a list of event set | EventSetList  | ObjectSetList  | ![Green]  |
 | GetCounterfactEvents  | Returns event list if a specific object is removed from the scene   | Object  | EventSet  | ![Green]  |
 | GetCounterfactEventsList  | Returns event list for all objects in an object set | ObjectSet  | EventSetList  | ![Green]  |
@@ -205,6 +206,7 @@ or the entire video (when input frame is “null”)
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
 | "Before entering the basket, does **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
+| "Before colliding with the ground, does **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
 
 | Question | Answer | Original Video |
 |---|---|---|

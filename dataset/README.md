@@ -120,7 +120,7 @@ We do not have any other side inputs now, but there may some in the future, such
 | Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] |
 | ExistList  | Applies Exist to each item in input list returning a list of Bool | ObjectSetList | BoolList  | ![GREEN] for ObjectSetList ![BLUE] for EventSetList |
 | AnyFalse  | Returns true if there is at least one false in a bool list | BoolList  | Bool | ![GREEN] |
-| FilterObjectsFromDynamicObjectCollisionEvents  | Returns objects from collision events including only dynamic objects   | EventSet  | ObjectSet  | ![Green]  |
+| FilterObjectsFromEvents  | Returns objects from events | EventSet  | ObjectSet  | ![Green]  |
 | FilterObjectsFromCollideGroundEvents  | Returns objects which collides to ground in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
 | FilterObjectsFromEnterContainerEvents  | Returns objects which enters to unique container in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
 | FilterObjectFromEnterContainerEventsList  | Applies FilterObjectFromEnterContainerEvents to each item in a list of event set | EventSetList  | ObjectSetList  | ![Green]  |

@@ -70,13 +70,15 @@ parser.add_argument('--num-scenes', default=0, type=int,
                          "generates questions for all scenes in the input file starting from " +
                          "--scene-start-idx")
 
-# Control the number of questions per image; we will attempt to generate
-# templates_per_image * instances_per_template questions per image.
-parser.add_argument('--templates-per-image', default=10, type=int,
+# Control the number of questions per video; we will attempt to generate
+# templates_per_video * instances_per_template questions per video.
+parser.add_argument('--restrict-template-count-per-video', default=False, type=bool,
+                    help="If set true then templates-per-video is used to restict the number of questions on each video")
+parser.add_argument('--templates-per-video', default=10, type=int,
                     help="The number of different templates that should be instantiated " +
-                         "on each image")
+                         "on each video")
 parser.add_argument('--instances-per-template', default=1, type=int,
-                    help="The number of times each template should be instantiated on an image")
+                    help="The number of times each template should be instantiated on a video")
 
 # Misc
 parser.add_argument('--reset-counts-every', default=250, type=int,
@@ -774,7 +776,7 @@ def main(args):
                 template_counts[(fn, idx)] += 1
             elif args.verbose:
                 print('did not get any =(')
-            if num_instantiated >= args.templates_per_image:
+            if args.restrict_template_count_per_video and num_instantiated >= args.templates_per_video:
                 break
 
     # Change "side_inputs" to "value_inputs" in all functions of all functional

@@ -42,7 +42,7 @@
     ],
     "constraints": []
   },
-    {
+  {
     "text": [
       "How many <C> objects are moving when the video ends?"
     ],
@@ -85,7 +85,7 @@
     ],
     "constraints": []
   },
-      {
+  {
     "text": [
       "How many <Z> objects are moving when the video ends?"
     ],
@@ -116,6 +116,40 @@
       {
         "inputs": [
           3
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "How many objects are moving when the video ends?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "end_scene"
+      },
+      {
+        "inputs": [],
+        "type": "end_scene_step"
+      },
+      {
+        "inputs": [
+          0, 1
+        ],
+        "type": "filter_moving_objects"
+      },
+      {
+        "inputs": [
+          2
         ],
         "type": "count"
       }

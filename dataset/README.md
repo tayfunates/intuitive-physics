@@ -157,12 +157,6 @@ or the entire video (when input frame is “null”)
 |**1. "Does the small green ball collide with an object before colliding with large red ball?"<br>2. "Does the big red circle collide with tiny brown cube before colliding with small blue ball?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene5.gif)|
 |**1. "Does the big cyan ball end up in the basket after colliding with the large yellow ball?"<br>2. "Does any other object end up in the basket before tiny brown ball ended up in the basket?"**|**1. "true"<br>2. "false"**|![](/dataset/examples/ExampleScene4.gif)|
 
-##### Counting
-
-| Question | Answer | Original Video|
-|---|---|---|
-|**1. "How many objects enters the basket after tiny brown ball ends up in the basket?"<br>2. "How many objects ends up in the basket before big yellow ball ends up in the basket?"**|**1. "2"<br>2. "2"**|![](/dataset/examples/ExampleScene4.gif)|
-
 #### Descriptive
 
 ##### Query Color
@@ -199,11 +193,14 @@ or the entire video (when input frame is “null”)
 | "How many **C** collide with the ground?" | **TODO** | Integer | ![GREEN] |
 | "How many **Z** collide with the ground?" | **TODO** | Integer | ![GREEN] |
 | "How many objects collide with the ground?" | **TODO** | Integer | ![GREEN] |
+| "How many objects enters the basket after the **Z** **C** **S** enters the basket?" | **TODO** | Integer | ![GREEN] |
+| "How many objects enters the basket before the **Z** **C** **S** enters the basket?" | **TODO** | Integer | ![GREEN] |
 
 | Question | Answer | Original Video|
 |---|---|---|
 |"How many circles are moving when the video ends?"|"2"|![](/dataset/examples/ExampleScene9.gif)|
 |"How many circles enter the basket?"|"1"|![](/dataset/examples/ExampleScene9.gif)|
+|1. "How many objects enters the basket after the tiny brown ball enters the basket?"<br>2. "How many objects enters the basket before big yellow ball enters the basket?"|1. "2"<br>2. "2"|![](/dataset/examples/ExampleScene4.gif)|
 |**1. "How many circles collide with red circle before it enters the basket?"<br>2. "How many circles collide with red circle before entering the basket?"**|**1. "2"<br>2. "2"**|![](/dataset/examples/ExampleScene7.gif)|
 |"**How many objects either enter the basket or collide with the ground?**"|"**2**"|![](/dataset/examples/ExampleScene2.gif)|
 

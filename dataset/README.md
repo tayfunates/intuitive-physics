@@ -203,7 +203,7 @@ or the entire video (when input frame is “null”)
 | Question | Answer | Original Video|
 |---|---|---|
 |"How many circles are moving when the video ends?"|"2"|![](/dataset/examples/ExampleScene9.gif)|
-|**"How many circles enter the basket?"**|**"1"**|![](/dataset/examples/ExampleScene9.gif)|
+|"How many circles enter the basket?"|"1"|![](/dataset/examples/ExampleScene9.gif)|
 |**1. "How many circles collide with red circle before it enters the basket?"<br>2. "How many circles collide with red circle before entering the basket?"**|**1. "2"<br>2. "2"**|![](/dataset/examples/ExampleScene7.gif)|
 |"**How many objects either enter the basket or collide with the ground?**"|"**2**"|![](/dataset/examples/ExampleScene2.gif)|
 

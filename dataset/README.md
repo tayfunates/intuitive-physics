@@ -195,6 +195,10 @@ or the entire video (when input frame is “null”)
 | "How many **C** objects enter the basket?" | **TODO** | Integer | ![GREEN] |
 | "How many **Z** objects enter the basket?" | **TODO** | Integer | ![GREEN] |
 | "How many objects enter the basket?" | **TODO** | Integer | ![GREEN] |
+| "How many **S**s collide with the ground?" | **TODO** | Integer | ![GREEN] |
+| "How many **C** collide with the ground?" | **TODO** | Integer | ![GREEN] |
+| "How many **Z** collide with the ground?" | **TODO** | Integer | ![GREEN] |
+| "How many objects collide with the ground?" | **TODO** | Integer | ![GREEN] |
 
 | Question | Answer | Original Video|
 |---|---|---|

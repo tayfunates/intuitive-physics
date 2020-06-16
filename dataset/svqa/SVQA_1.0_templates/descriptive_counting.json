@@ -571,5 +571,251 @@
     "params": [
     ],
     "constraints": []
+  },
+  {
+    "text": [
+      "How many objects enters the basket after the <Z> <C> <S> enters the basket?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+          "inputs": [],
+          "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          4
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          5
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          6
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          1, 8
+        ],
+        "type": "filter_events"
+      },
+      {
+        "inputs": [
+          9
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          10
+        ],
+        "type": "filter_first"
+      },
+      {
+        "inputs": [
+          2, 11
+        ],
+        "type": "filter_after"
+      },
+      {
+        "inputs": [
+          12
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          13
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          14
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "How many objects enters the basket before the <Z> <C> <S> enters the basket?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+          "inputs": [],
+          "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          4
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          5
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          6
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          1, 8
+        ],
+        "type": "filter_events"
+      },
+      {
+        "inputs": [
+          9
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          10
+        ],
+        "type": "filter_first"
+      },
+      {
+        "inputs": [
+          2, 11
+        ],
+        "type": "filter_before"
+      },
+      {
+        "inputs": [
+          12
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          13
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          14
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
   }
 ]

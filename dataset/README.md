@@ -187,11 +187,11 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "How many **S**s are moving when the video ends?" | **TODO** | ![GREEN] |
+| "How many **S**s are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
 | "How many **C** objects are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
 | "How many **Z** objects are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
 | "How many objects are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
-| "How many **S**s enter the basket?" | **TODO** | ![GREEN] |
+| "How many **S**s enter the basket?" | **TODO** | Integer | ![GREEN] |
 | "How many **C** objects enter the basket?" | **TODO** | Integer | ![GREEN] |
 | "How many **Z** objects enter the basket?" | **TODO** | Integer | ![GREEN] |
 | "How many objects enter the basket?" | **TODO** | Integer | ![GREEN] |

@@ -48,6 +48,8 @@ us to efficiently prune the search space and terminate early when we know that
 (1) or (2) will be violated.
 """
 
+# TODO: Add option to print to a file rather than stdout.
+
 parser = argparse.ArgumentParser()
 
 # Inputs
@@ -814,7 +816,6 @@ def main(args):
 
 
 def print_statistics(question_list: list):
-    """ Prints statistics about the questions generated for this run. """
     print()
     print("Statistics of Generated Questions:")
     print()

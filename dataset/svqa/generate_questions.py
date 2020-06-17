@@ -852,12 +852,18 @@ def get_answer_frequencies(q_a_t_f_list):
         for answer in answers_for_this_template: freq_map[answer] += 1
         template_file_to_answer_to_count_map[k] = freq_map
 
-    # Maybe convert into nested function to be more clear?
-    answer_count_row_for = lambda template: tuple("" if answer not in template_file_to_answer_to_count_map[
-        template] else f"{template_file_to_answer_to_count_map[template][answer]} (%{round(100 * (template_file_to_answer_to_count_map[template][answer] / sum(template_file_to_answer_to_count_map[template].values())), 2)})"
-                                                  for answer in answer_set)
+    def answer_count_row_for(template_file):
+        row = []
+        for answer in answer_set:
+            if answer not in template_file_to_answer_to_count_map[template_file]:
+                row.append("")
+            else:
+                count = template_file_to_answer_to_count_map[template_file][answer]
+                total = sum(template_file_to_answer_to_count_map[template_file].values())
+                row.append(f"{count} (%{round(100 * (count / total))})")
+        return row
 
-    template_count_list = [(k, v) + answer_count_row_for(k) for k, v in template_file_to_question_count_map.items()]
+    template_count_list = [[k, v] + answer_count_row_for(k) for k, v in template_file_to_question_count_map.items()]
 
     answer_set_header = lambda answer_set: [f"Answer: {answer}" for answer in answer_set]
 

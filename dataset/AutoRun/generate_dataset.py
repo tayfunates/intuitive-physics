@@ -133,6 +133,9 @@ def generate(config: Config):
 
     dataset = json.loads("[]")
 
+    # To print statistics about generated questions.
+    generated_questions = {"train": [], "validation": [], "test": []}
+
     json.dump(
         dataset,
         open(f"{config.output_folder_path}/dataset.json", "w"),
@@ -152,6 +155,7 @@ def generate(config: Config):
     validation_simulations = config.sim_ids_for_each_split["validation"]
     test_simulations = config.sim_ids_for_each_split["test"]
 
+    # Breakup split ratios to each scene ID.
     splits = [("train", sid) for sid in train_simulations * (train // len(train_simulations))]
     splits.extend([("validation", sid) for sid in validation_simulations] * (val // len(validation_simulations)))
     splits.extend([("test", sid) for sid in test_simulations] * (test // len(test_simulations)))
@@ -203,12 +207,14 @@ def generate(config: Config):
 
         # Generate questions.
         try:
-            generate_questions.main(
+            questions = generate_questions.main(
                 generate_questions.parser.parse_args(['--input-scene-file', variations_output_path,
                                                       '--output-questions-file', questions_file_path,
                                                       '--metadata-file', '../svqa/metadata.json',
                                                       '--synonyms-json', '../svqa/synonyms.json',
-                                                      '--template-dir', '../svqa/SVQA_1.0_templates']))
+                                                      '--template-dir', '../svqa/SVQA_1.0_templates',
+                                                      '--print-stats', False]))
+            generated_questions[split].extend(questions)
         except Exception as e:
             traceback.print_exception(type(e), e, e.__traceback__)
 
@@ -227,6 +233,13 @@ def generate(config: Config):
             open(f"{config.output_folder_path}/dataset.json", "w"),
             indent=4
         )
+
+    # Print questions and answer frequencies for each template in the generated dataset.
+    for split in ["train", "validation", "test"]:
+        print()
+        print(f"Answers for split: {split}")
+        print(generate_questions.get_answer_frequencies(
+            generate_questions.convert_to_question_tuple_list(generated_questions[split])))
 
 
 def main(args):

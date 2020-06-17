@@ -6,12 +6,16 @@
 # of patent rights can be found in the PATENTS file in the same directory.
 
 from __future__ import print_function
+
+from collections import defaultdict
+
 from svqa.causal_graph import CausalGraph
 import argparse, json, os, itertools, random, shutil
 import time
 import re
-from svqa.simulation import Simulation
+from tabulate import tabulate
 
+from svqa.simulation import Simulation
 import svqa.question_engine as qeng
 
 """
@@ -805,6 +809,46 @@ def main(args):
             'info': scene_info,
             'questions': questions,
         }, f)
+
+    print_statistics(questions)
+
+
+def print_statistics(question_list: list):
+    """ Prints statistics about the questions generated for this run. """
+    print()
+    print("Statistics of Generated Questions:")
+    print()
+
+    # (question, answer, template, video_filename)
+    q_a_t_f_list = [(q["question"], q["answer"], q["template_filename"][:-5], q["video_filename"]) for q in
+                    question_list]
+
+    # Printing all questions:
+    print(tabulate(q_a_t_f_list, headers=["Question", "Answer", "Template", "Video"]))
+    print()
+
+    # Calculate answer frequencies.
+    answer_set: list = list(set([q[1] for q in q_a_t_f_list]))
+    template_to_q_count_map = defaultdict(int)
+    for q in q_a_t_f_list: template_to_q_count_map[q[2]] += 1
+
+    template_to_answer_to_count_map = {}
+    for k in template_to_q_count_map.keys():
+        answers_for_this_template = [q[1] for q in q_a_t_f_list if q[2] == k]
+        freq_map = defaultdict(int)
+        for answer in answers_for_this_template: freq_map[answer] += 1
+        template_to_answer_to_count_map[k] = freq_map
+
+    # Maybe convert into nested function to be more clear?
+    answer_count_row_for = lambda template: tuple("" if answer not in template_to_answer_to_count_map[template] else f"{template_to_answer_to_count_map[template][answer]} (%{round(100 * (template_to_answer_to_count_map[template][answer] / sum(template_to_answer_to_count_map[template].values())), 2)})" for answer in answer_set)
+
+    template_count_list = [(k, v) + answer_count_row_for(k) for k, v in template_to_q_count_map.items()]
+
+    answer_set_header = lambda answer_set: [f"Answer: {answer}" for answer in answer_set]
+
+    # Print each number of questions of each type:
+    print(tabulate(template_count_list, headers=["Template", "Question Count"] + answer_set_header(answer_set),
+                   tablefmt="github"))
 
 
 if __name__ == '__main__':

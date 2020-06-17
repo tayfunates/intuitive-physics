@@ -79,7 +79,7 @@ parser.add_argument('--num-scenes', default=0, type=int,
 # Control the number of questions per video; we will attempt to generate
 # templates_per_video * instances_per_template questions per video.
 parser.add_argument('--restrict-template-count-per-video', default=False, type=bool,
-                    help="If set true then templates-per-video is used to restict the number of questions on each video")
+                    help="If set true then templates-per-video is used to restrict the number of questions on each video")
 parser.add_argument('--templates-per-video', default=10, type=int,
                     help="The number of different templates that should be instantiated " +
                          "on each video")
@@ -97,6 +97,8 @@ parser.add_argument('--time-dfs', action='store_true',
                     help="Time each depth-first search; must be given with --verbose")
 parser.add_argument('--profile', action='store_true',
                     help="If given then run inside cProfile")
+parser.add_argument('--print-stats', default=True, type=bool,
+                    help="If true, prints statistics of generated questions and answers.")
 
 
 # args = parser.parse_args()
@@ -122,7 +124,7 @@ def precompute_filter_options(start_scene_struct, metadata):
 
     for object_idx, obj in enumerate(start_scene_struct['objects']):
         if metadata['dataset'] == 'SVQA-v1.0':
-            if (obj['bodyType'] == 2): #Only dynamic objects
+            if (obj['bodyType'] == 2):  # Only dynamic objects
                 keys = [tuple(obj[k] for k in attr_keys)]
 
         for mask in masks:
@@ -713,7 +715,7 @@ def main(args):
         # Gets start state of the simulation
         start_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] == 0][0]
         end_scene_struct = [scene['scene'] for scene in simulation['scene_states'] if scene['step'] != 0][0]
-        #TODO: Maybe fill all scene structs in sorted order
+        # TODO: Maybe fill all scene structs in sorted order
 
         scene_structs = [start_scene_struct, end_scene_struct]
 
@@ -812,7 +814,14 @@ def main(args):
             'questions': questions,
         }, f)
 
-    print_statistics(questions)
+    if args.print_stats:
+        print_statistics(questions)
+    return questions
+
+
+def convert_to_question_tuple_list(questions):
+    return [(q["question"], q["answer"], q["template_filename"][:-5], q["video_filename"]) for q in
+            questions]
 
 
 def print_statistics(question_list: list):
@@ -820,36 +829,40 @@ def print_statistics(question_list: list):
     print("Statistics of Generated Questions:")
     print()
 
-    # (question, answer, template, video_filename)
-    q_a_t_f_list = [(q["question"], q["answer"], q["template_filename"][:-5], q["video_filename"]) for q in
-                    question_list]
+    # List of (question, answer, template, video_filename).
+    q_a_t_f_list = convert_to_question_tuple_list(question_list)
 
     # Printing all questions:
-    print(tabulate(q_a_t_f_list, headers=["Question", "Answer", "Template", "Video"]))
+    print(tabulate(q_a_t_f_list, headers=["Question", "Answer", "Template File", "Video"]))
     print()
 
-    # Calculate answer frequencies.
-    answer_set: list = list(set([q[1] for q in q_a_t_f_list]))
-    template_to_q_count_map = defaultdict(int)
-    for q in q_a_t_f_list: template_to_q_count_map[q[2]] += 1
+    # Calculate and print answer frequencies.
+    print(get_answer_frequencies(q_a_t_f_list))
 
-    template_to_answer_to_count_map = {}
-    for k in template_to_q_count_map.keys():
+
+def get_answer_frequencies(q_a_t_f_list):
+    answer_set: list = list(set([q[1] for q in q_a_t_f_list]))
+    template_file_to_question_count_map = defaultdict(int)
+    for q in q_a_t_f_list: template_file_to_question_count_map[q[2]] += 1
+
+    template_file_to_answer_to_count_map = {}
+    for k in template_file_to_question_count_map.keys():
         answers_for_this_template = [q[1] for q in q_a_t_f_list if q[2] == k]
         freq_map = defaultdict(int)
         for answer in answers_for_this_template: freq_map[answer] += 1
-        template_to_answer_to_count_map[k] = freq_map
+        template_file_to_answer_to_count_map[k] = freq_map
 
     # Maybe convert into nested function to be more clear?
-    answer_count_row_for = lambda template: tuple("" if answer not in template_to_answer_to_count_map[template] else f"{template_to_answer_to_count_map[template][answer]} (%{round(100 * (template_to_answer_to_count_map[template][answer] / sum(template_to_answer_to_count_map[template].values())), 2)})" for answer in answer_set)
+    answer_count_row_for = lambda template: tuple("" if answer not in template_file_to_answer_to_count_map[
+        template] else f"{template_file_to_answer_to_count_map[template][answer]} (%{round(100 * (template_file_to_answer_to_count_map[template][answer] / sum(template_file_to_answer_to_count_map[template].values())), 2)})"
+                                                  for answer in answer_set)
 
-    template_count_list = [(k, v) + answer_count_row_for(k) for k, v in template_to_q_count_map.items()]
+    template_count_list = [(k, v) + answer_count_row_for(k) for k, v in template_file_to_question_count_map.items()]
 
     answer_set_header = lambda answer_set: [f"Answer: {answer}" for answer in answer_set]
 
-    # Print each number of questions of each type:
-    print(tabulate(template_count_list, headers=["Template", "Question Count"] + answer_set_header(answer_set),
-                   tablefmt="github"))
+    return tabulate(template_count_list, headers=["Template File", "Question Count"] + answer_set_header(answer_set),
+                    tablefmt="github")
 
 
 if __name__ == '__main__':

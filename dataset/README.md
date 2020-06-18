@@ -189,10 +189,10 @@ or the entire video (when input frame is “null”)
 | "How many **C** objects enter the basket?" | **TODO** | Integer | ![GREEN] |
 | "How many **Z** objects enter the basket?" | **TODO** | Integer | ![GREEN] |
 | "How many objects enter the basket?" | **TODO** | Integer | ![GREEN] |
-| "How many **S**s collide with the ground?" | **TODO** | Integer | ![GREEN] |
-| "How many **C** objects collide with the ground?" | **TODO** | Integer | ![GREEN] |
-| "How many **Z** objects collide with the ground?" | **TODO** | Integer | ![GREEN] |
-| "How many objects collide with the ground?" | **TODO** | Integer | ![GREEN] |
+| "How many **S**s fall to the ground?" | **TODO** | Integer | ![GREEN] |
+| "How many **C** objects fall to the ground?" | **TODO** | Integer | ![GREEN] |
+| "How many **Z** objects fall to the ground?" | **TODO** | Integer | ![GREEN] |
+| "How many objects fall to the ground?" | **TODO** | Integer | ![GREEN] |
 | "How many objects enters the basket after the **Z** **C** **S** enters the basket?" | **TODO** | Integer | ![GREEN] |
 | "How many objects enters the basket before the **Z** **C** **S** enters the basket?" | **TODO** | Integer | ![GREEN] |
 | "How many objects fall to the ground after the **Z** **C** **S** falls to the ground?" | **TODO** | Integer | ![GREEN] |
@@ -215,9 +215,9 @@ or the entire video (when input frame is “null”)
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
 | "Before entering the basket, does the **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
-| "Before colliding with the ground, does the **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
+| "Before falling to the ground, does the **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
 | "Are there any collisions after the **Z** **C** **S** enters the basket?" | **TODO** | Bool | ![GREEN] |
-| "Are there any collisions after the **Z** **C** **S** collides with the ground?" | **TODO** | Bool | ![GREEN] |
+| "Are there any collisions after the **Z** **C** **S** falls to the ground?" | **TODO** | Bool | ![GREEN] |
 
 | Question | Answer | Original Video |
 |---|---|---|
@@ -228,11 +228,11 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to collide with the ground?", "Does the **Z** **C** **S** enable the collision between the **Z2** **C2** **S2** and the ground?", "There is a **Z** **C** **S**, does it enable **Z2** **C2** **S2** to collide with the ground?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the ground?" | **TODO**  | Bool | ![GREEN] |
+| "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to fall to the ground?", "Does the **Z** **C** **S** enable the collision between the **Z2** **C2** **S2** and the ground?", "There is a **Z** **C** **S**, does it enable **Z2** **C2** **S2** to fall to the ground?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the ground?" | **TODO**  | Bool | ![GREEN] |
 | "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to enter the basket?", "There is a **Z** **C** **S**, does it enable the **Z2** **C2** **S2** to enter the basket?" | **TODO**  | Bool | ![GREEN] |
 | "Is there any object which enables the **Z** **C** **S** to enter the basket?", "Are there any objects which enable the **Z** **C** **S** to enter the basket?" | **TODO**  | Bool | ![GREEN] |
 | "How many objects does the **Z** **C** **S** enable to enter the basket?", "What is the number of objects that the **Z** **C** **S** enable to enter the basket?" | **TODO**  | Integer | ![GREEN] |
-| "How many objects does the **Z** **C** **S** enable to collide with the ground?", "What is the number of objects that the **Z** **C** **S** enable to collide with the ground?" | **TODO**  | Integer | ![GREEN] |
+| "How many objects does the **Z** **C** **S** enable to fall to the ground?", "What is the number of objects that the **Z** **C** **S** enable to fall to the ground?" | **TODO**  | Integer | ![GREEN] |
 
 
 | Question | Answer | Original Video| Variation Video |
@@ -243,21 +243,21 @@ or the entire video (when input frame is “null”)
 |"Is there any object which enables the big red circle to enter the basket?"|"false"|![](/dataset/examples/ExampleScene3.gif)| <table> <tbody>  <tr>  <td>![](/dataset/examples/ExampleScene3Variation1.gif)</td>  <td>![](/dataset/examples/ExampleScene3Variation3.gif)</td>  </tr>  <tr>  <td>![](/dataset/examples/ExampleScene3Variation4.gif)</td>  <td>![](/dataset/examples/ExampleScene3Variation5.gif)</td>  </tr>  <tr>  </tbody>  </table> |
 |"Are there any objects which enable the small brown cube to enter the basket?"|"true"|![](/dataset/examples/ExampleScene3.gif)|![](/dataset/examples/ExampleScene3Variation2.gif)|
 |"How many objects does the big yellow circle enable to enter the basket?"|"2"|![](/dataset/examples/ExampleScene4.gif)|![](/dataset/examples/ExampleScene4Variation1.gif)|
-|"What is the number of objects that the big red circle enable to collide with the ground?"|"0"|![](/dataset/examples/ExampleScene5.gif)|![](/dataset/examples/ExampleScene5Variation1.gif)|
+|"What is the number of objects that the big red circle enable to fall to the ground?"|"0"|![](/dataset/examples/ExampleScene5.gif)|![](/dataset/examples/ExampleScene5Variation1.gif)|
 |"Is there any object which enables the small green circle to enter the basket?"|"**true**"|![](/dataset/examples/ExampleScene7.gif)|![](/dataset/examples/ExampleScene7Variation1.gif)|
-|"What is the number of objects that the large cyan circle enable to collide with the ground?"|"1"|![](/dataset/examples/ExampleScene8.gif)|![](/dataset/examples/ExampleScene8Variation1.gif)|
+|"What is the number of objects that the large cyan circle enable to fall to the ground?"|"1"|![](/dataset/examples/ExampleScene8.gif)|![](/dataset/examples/ExampleScene8Variation1.gif)|
 |"There is a tiny red circle, does it enable the small purple circle to enter the basket?"|"**true**"|![](/dataset/examples/ExampleScene10.gif)|![](/dataset/examples/ExampleScene10Variation1.gif)|
   
 ##### Prevent
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from colliding with the ground?" | **TODO**  | Bool | ![GREEN] |
+| "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from falling to the ground?" | **TODO**  | Bool | ![GREEN] |
 | "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from entering to the basket?" | **TODO**  | Bool | ![GREEN] |
 
 | Question | Answer | Original Video| Variation Video |
 |---|---|---|---|
-|"Does the large green block prevent the small red block from colliding with the ground?"|"true"|![](/dataset/examples/ExampleScene1.gif)|![](/dataset/examples/ExampleScene1Variation1.gif)|
+|"Does the large green block prevent the small red block from falling to the ground?"|"true"|![](/dataset/examples/ExampleScene1.gif)|![](/dataset/examples/ExampleScene1Variation1.gif)|
 |"Does the big yellow cube prevent the small blue triangle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene2.gif)|![](/dataset/examples/ExampleScene2Variation3.gif)|
 |"Does the tiny purple circle prevent the big blue circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene6.gif)|![](/dataset/examples/ExampleScene6Variation1.gif)|
 |"Does the large cyan circle prevent the tiny brown circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene8.gif)|![](/dataset/examples/ExampleScene8Variation1.gif)|

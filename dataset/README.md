@@ -144,6 +144,40 @@ or the entire video (when input frame is “null”)
 - Scene information at end (SceneAtEnd): Holds objects' static and dynamic information at end of the video, color, position, shape, velocity etc.
 - Causal graph (CausalGraph): Graph constructed by events of objects as nodes. All events causing a specific event are the ancestors of that event.
 
+### All Tasks
+
+| Task  |  Category |
+|---|---|
+| 1. "What color is the object that first collides with the **Z** **C** **S**?", "What is the color of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what color is it?", "There is an object that first collides with the **Z** **C** **S**; what is its color?" | Descriptive |
+| 2. "What shape is the object that first collides with the **Z** **C** **S**?", "What is the shape of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what shape is it?", "There is an object that first collides with the **Z** **C** **S**; what is its shape?" | Descriptive |
+| 3. "How many **S**s are moving when the video ends?" | Descriptive |
+| 4. "How many **C** objects are moving when the video ends?" | Descriptive |
+| 5. "How many **Z** objects are moving when the video ends?" | Descriptive |
+| 6. "How many objects are moving when the video ends?" | Descriptive |
+| 7. "How many **S**s enter the basket?" | Descriptive|
+| 8. "How many **C** objects enter the basket?" | Descriptive |
+| 9. "How many **Z** objects enter the basket?" | Descriptive |
+| 10. "How many objects enter the basket?" | Descriptive |
+| 11. "How many **S**s fall to the ground?" | Descriptive |
+| 12. "How many **C** objects fall to the ground?" | Descriptive |
+| 13. "How many **Z** objects fall to the ground?" | Descriptive |
+| 14. "How many objects fall to the ground?" | Descriptive |
+| 15. "How many objects enters the basket after the **Z** **C** **S** enters the basket?" | Descriptive |
+| 16. "How many objects enters the basket before the **Z** **C** **S** enters the basket?" | Descriptive |
+| 17. "How many objects fall to the ground after the **Z** **C** **S** falls to the ground?" | Descriptive |
+| 18. "How many objects fall to the ground before the **Z** **C** **S** falls to the ground?" | Descriptive |
+| 19. "Before entering the basket, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 20. "Before falling to the ground, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 21. "Are there any collisions after the **Z** **C** **S** enters the basket?" | Descriptive |
+| 22. "Are there any collisions after the **Z** **C** **S** falls to the ground?" | Descriptive |
+| 23. "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to fall to the ground?", "Does the **Z** **C** **S** enable the collision between the **Z2** **C2** **S2** and the ground?", "There is a **Z** **C** **S**, does it enable **Z2** **C2** **S2** to fall to the ground?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the ground?" | Enable |
+| 24. "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to enter the basket?", "There is a **Z** **C** **S**, does it enable the **Z2** **C2** **S2** to enter the basket?" | Enable |
+| 25. "Is there any object which enables the **Z** **C** **S** to enter the basket?", "Are there any objects which enable the **Z** **C** **S** to enter the basket?" | Enable |
+| 26. "How many objects does the **Z** **C** **S** enable to enter the basket?", "What is the number of objects that the **Z** **C** **S** enable to enter the basket?" | Enable |
+| 27. "How many objects does the **Z** **C** **S** enable to fall to the ground?", "What is the number of objects that the **Z** **C** **S** enable to fall to the ground?" | Enable |
+| 28. "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from falling to the ground?" | Prevent |
+| 29. "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from entering to the basket?" | Prevent |
+
 ### Samples
 
 #### Temporal

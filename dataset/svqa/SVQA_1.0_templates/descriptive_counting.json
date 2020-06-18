@@ -367,7 +367,7 @@
   },
     {
     "text": [
-      "How many <S>s collide with the ground?"
+      "How many <S>s fall to the ground?"
     ],
     "nodes": [
       {
@@ -422,7 +422,7 @@
   },
   {
     "text": [
-      "How many <C> objects collide with the ground?"
+      "How many <C> objects fall to the ground?"
     ],
     "nodes": [
       {
@@ -477,7 +477,7 @@
   },
   {
     "text": [
-      "How many <Z> objects collide with the ground?"
+      "How many <Z> objects fall to the ground?"
     ],
     "nodes": [
       {
@@ -532,7 +532,7 @@
   },
   {
     "text": [
-      "How many objects collide with the ground?"
+      "How many objects fall to the ground?"
     ],
     "nodes": [
       {

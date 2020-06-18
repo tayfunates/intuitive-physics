@@ -1,9 +1,9 @@
 [
   {
     "text": [
-      "Does the <Z> <C> <S> enable the <Z2> <C2> <S2> to collide with the ground?",
+      "Does the <Z> <C> <S> enable the <Z2> <C2> <S2> to fall to the ground?",
       "Does the <Z> <C> <S> enable the collision between the <Z2> <C2> <S2> and the ground?",
-      "There is a <Z> <C> <S>, does it enable the <Z2> <C2> <S2> to collide with the ground?",
+      "There is a <Z> <C> <S>, does it enable the <Z2> <C2> <S2> to fall to the ground?",
       "Is the <Z> <C> <S> responsible for the collision between the <Z2> <C2> <S2> and the ground?"
     ],
     "nodes": [
@@ -578,8 +578,8 @@
   },
   {
     "text": [
-      "How many objects does the <Z> <C> <S> enable to collide with the ground?",
-      "What is the number of objects that the <Z> <C> <S> enable to collide with the ground?"
+      "How many objects does the <Z> <C> <S> enable falling to the ground?",
+      "What is the number of objects that the <Z> <C> <S> enable falling to the ground?"
     ],
     "nodes": [
       {

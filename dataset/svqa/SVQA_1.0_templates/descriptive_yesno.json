@@ -106,7 +106,7 @@
   },
   {
     "text": [
-      "Before colliding with the ground, does the <Z> <C> <S> collide with other objects?"
+      "Before falling to the ground, does the <Z> <C> <S> collide with other objects?"
     ],
       "nodes": [
         {
@@ -322,7 +322,7 @@
   },
   {
     "text": [
-      "Are there any collisions after the <Z> <C> <S> collides with the ground?"
+      "Are there any collisions after the <Z> <C> <S> falls to the ground?"
     ],
       "nodes": [
         {

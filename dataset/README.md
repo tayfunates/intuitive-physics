@@ -153,7 +153,7 @@ or the entire video (when input frame is “null”)
 | 3. "How many **S**s are moving when the video ends?", "**How many Ss are in motion at the end of the video?**" | Descriptive |
 | 4. "How many **C** objects are moving when the video ends?", "**How many C objects are in motion at the end of the video?**" | Descriptive |
 | 5. "How many **Z** objects are moving when the video ends?", "**How many Z objects are in motion at the end of the video?**" | Descriptive |
-| 6. "How many objects are moving when the video ends?" | Descriptive |
+| 6. "How many objects are moving when the video ends?", "**How many objects are in motion at the end of the video?**" | Descriptive |
 | 7. "How many **S**s enter the basket?" | Descriptive|
 | 8. "How many **C** objects enter the basket?" | Descriptive |
 | 9. "How many **Z** objects enter the basket?" | Descriptive |

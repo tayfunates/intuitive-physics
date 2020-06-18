@@ -150,9 +150,9 @@ or the entire video (when input frame is “null”)
 |---|---|
 | 1. "What color is the object that first collides with the **Z** **C** **S**?", "What is the color of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what color is it?", "There is an object that first collides with the **Z** **C** **S**; what is its color?" | Descriptive |
 | 2. "What shape is the object that first collides with the **Z** **C** **S**?", "What is the shape of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what shape is it?", "There is an object that first collides with the **Z** **C** **S**; what is its shape?" | Descriptive |
-| 3. "How many **S**s are moving when the video ends?" | Descriptive |
-| 4. "How many **C** objects are moving when the video ends?" | Descriptive |
-| 5. "How many **Z** objects are moving when the video ends?" | Descriptive |
+| 3. "How many **S**s are moving when the video ends?", "**How many Ss are in motion at the end of the video?**" | Descriptive |
+| 4. "How many **C** objects are moving when the video ends?", "**How many C objects are in motion at the end of the video?**" | Descriptive |
+| 5. "How many **Z** objects are moving when the video ends?", "**How many Z objects are in motion at the end of the video?**" | Descriptive |
 | 6. "How many objects are moving when the video ends?" | Descriptive |
 | 7. "How many **S**s enter the basket?" | Descriptive|
 | 8. "How many **C** objects enter the basket?" | Descriptive |

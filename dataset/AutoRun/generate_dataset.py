@@ -1,5 +1,6 @@
 import argparse
 import glob
+import itertools
 import json
 import os
 import subprocess
@@ -8,6 +9,13 @@ import traceback
 
 import AutoRun.variation_run as variation_run
 import svqa.generate_questions as generate_questions
+
+"""
+TODO: 
+    - Otomatik dataset scripti çıkabilecek cevaplara göre kaç tane sorunun cevabı oldugunu bize söyleyebilsin. 
+        Train --> True: 204, 2: 102, Circle: 402 gibi
+        ki görelim nasıl cevaplar vermişiz sonra tune ederiz uniform dağıtılacak şekilde
+"""
 
 """
 Generates a dataset that contains simulation outputs with variations and their videos.
@@ -34,7 +42,7 @@ Single data in the dataset is generated as follows:
       - train_xxxxxx.mpg
       - test_xxxxxx.mpg
       - val_xxxxxx.mpg
-  - dataset.json            (This json file contains all the video paths, and can questions generated from the outputs.)
+  - dataset.json            (This json file contains all the video paths, and questions generated from the outputs.)
 """
 
 
@@ -46,6 +54,7 @@ class Config(object):
         self.test_set_ratio = config_dict['test_set_ratio']
         self.validation_set_ratio = config_dict['validation_set_ratio']
         self.train_set_ratio = config_dict['train_set_ratio']
+        self.sim_ids_for_each_split = config_dict['sim_ids_for_each_split']
         self.simulation_configs = config_dict['simulation_configs']
 
 
@@ -58,9 +67,14 @@ def init_args():
           "dataset_size": 1000,
           "executable_path": "../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
           "output_folder_path": "dataset1000/",
-          "test_set_ratio": 0.2,
-          "validation_set_ratio": 0.2,
           "train_set_ratio": 0.6,
+          "validation_set_ratio": 0.2,
+          "test_set_ratio": 0.2,
+          "sim_ids_for_each_split": {
+            "train": [1,2,3], 
+            "validation": [4],
+            "test": [1,2,3,4,5]
+          },
           "simulation_configs": [
             {
               "id": 0,
@@ -100,17 +114,27 @@ def delete_files(folder_path, *wildcards):
 
 
 def run_simulation(exec_path: str, controller_json_path: str, debug_output_path=None):
+    # TODO: Find if debug_output_path is None, print to console.
     subprocess.call(f"{exec_path} {controller_json_path}", shell=True, universal_newlines=True,
                     stdout=open(
-                        f"{pathlib.Path(controller_json_path).parent}/cl_debug_{pathlib.Path(controller_json_path).name.replace('.json', '.txt').replace('controller_', '').replace('_controller', '')}".replace("\\", "/"), "w")
+                        f"{pathlib.Path(controller_json_path).parent}/cl_debug_{pathlib.Path(controller_json_path).name.replace('.json', '.txt').replace('controller_', '').replace('_controller', '')}".replace(
+                            "\\", "/"), "w")
                     if debug_output_path is None
                     else open(debug_output_path, "w"))
 
 
 def generate(config: Config):
+    """
+    Generates a dataset with parameters specified in a configuration file.
+
+    TODO: Do not print question statistics while generating the dataset.
+    """
     os.makedirs(config.output_folder_path, exist_ok=True)
 
     dataset = json.loads("[]")
+
+    # To print statistics about generated questions.
+    generated_questions = {"train": [], "validation": [], "test": []}
 
     json.dump(
         dataset,
@@ -123,81 +147,99 @@ def generate(config: Config):
         os.makedirs(f"{intermediates_folder_path}/sim-id-{sim['id']}/debug", exist_ok=True)
         os.makedirs(f"{config.output_folder_path}/videos/sim-id-{sim['id']}", exist_ok=True)
 
-    test = int(float(config.test_set_ratio) * config.dataset_size)
-    val = int(float(config.validation_set_ratio) * config.dataset_size)
     train = int(float(config.train_set_ratio) * config.dataset_size)
+    val = int(float(config.validation_set_ratio) * config.dataset_size)
+    test = int(float(config.test_set_ratio) * config.dataset_size)
 
-    data_types = ["test"] * test + ["val"] * val + ["train"] * train
+    train_simulations = config.sim_ids_for_each_split["train"]
+    validation_simulations = config.sim_ids_for_each_split["validation"]
+    test_simulations = config.sim_ids_for_each_split["test"]
 
-    for i in range(len(data_types)):
-        data_type = data_types[i]
-        for sim in config.simulation_configs:
+    # Breakup split ratios to each scene ID.
+    splits = [("train", sid) for sid in train_simulations * (train // len(train_simulations))]
+    splits.extend([("validation", sid) for sid in validation_simulations] * (val // len(validation_simulations)))
+    splits.extend([("test", sid) for sid in test_simulations] * (test // len(test_simulations)))
 
-            # Create controller file.
-            controller_json_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/controller_{data_type}_{i:06d}.json"
-            output_json_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/{data_type}_{i:06d}.json"
+    for i in range(len(splits)):
+        split_v_id = splits[i]
+        split = split_v_id[0]
+        sim = next((x for x in config.simulation_configs if x['id'] == split_v_id[1]), None)
+        assert sim is not None, f"Specified simulation ID ({split_v_id[1]}) in 'sim_ids_for_each_split' " \
+                                f"isn't present in 'simulation_configs'."
+        print(f"Running, split: {split}, sim_id: {sim['id']}, N: {i:06d}")
 
-            with open(controller_json_path, 'w') as controller_file:
-                json.dump(
-                    json.loads(
-                        f"""{{
-                                "simulationID": {sim['id']},
-                                "offline": true,
-                                "outputVideoPath": "{config.output_folder_path}/videos/sim-id-{sim['id']}/{data_type}_{i:06d}.mpg",
-                                "outputJSONPath": "{output_json_path}",
-                                "width":  {sim['width']},
-                                "height": {sim['height']},
-                                "inputScenePath":  "",
-                                "numberOfObjects": 2,
-                                "numberOfObstacles": 1,
-                                "numberOfPendulums": 1,
-                                "stepCount": {sim['step_count']}
-                            }}"""),
-                    controller_file,
-                    indent=4
-                )
+        # Create controller file.
+        controller_json_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/controller_{split}_{i:06d}.json"
+        output_json_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/{split}_{i:06d}.json"
 
-            # Run simulation.
-            run_simulation(config.executable_path, f"{controller_json_path}",
-                           f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/cl_debug_{data_type}_{i:06d}.txt")
-
-            # Run its variations.
-            variations_output_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/{data_type}_{i:06d}.json"
-            variation_run.run_variations(variation_run.init_args(['-exec', config.executable_path,
-                                                                  '-c', controller_json_path,
-                                                                  '-p', output_json_path,
-                                                                  '-o', variations_output_path]))
-
-            questions_file_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/qa_{data_type}_{i:06d}.json"
-
-            # Generate questions.
-            try:
-                generate_questions.main(
-                    generate_questions.parser.parse_args(['--input-scene-file', variations_output_path,
-                                                          '--output-questions-file', questions_file_path,
-                                                          '--metadata-file', '../svqa/metadata.json',
-                                                          '--synonyms-json', '../svqa/synonyms.json',
-                                                          '--template-dir', '../svqa/SVQA_1.0_templates']))
-            except Exception as e:
-                traceback.print_exception(type(e), e, e.__traceback__)
-
-            # Add them into dataset.json
-            dataset.append(
-                json.loads(f"""
-                            {{
-                                "simulation_id": {sim['id']},
-                                "split": {data_type},
-                                "video_path": "{config.output_folder_path}/videos/sim-id-{sim['id']}/{data_type}_{i:06d}.mpg",
-                                "questions": {json.load(open(questions_file_path, "r"))}
-                            }}
-                            """)
-            )
-
+        with open(controller_json_path, 'w') as controller_file:
             json.dump(
-                dataset,
-                open(f"{config.output_folder_path}/dataset.json", "w"),
+                json.loads(
+                    f"""{{
+                            "simulationID": {sim['id']},
+                            "offline": true,
+                            "outputVideoPath": "{config.output_folder_path}/videos/sim-id-{sim['id']}/{split}_{i:06d}.mpg",
+                            "outputJSONPath": "{output_json_path}",
+                            "width":  {sim['width']},
+                            "height": {sim['height']},
+                            "inputScenePath":  "",
+                            "numberOfObjects": 2,
+                            "numberOfObstacles": 1,
+                            "numberOfPendulums": 1,
+                            "stepCount": {sim['step_count']}
+                        }}"""),
+                controller_file,
                 indent=4
             )
+
+        # Run simulation.
+        run_simulation(config.executable_path, f"{controller_json_path}",
+                       f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/cl_debug_{split}_{i:06d}.txt")
+
+        # Run its variations.
+        variations_output_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/{split}_{i:06d}.json"
+        variation_run.run_variations(variation_run.init_args(['-exec', config.executable_path,
+                                                              '-c', controller_json_path,
+                                                              '-p', output_json_path,
+                                                              '-o', variations_output_path]))
+
+        questions_file_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/qa_{split}_{i:06d}.json"
+
+        # Generate questions.
+        try:
+            questions = generate_questions.main(
+                generate_questions.parser.parse_args(['--input-scene-file', variations_output_path,
+                                                      '--output-questions-file', questions_file_path,
+                                                      '--metadata-file', '../svqa/metadata.json',
+                                                      '--synonyms-json', '../svqa/synonyms.json',
+                                                      '--template-dir', '../svqa/SVQA_1.0_templates',
+                                                      '--print-stats', False]))
+            generated_questions[split].extend(questions)
+        except Exception as e:
+            traceback.print_exception(type(e), e, e.__traceback__)
+
+        # Add them into dataset.json
+        dataset.append(
+            json.loads(f"""{{
+                            "simulation_id": "{sim['id']}",
+                            "split": "{split}",
+                            "video_path": "{config.output_folder_path}/videos/sim-id-{sim['id']}/{split}_{i:06d}.mpg",
+                            "questions": {json.dumps(json.load(open(questions_file_path, "r")))}
+                        }}""")
+        )
+
+        json.dump(
+            dataset,
+            open(f"{config.output_folder_path}/dataset.json", "w"),
+            indent=4
+        )
+
+    # Print questions and answer frequencies for each template in the generated dataset.
+    for split in ["train", "validation", "test"]:
+        print()
+        print(f"Answers for split: {split}")
+        print(generate_questions.get_answer_frequencies(
+            generate_questions.convert_to_question_tuple_list(generated_questions[split])))
 
 
 def main(args):

@@ -5,13 +5,10 @@ import subprocess
 import os
 import glob
 
-# This script runs a number of simulations, but does not generate a dataset of videos-questions.
+# This script runs a number of simulations, but it does not generate a dataset of videos-questions.
 # It may be used for debugging purposes.
 
 parser = argparse.ArgumentParser()
-
-args = None
-
 
 def get_json(data_type: str, simulation_id: int, controller_id: str):
     return json.loads(

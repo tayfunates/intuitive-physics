@@ -11,13 +11,6 @@ import AutoRun.variation_run as variation_run
 import svqa.generate_questions as generate_questions
 
 """
-TODO: 
-    - Otomatik dataset scripti çıkabilecek cevaplara göre kaç tane sorunun cevabı oldugunu bize söyleyebilsin. 
-        Train --> True: 204, 2: 102, Circle: 402 gibi
-        ki görelim nasıl cevaplar vermişiz sonra tune ederiz uniform dağıtılacak şekilde
-"""
-
-"""
 Generates a dataset that contains simulation outputs with variations and their videos.
 
 Single data in the dataset is generated as follows:
@@ -71,27 +64,39 @@ def init_args():
           "validation_set_ratio": 0.2,
           "test_set_ratio": 0.2,
           "sim_ids_for_each_split": {
-            "train": [1,2,3], 
-            "validation": [4],
-            "test": [1,2,3,4,5]
+            "train": [1], 
+            "validation": [1,2],
+            "test": [1,2]
           },
           "simulation_configs": [
             {
-              "id": 0,
+              "id": 1,
+              "task_ids": [
+                "('descriptive_counting.json', 0)",
+                "('descriptive_counting.json', 1)",
+                "('descriptive_counting.json', 2)",
+                "('descriptive_counting.json', 3)"
+              ],
               "step_count": 600,
               "width": 256,
               "height": 256
             },
             {
-              "id": 1,
+              "id": 2,
+              "task_ids": [
+                "('enable.json', 0)",
+                "('enable.json', 1)",
+                "('enable.json', 2)",
+                "('enable.json', 3)"
+              ],
               "step_count": 600,
               "width": 256,
               "height": 256
             }
           ]
         }
-    
-    If more than one simulation config is specified as above, for example 2, total dataset_size will be 2 * 1000.
+        
+    If "task_ids" are null, then all tasks in all template files will be used to generate questions for that scene.
     """
 
     parser.add_argument('-config', '--configuration-file', action='store', dest='configuration_file', required=True,
@@ -125,9 +130,7 @@ def run_simulation(exec_path: str, controller_json_path: str, debug_output_path=
 
 def generate(config: Config):
     """
-    Generates a dataset with parameters specified in a configuration file.
-
-    TODO: Do not print question statistics while generating the dataset.
+    Generates a dataset with parameters specified in the configuration file.
     """
     os.makedirs(config.output_folder_path, exist_ok=True)
 
@@ -213,7 +216,8 @@ def generate(config: Config):
                                                       '--metadata-file', '../svqa/metadata.json',
                                                       '--synonyms-json', '../svqa/synonyms.json',
                                                       '--template-dir', '../svqa/SVQA_1.0_templates',
-                                                      '--print-stats', False]))
+                                                      '--print-stats', False,
+                                                      '--task-ids', sim["task_ids"]]))
             generated_questions[split].extend(questions)
         except Exception as e:
             traceback.print_exception(type(e), e, e.__traceback__)

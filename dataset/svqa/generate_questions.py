@@ -8,6 +8,7 @@
 from __future__ import print_function
 
 from collections import defaultdict
+from collections import Counter
 
 from svqa.causal_graph import CausalGraph
 import argparse, json, os, itertools, random, shutil
@@ -850,21 +851,23 @@ def get_answer_frequencies(q_a_t_f_list):
     template_file_to_question_count_map = defaultdict(int)
     for q in q_a_t_f_list: template_file_to_question_count_map[q[2]] += 1
 
-    template_file_to_answer_to_count_map = {}
-    for k in template_file_to_question_count_map.keys():
-        answers_for_this_template = [q[1] for q in q_a_t_f_list if q[2] == k]
-        freq_map = defaultdict(int)
-        for answer in answers_for_this_template: freq_map[answer] += 1
-        template_file_to_answer_to_count_map[k] = freq_map
+    template_file_to_answer_freq_map = {"**Total**": Counter({})}
+    for template_file in template_file_to_question_count_map.keys():
+        answers_for_this_template_file = [q[1] for q in q_a_t_f_list if q[2] == template_file]
+        freq_map = Counter(answers_for_this_template_file)
+        template_file_to_answer_freq_map[template_file] = freq_map
+        template_file_to_answer_freq_map["**Total**"] += Counter(freq_map)
+
+    template_file_to_question_count_map["**Total**"] = len(q_a_t_f_list)
 
     def answer_count_row_for(template_file):
         row = []
         for answer in answer_set:
-            if answer not in template_file_to_answer_to_count_map[template_file]:
+            if answer not in template_file_to_answer_freq_map[template_file]:
                 row.append("")
             else:
-                count = template_file_to_answer_to_count_map[template_file][answer]
-                total = sum(template_file_to_answer_to_count_map[template_file].values())
+                count = template_file_to_answer_freq_map[template_file][answer]
+                total = sum(template_file_to_answer_freq_map[template_file].values())
                 row.append(f"{count} (%{round(100 * (count / total))})")
         return row
 

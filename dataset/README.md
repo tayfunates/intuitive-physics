@@ -90,15 +90,15 @@ We do not have any other side inputs now, but there may some in the future, such
 
 #### Noun and Adjective Synonyms
 
-"thing": "thing", "object"
-"sphere": "sphere", "ball"
-"cube": "cube", "block"
-"large": "large", "big"
-"small": "small", "tiny"
+"thing": "thing", "object"</br>
+"sphere": "sphere", "ball"</br>
+"cube": "cube", "block"</br>
+"large": "large", "big"</br>
+"small": "small", "tiny"</br>
 
 #### Verb Synonyms
 
-"prevent": "prevent", "keep", "hold"
+"prevent": "prevent", "keep", "hold"</br>
 
 ## Functional Modules
 

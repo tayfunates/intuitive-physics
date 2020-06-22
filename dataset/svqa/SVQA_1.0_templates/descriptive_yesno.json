@@ -322,6 +322,111 @@
   },
   {
     "text": [
+      "Are there any collisions before the <Z> <C> <S> enters the basket?"
+    ],
+      "nodes": [
+        {
+          "inputs": [],
+          "type": "start_scene"
+        },
+        {
+          "inputs": [],
+          "type": "events"
+        },
+        {
+          "inputs": [
+            1
+          ],
+          "type": "filter_objects_from_enter_container_events"
+        },
+        {
+          "side_inputs": [
+            "<Z>"
+          ],
+          "inputs": [
+            2
+          ],
+          "type": "filter_size"
+        },
+        {
+          "side_inputs": [
+            "<C>"
+          ],
+          "inputs": [
+            3
+          ],
+          "type": "filter_color"
+        },
+        {
+          "side_inputs": [
+            "<S>"
+          ],
+          "inputs": [
+            4
+          ],
+          "type": "filter_shape"
+        },
+        {
+          "inputs": [
+            5
+          ],
+          "type": "unique"
+        },
+        {
+          "inputs": [
+            1, 6
+          ],
+          "type": "filter_events"
+        },
+        {
+          "inputs": [
+            7
+          ],
+          "type": "filter_enter_container"
+        },
+        {
+          "inputs": [
+            8
+          ],
+          "type": "filter_first"
+        },
+        {
+          "inputs": [
+            1
+          ],
+          "type": "filter_collision_with_dynamics"
+        },
+        {
+          "inputs": [
+            10, 9
+          ],
+          "type": "filter_before"
+        },
+        {
+          "inputs": [
+            11
+          ],
+          "type": "event_exist"
+        }
+      ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
       "Are there any collisions after the <Z> <C> <S> falls to the ground?"
     ],
       "nodes": [
@@ -407,6 +512,117 @@
             11, 10
           ],
           "type": "filter_after"
+        },
+        {
+          "inputs": [
+            12
+          ],
+          "type": "event_exist"
+        }
+      ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "Are there any collisions before the <Z> <C> <S> falls to the ground?"
+    ],
+      "nodes": [
+        {
+          "inputs": [],
+          "type": "start_scene"
+        },
+        {
+          "inputs": [],
+          "type": "events"
+        },
+        {
+          "inputs": [
+            1
+          ],
+          "type": "filter_collide_ground"
+        },
+        {
+          "inputs": [
+            2
+          ],
+          "type": "filter_objects_from_events"
+        },
+        {
+          "side_inputs": [
+            "<Z>"
+          ],
+          "inputs": [
+            3
+          ],
+          "type": "filter_size"
+        },
+        {
+          "side_inputs": [
+            "<C>"
+          ],
+          "inputs": [
+            4
+          ],
+          "type": "filter_color"
+        },
+        {
+          "side_inputs": [
+            "<S>"
+          ],
+          "inputs": [
+            5
+          ],
+          "type": "filter_shape"
+        },
+        {
+          "inputs": [
+            6
+          ],
+          "type": "unique"
+        },
+        {
+          "inputs": [
+            1, 7
+          ],
+          "type": "filter_events"
+        },
+        {
+          "inputs": [
+            8
+          ],
+          "type": "filter_collide_ground"
+        },
+        {
+          "inputs": [
+            9
+          ],
+          "type": "filter_first"
+        },
+        {
+          "inputs": [
+            1
+          ],
+          "type": "filter_collision_with_dynamics"
+        },
+        {
+          "inputs": [
+            11, 10
+          ],
+          "type": "filter_before"
         },
         {
           "inputs": [

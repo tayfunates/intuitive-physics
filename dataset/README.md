@@ -101,6 +101,7 @@ We do not have any other side inputs now, but there may some in the future, such
 "prevent": "prevent", "keep", "hold"</br>
 "enter": "enter", "go into"</br>
 "entering": "entering", "going into"</br>
+"enters": "enters", "goes into"</br>
 
 ## Functional Modules
 

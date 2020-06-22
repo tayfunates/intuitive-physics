@@ -63,5 +63,13 @@
     "prevent",
     "keep",
     "hold"
+  ],
+  "enter": [
+    "enter",
+    "go into"
+  ],
+  "entering": [
+    "entering",
+    "going into"
   ]
 }

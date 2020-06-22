@@ -164,8 +164,7 @@
   },
   {
     "text": [
-      "How many <S>s enter the basket?",
-      "How many <S>s go into the basket?"
+      "How many <S>s *enter* the basket?"
     ],
     "nodes": [
       {
@@ -220,8 +219,7 @@
   },
   {
     "text": [
-      "How many <C> objects enter the basket?",
-      "How many <C> objects go into the basket?"
+      "How many <C> objects *enter* the basket?"
     ],
     "nodes": [
       {
@@ -276,8 +274,7 @@
   },
   {
     "text": [
-      "How many <Z> objects enter the basket?",
-      "How many <Z> objects go into the basket?"
+      "How many <Z> objects *enter* the basket?"
     ],
     "nodes": [
       {
@@ -332,8 +329,7 @@
   },
   {
     "text": [
-      "How many objects enter the basket?",
-      "How many objects go into the basket?"
+      "How many objects *enter* the basket?"
     ],
     "nodes": [
       {

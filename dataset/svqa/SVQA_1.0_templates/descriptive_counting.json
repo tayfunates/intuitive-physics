@@ -1,7 +1,8 @@
 [
   {
     "text": [
-      "How many <S>s are moving when the video ends?"
+      "How many <S>s are moving when the video ends?",
+      "How many <S>s are in motion at the end of the video?"
     ],
     "nodes": [
       {
@@ -44,7 +45,8 @@
   },
   {
     "text": [
-      "How many <C> objects are moving when the video ends?"
+      "How many <C> objects are moving when the video ends?",
+      "How many <C> objects are in motion at the end of the video?"
     ],
     "nodes": [
       {
@@ -87,7 +89,8 @@
   },
   {
     "text": [
-      "How many <Z> objects are moving when the video ends?"
+      "How many <Z> objects are moving when the video ends?",
+      "How many <Z> objects are in motion at the end of the video?"
     ],
     "nodes": [
       {
@@ -130,7 +133,8 @@
   },
   {
     "text": [
-      "How many objects are moving when the video ends?"
+      "How many objects are moving when the video ends?",
+      "How many objects are in motion at the end of the video?"
     ],
     "nodes": [
       {
@@ -160,7 +164,8 @@
   },
   {
     "text": [
-      "How many <S>s enter the basket?"
+      "How many <S>s enter the basket?",
+      "How many <S>s go into the basket?"
     ],
     "nodes": [
       {
@@ -215,7 +220,8 @@
   },
   {
     "text": [
-      "How many <C> objects enter the basket?"
+      "How many <C> objects enter the basket?",
+      "How many <C> objects go into the basket?"
     ],
     "nodes": [
       {
@@ -270,7 +276,8 @@
   },
   {
     "text": [
-      "How many <Z> objects enter the basket?"
+      "How many <Z> objects enter the basket?",
+      "How many <Z> objects go into the basket?"
     ],
     "nodes": [
       {
@@ -325,7 +332,8 @@
   },
   {
     "text": [
-      "How many objects enter the basket?"
+      "How many objects enter the basket?",
+      "How many objects go into the basket?"
     ],
     "nodes": [
       {

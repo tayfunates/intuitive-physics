@@ -86,6 +86,20 @@ Internal tagging information:
   
 We do not have any other side inputs now, but there may some in the future, such as Order type in Clevrer.
 
+### Synonmys
+
+#### Noun and Adjective Synonyms
+
+"thing": "thing", "object"
+"sphere": "sphere", "ball"
+"cube": "cube", "block"
+"large": "large", "big"
+"small": "small", "tiny"
+
+#### Verb Synonyms
+
+"prevent": "prevent", "keep", "hold"
+
 ## Functional Modules
 
 | Name  | Description  | Input Types  | Output Types  | Implementation Status |

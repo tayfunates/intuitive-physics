@@ -61,6 +61,7 @@
   ],
     "prevent": [
     "prevent",
-    "keep"
+    "keep",
+    "hold"
   ]
 }

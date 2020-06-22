@@ -54,8 +54,13 @@
     "stable",
     "stationary"
   ],
-  "enables": [
-    "causes",
-    "leads"
+  "enable": [
+    "enable",
+    "cause",
+    "lead"
+  ],
+    "prevent": [
+    "prevent",
+    "keep"
   ]
 }

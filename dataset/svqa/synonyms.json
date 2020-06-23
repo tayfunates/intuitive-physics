@@ -54,8 +54,26 @@
     "stable",
     "stationary"
   ],
-  "enables": [
-    "causes",
-    "leads"
+  "enable": [
+    "enable",
+    "cause",
+    "lead"
+  ],
+    "prevent": [
+    "prevent",
+    "keep",
+    "hold"
+  ],
+  "enter": [
+    "enter",
+    "go into"
+  ],
+  "entering": [
+    "entering",
+    "going into"
+  ],
+  "enters": [
+    "enters",
+    "goes into"
   ]
 }

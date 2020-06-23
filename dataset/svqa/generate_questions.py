@@ -62,8 +62,8 @@ parser.add_argument('--synonyms-json', default='synonyms.json',
                     help="JSON file defining synonyms for parameter values")
 parser.add_argument('--template-dir', default='SVQA_1.0_templates',
                     help="Directory containing JSON templates for questions")
-parser.add_argument('--task-ids', default=None,
-                    help="List of task IDs that should be used to generate the questions. "
+parser.add_argument('--excluded-task-ids', default=None,
+                    help="List of task IDs that should be excluded when generating questions. "
                          "If None, all question templates in the template directory will be used.")
 
 # Output
@@ -657,7 +657,7 @@ def main(args):
             base = os.path.splitext(fn)[0]
             for i, template in enumerate(json.load(f)):
                 key = (fn, i)
-                if args.task_ids is not None and str(key) not in args.task_ids:
+                if args.excluded_task_ids is not None and str(key) in args.excluded_task_ids:
                     continue
                 num_loaded_templates += 1
                 discard_material_from_template(template)

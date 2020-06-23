@@ -71,19 +71,14 @@ def init_args():
           "simulation_configs": [
             {
               "id": 1,
-              "task_ids": [
-                "('descriptive_counting.json', 0)",
-                "('descriptive_counting.json', 1)",
-                "('descriptive_counting.json', 2)",
-                "('descriptive_counting.json', 3)"
-              ],
+              "excluded_task_ids": null,
               "step_count": 600,
               "width": 256,
               "height": 256
             },
             {
               "id": 2,
-              "task_ids": [
+              "excluded_task_ids": [
                 "('enable.json', 0)",
                 "('enable.json', 1)",
                 "('enable.json', 2)",
@@ -96,7 +91,7 @@ def init_args():
           ]
         }
         
-    If "task_ids" are null, then all tasks in all template files will be used to generate questions for that scene.
+    If "excluded_task_ids" are null, then all tasks in all template files will be used to generate questions for that scene.
     """
 
     parser.add_argument('-config', '--configuration-file', action='store', dest='configuration_file', required=True,
@@ -217,7 +212,7 @@ def generate(config: Config):
                                                       '--synonyms-json', '../svqa/synonyms.json',
                                                       '--template-dir', '../svqa/SVQA_1.0_templates',
                                                       '--print-stats', False,
-                                                      '--task-ids', sim["task_ids"]]))
+                                                      '--excluded-task-ids', sim["excluded_task_ids"]]))
             generated_questions[split].extend(questions)
         except Exception as e:
             traceback.print_exception(type(e), e, e.__traceback__)

@@ -105,5 +105,10 @@
   "ground": [
     "ground",
     "bottom"
+  ],
+  "basket": [
+    "basket",
+    "container",
+    "bucket"
   ]
 }

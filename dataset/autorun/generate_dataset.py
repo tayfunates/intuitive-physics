@@ -1,11 +1,15 @@
 import argparse
 import glob
-import itertools
 import json
 import os
 import subprocess
 import pathlib
+import sys
 import traceback
+
+import numpy as np
+import time
+import logging
 
 import autorun.variation_run as variation_run
 import svqa.generate_questions as generate_questions
@@ -166,13 +170,18 @@ def generate(config: Config):
     splits.extend([("validation", sid) for sid in validation_simulations] * (val // len(validation_simulations)))
     splits.extend([("test", sid) for sid in test_simulations] * (test // len(test_simulations)))
 
+    # To measure remaining time.
+    start_time = time.time()
+    times = np.array([])
     for i in range(len(splits)):
+        t1 = time.time()  # To measure remaining time.
+
         split_v_id = splits[i]
         split = split_v_id[0]
         sim = next((x for x in config.simulation_configs if x['id'] == split_v_id[1]), None)
         assert sim is not None, f"Specified simulation ID ({split_v_id[1]}) in 'sim_ids_for_each_split' " \
                                 f"isn't present in 'simulation_configs'."
-        print(f"Running, split: {split}, sim_id: {sim['id']}, N: {i:06d}")
+        logging.info(f"Running, split: {split}, sim_id: {sim['id']}, N: {i:06d}")
 
         # Create controller file.
         controller_json_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/controller_{split}_{i:06d}.json"
@@ -241,22 +250,38 @@ def generate(config: Config):
             indent=4
         )
 
+        diff = time.time() - t1
+        times = np.append(times, diff)
+        logging.info(f"Approx. {round((np.mean(times) * (len(splits) - i - 1)) / 60, 2)} "
+                     "minutes remaining...".ljust(75, " "))
+
+    logging.info(f"Dataset generation is complete. Process took {round((start_time - time.time()) / 60, 2)} minutes.")
+
     # Print questions and answer frequencies for each template in the generated dataset.
     for split in ["train", "validation", "test"]:
-        print()
-        print(f"Answers for split: {split}")
-        print(generate_questions.get_answer_frequencies(
-            generate_questions.convert_to_question_tuple_list(generated_questions[split])))
+        logging.info(f"Answers for split: {split}")
+        table = generate_questions.get_answer_frequencies(
+            generate_questions.convert_to_question_tuple_list(generated_questions[split]))
+        logging.info(f"{os.linesep}"
+                     f"{table}")
 
 
 def main(args):
-    with open(args.configuration_file, 'r') as config_json:
-        config = Config(json.loads(config_json.read()))
+    logging.basicConfig(
+        level=logging.NOTSET,
+        format='[%(levelname)s]\t%(asctime)s\t%(message)s',
+        handlers=[logging.FileHandler("dataset_generation.log"), logging.StreamHandler(sys.stdout)])
 
+    logging.info("Opening dataset generation configuration file.")
+    with open(args.configuration_file, 'r') as config_json:
+        s = config_json.read()
+        config = Config(json.loads(s))
+        logging.debug(f"Configuration:{os.linesep}{s}")
+
+    logging.info("Running simulations...")
     generate(config)
 
 
 if __name__ == "__main__":
     args = init_args()
-    print("Running simulations...")
     main(args)

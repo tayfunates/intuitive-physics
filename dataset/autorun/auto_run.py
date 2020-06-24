@@ -10,6 +10,7 @@ import glob
 
 parser = argparse.ArgumentParser()
 
+
 def get_json(data_type: str, simulation_id: int, controller_id: str):
     return json.loads(
         f"""{{

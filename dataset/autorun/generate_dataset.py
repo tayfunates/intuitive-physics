@@ -7,7 +7,7 @@ import subprocess
 import pathlib
 import traceback
 
-import AutoRun.variation_run as variation_run
+import autorun.variation_run as variation_run
 import svqa.generate_questions as generate_questions
 
 """

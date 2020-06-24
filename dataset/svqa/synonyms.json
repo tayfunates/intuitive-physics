@@ -56,8 +56,13 @@
   ],
   "enable": [
     "enable",
-    "cause",
-    "lead"
+    "help",
+    "allow"
+  ],
+  "enables": [
+    "enables",
+    "helps",
+    "allows"
   ],
     "prevent": [
     "prevent",

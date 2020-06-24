@@ -83,5 +83,20 @@
     "enters",
     "goes into",
     "gets into"
+  ],
+  "fall to": [
+    "fall to",
+    "hit",
+    "collide with"
+  ],
+  "falling to": [
+    "falling to",
+    "hitting",
+    "colliding with"
+  ],
+  "falls to": [
+    "falls to",
+    "hits",
+    "collides with"
   ]
 }

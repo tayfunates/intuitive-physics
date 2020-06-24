@@ -101,9 +101,9 @@ We do not have any other side inputs now, but there may some in the future, such
 "prevent": "prevent", "keep", "hold"</br>
 "enable": "enable", "help", "allow"</br>
 "enables": "enables", "helps", "allows"</br>
-"enter": "enter", "go into", "get into"</br>
-"entering": "entering", "going into", "getting into"</br>
-"enters": "enters", "goes into", "gets into"</br>
+"enter": "enter", "go into", "get into", "end up in"</br>
+"entering": "entering", "going into", "getting into", "ending up in"</br>
+"enters": "enters", "goes into", "gets into", "ends up in"</br>
 "fall to": "fall to", "hit", "collide with"</br>
 "falling to": "falling to", "hitting", "colliding with"</br>
 "falls to": "falls to", "hits", "collides with"</br>

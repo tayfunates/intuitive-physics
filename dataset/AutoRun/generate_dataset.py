@@ -153,6 +153,14 @@ def generate(config: Config):
     validation_simulations = config.sim_ids_for_each_split["validation"]
     test_simulations = config.sim_ids_for_each_split["test"]
 
+    # If no simulation id specified for a split, use all.
+    if train_simulations is None:
+        train_simulations = [config["id"] for config in config.simulation_configs]
+    if validation_simulations is None:
+        validation_simulations = [config["id"] for config in config.simulation_configs]
+    if test_simulations is None:
+        test_simulations = [config["id"] for config in config.simulation_configs]
+
     # Breakup split ratios to each scene ID.
     splits = [("train", sid) for sid in train_simulations * (train // len(train_simulations))]
     splits.extend([("validation", sid) for sid in validation_simulations] * (val // len(validation_simulations)))

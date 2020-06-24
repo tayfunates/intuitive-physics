@@ -53,6 +53,7 @@ class Config(object):
         self.train_set_ratio = config_dict['train_set_ratio']
         self.sim_ids_for_each_split = config_dict['sim_ids_for_each_split']
         self.simulation_configs = config_dict['simulation_configs']
+        self.offline = config_dict['offline']
 
 
 def init_args():
@@ -192,7 +193,7 @@ def generate(config: Config):
                 json.loads(
                     f"""{{
                             "simulationID": {sim['id']},
-                            "offline": true,
+                            "offline": {str(config.offline).lower()},
                             "outputVideoPath": "{config.output_folder_path}/videos/sim-id-{sim['id']}/{split}_{i:06d}.mpg",
                             "outputJSONPath": "{output_json_path}",
                             "width":  {sim['width']},
@@ -228,6 +229,7 @@ def generate(config: Config):
                                                       '--metadata-file', '../svqa/metadata.json',
                                                       '--synonyms-json', '../svqa/synonyms.json',
                                                       '--template-dir', '../svqa/SVQA_1.0_templates',
+                                                      '--restrict-template-count-per-video', False,
                                                       '--print-stats', False,
                                                       '--excluded-task-ids', sim["excluded_task_ids"]]))
             generated_questions[split].extend(questions)
@@ -255,7 +257,7 @@ def generate(config: Config):
         logging.info(f"Approx. {round((np.mean(times) * (len(splits) - i - 1)) / 60, 2)} "
                      "minutes remaining...".ljust(75, " "))
 
-    logging.info(f"Dataset generation is complete. Process took {round((start_time - time.time()) / 60, 2)} minutes.")
+    logging.info(f"Dataset generation is complete. Process took {round((time.time() - start_time) / 60, 2)} minutes.")
 
     # Print questions and answer frequencies for each template in the generated dataset.
     for split in ["train", "validation", "test"]:

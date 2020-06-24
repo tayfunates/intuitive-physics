@@ -6,3 +6,4 @@ controllers/
 venv/
 *cache*
 dataset*
+!dataset_gen_config.json

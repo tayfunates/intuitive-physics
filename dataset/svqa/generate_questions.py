@@ -285,11 +285,12 @@ def other_heuristic(text, param_vals):
             text = text.replace(' another ', ' a ')
     return text
 
-def addVerbSynonmys(text, synonyms):
-    m = re.findall('\*(.+?)\*', text)
-    for verb in m:
-        val = random.choice(synonyms[verb])
-        text = text.replace('*'+verb+'*', val)
+def addSynonmysForStaticWords(text, synonyms):
+    #TODO: separate verb and noun synonmys
+    m = set(re.findall('\*(.+?)\*', text))
+    for word in m:
+        val = random.choice(synonyms[word])
+        text = text.replace('*'+word+'*', val)
     return text
 
 
@@ -297,7 +298,7 @@ def instantiate_templates_dfs(variations_outputs, scene_structs, causal_graph, t
                               synonyms, max_instances=None, verbose=False):
     param_name_to_type = {p['name']: p['type'] for p in template['params']}
 
-    template['text'] = [addVerbSynonmys(text, synonyms) for text in template['text']]
+    template['text'] = [addSynonmysForStaticWords(text, synonyms) for text in template['text']]
 
     initial_state = {
         'nodes': [node_shallow_copy(template['nodes'][0])],

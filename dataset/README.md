@@ -99,6 +99,8 @@ We do not have any other side inputs now, but there may some in the future, such
 #### Verb Synonyms
 
 "prevent": "prevent", "keep", "hold"</br>
+"enable": "enable", "help", "allow"</br>
+"enables": "enables", "helps", "allows"</br>
 "enter": "enter", "go into", "get into"</br>
 "entering": "entering", "going into", "getting into"</br>
 "enters": "enters", "goes into", "gets into"</br>
@@ -191,11 +193,11 @@ or the entire video (when input frame is “null”)
 | 24. "Are there any collisions before the **Z** **C** **S** **enters** the basket?" | Descriptive |
 | 25. "Are there any collisions after the **Z** **C** **S** falls to the ground?" | Descriptive |
 | 26. "Are there any collisions before the **Z** **C** **S** falls to the ground?" | Descriptive |
-| 27. "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to fall to the ground?", "Does the **Z** **C** **S** enable the collision between the **Z2** **C2** **S2** and the ground?", "There is a **Z** **C** **S**, does it enable **Z2** **C2** **S2** to fall to the ground?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the ground?" | Enable |
-| 28. "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to **enter** the basket?", "There is a **Z** **C** **S**, does it enable the **Z2** **C2** **S2** to **enter** the basket?" | Enable |
-| 29. "Is there any object which enables the **Z** **C** **S** to **enter** the basket?", "Are there any objects which enable the **Z** **C** **S** to **enter** the basket?" | Enable |
-| 30. "How many objects does the **Z** **C** **S** enable to **enter** the basket?", "What is the number of objects that the **Z** **C** **S** enable to **enter** the basket?" | Enable |
-| 31. "How many objects does the **Z** **C** **S** enable to fall to the ground?", "What is the number of objects that the **Z** **C** **S** enable to fall to the ground?" | Enable |
+| 27. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to fall to the ground?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the ground?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to fall to the ground?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the ground?" | Enable |
+| 28. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **enter** the basket?", "There is a **Z** **C** **S**, does it **enable** the **Z2** **C2** **S2** to **enter** the basket?" | Enable |
+| 29. "Is there any object which **enables** the **Z** **C** **S** to **enter** the basket?", "Are there any objects which **enable** the **Z** **C** **S** to **enter** the basket?" | Enable |
+| 30. "How many objects does the **Z** **C** **S** **enable** to **enter** the basket?", "What is the number of objects that the **Z** **C** **S** **enable** to **enter** the basket?" | Enable |
+| 31. "How many objects does the **Z** **C** **S** **enable** to fall to the ground?", "What is the number of objects that the **Z** **C** **S** **enable** to fall to the ground?" | Enable |
 | 32. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from falling to the ground?" | Prevent |
 | 33. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the basket?" | Prevent |
 

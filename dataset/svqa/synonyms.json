@@ -101,5 +101,9 @@
     "falls to",
     "hits",
     "collides with"
+  ],
+  "ground": [
+    "ground",
+    "bottom"
   ]
 }

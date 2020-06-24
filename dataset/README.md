@@ -95,6 +95,7 @@ We do not have any other side inputs now, but there may some in the future, such
 "cube": "cube", "block"</br>
 "large": "large", "big"</br>
 "small": "small", "tiny"</br>
+"ground": "ground", "bottom"</br>
 
 #### Verb Synonyms
 

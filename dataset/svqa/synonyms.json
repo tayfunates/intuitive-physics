@@ -66,14 +66,17 @@
   ],
   "enter": [
     "enter",
-    "go into"
+    "go into",
+    "get into"
   ],
   "entering": [
     "entering",
-    "going into"
+    "going into",
+    "getting into"
   ],
   "enters": [
     "enters",
-    "goes into"
+    "goes into",
+    "gets into"
   ]
 }

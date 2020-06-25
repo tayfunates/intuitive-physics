@@ -13,6 +13,7 @@ import logging
 
 import autorun.variation_run as variation_run
 import svqa.generate_questions as generate_questions
+import autorun.dataset_utils as dataset_utils
 
 """
 Generates a dataset that contains simulation outputs with variations and their videos.
@@ -266,6 +267,13 @@ def generate(config: Config):
             generate_questions.convert_to_question_tuple_list(generated_questions[split]))
         logging.info(f"{os.linesep}"
                      f"{table}")
+
+    # Dump minimal version of the dataset or easier debugging.
+    json.dump(
+        dataset_utils.minimized_dataset(dataset),
+        open(f"{config.output_folder_path}/dataset_minimal.json", "w"),
+        indent=2
+    )
 
 
 def main(args):

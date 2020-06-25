@@ -1,7 +1,7 @@
 [
   {
     "text": [
-      "After *entering* the basket, does the <Z> <C> <S> collide with other objects?"
+      "After *entering* the *basket*, does the <Z> <C> <S> collide with other objects?"
     ],
       "nodes": [
         {
@@ -106,7 +106,7 @@
   },
   {
     "text": [
-      "Before *entering* the basket, does the <Z> <C> <S> collide with other objects?"
+      "Before *entering* the *basket*, does the <Z> <C> <S> collide with other objects?"
     ],
       "nodes": [
         {
@@ -211,7 +211,7 @@
   },
   {
     "text": [
-      "After falling to the ground, does the <Z> <C> <S> collide with other objects?"
+      "After *falling to* the *ground*, does the <Z> <C> <S> collide with other objects?"
     ],
       "nodes": [
         {
@@ -322,7 +322,7 @@
   },
   {
     "text": [
-      "Before falling to the ground, does the <Z> <C> <S> collide with other objects?"
+      "Before *falling to* the *ground*, does the <Z> <C> <S> collide with other objects?"
     ],
       "nodes": [
         {
@@ -433,7 +433,7 @@
   },
   {
     "text": [
-      "Are there any collisions after the <Z> <C> <S> *enters* the basket?"
+      "Are there any collisions after the <Z> <C> <S> *enters* the *basket*?"
     ],
       "nodes": [
         {
@@ -538,7 +538,7 @@
   },
   {
     "text": [
-      "Are there any collisions before the <Z> <C> <S> *enters* the basket?"
+      "Are there any collisions before the <Z> <C> <S> *enters* the *basket*?"
     ],
       "nodes": [
         {
@@ -643,7 +643,7 @@
   },
   {
     "text": [
-      "Are there any collisions after the <Z> <C> <S> falls to the ground?"
+      "Are there any collisions after the <Z> <C> <S> *falls to* the *ground*?"
     ],
       "nodes": [
         {
@@ -754,7 +754,7 @@
   },
   {
     "text": [
-      "Are there any collisions before the <Z> <C> <S> falls to the ground?"
+      "Are there any collisions before the <Z> <C> <S> *falls to* the *ground*?"
     ],
       "nodes": [
         {

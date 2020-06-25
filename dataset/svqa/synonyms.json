@@ -72,16 +72,43 @@
   "enter": [
     "enter",
     "go into",
-    "get into"
+    "get into",
+    "end up in"
   ],
   "entering": [
     "entering",
     "going into",
-    "getting into"
+    "getting into",
+    "ending up in"
   ],
   "enters": [
     "enters",
     "goes into",
-    "gets into"
+    "gets into",
+    "ends up in"
+  ],
+  "fall to": [
+    "fall to",
+    "hit",
+    "collide with"
+  ],
+  "falling to": [
+    "falling to",
+    "hitting",
+    "colliding with"
+  ],
+  "falls to": [
+    "falls to",
+    "hits",
+    "collides with"
+  ],
+  "ground": [
+    "ground",
+    "bottom"
+  ],
+  "basket": [
+    "basket",
+    "container",
+    "bucket"
   ]
 }

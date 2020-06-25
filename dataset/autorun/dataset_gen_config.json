@@ -5,6 +5,7 @@
   "train_set_ratio": 0.5,
   "validation_set_ratio": 0.3,
   "test_set_ratio": 0.2,
+  "offline": true,
   "sim_ids_for_each_split": {
     "train": null,
     "validation": null,
@@ -34,6 +35,13 @@
     },
     {
       "id": 4,
+      "step_count": 600,
+      "width": 256,
+      "height": 256,
+      "excluded_task_ids": null
+    },
+    {
+      "id": 5,
       "step_count": 600,
       "width": 256,
       "height": 256,

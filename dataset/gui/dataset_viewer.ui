@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1041</width>
-    <height>637</height>
+    <width>1051</width>
+    <height>638</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,7 +66,7 @@
       <x>210</x>
       <y>40</y>
       <width>571</width>
-      <height>391</height>
+      <height>551</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -79,9 +79,9 @@
    <widget class="QListWidget" name="questionsListWidget">
     <property name="geometry">
      <rect>
-      <x>795</x>
+      <x>790</x>
       <y>40</y>
-      <width>241</width>
+      <width>251</width>
       <height>551</height>
      </rect>
     </property>
@@ -98,23 +98,13 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QTableView" name="statisticsTableView">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>440</y>
-      <width>571</width>
-      <height>151</height>
-     </rect>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1041</width>
+     <width>1051</width>
      <height>21</height>
     </rect>
    </property>

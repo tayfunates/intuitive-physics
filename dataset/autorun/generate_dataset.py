@@ -250,7 +250,7 @@ def generate(config: Config):
         json.dump(
             dataset,
             open(f"{config.output_folder_path}/dataset.json", "w"),
-            indent=4
+            indent=2
         )
 
         diff = time.time() - t1
@@ -268,7 +268,15 @@ def generate(config: Config):
         logging.info(f"{os.linesep}"
                      f"{table}")
 
-    # Dump minimal version of the dataset or easier debugging.
+    dataset = dataset_utils.relativize_paths(dataset, config.output_folder_path)
+
+    json.dump(
+        dataset,
+        open(f"{config.output_folder_path}/dataset.json", "w"),
+        indent=2
+    )
+
+    # Dump minimal version of the dataset for easier debugging.
     json.dump(
         dataset_utils.minimized_dataset(dataset),
         open(f"{config.output_folder_path}/dataset_minimal.json", "w"),

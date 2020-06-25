@@ -77,7 +77,7 @@ class Ui(QtWidgets.QMainWindow):
         self.vlc_media_player.play()
 
         self.lw_questions.clear()
-        self.lw_questions.addItems([f"Q: {qa['question']}\nA: {qa['answer']}\nT: {qa['template_filename']}"
+        self.lw_questions.addItems([f"Q: {qa['question']}\nA: {qa['answer']}\nT: {qa['template_filename']}\n"
                                     for qa in g_dataset.video_to_qa[filename]])
 
     def populate_lists(self):

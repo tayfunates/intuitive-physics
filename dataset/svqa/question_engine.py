@@ -268,19 +268,6 @@ def filter_objects_from_events_handler(variations_outputs, scene_structs, causal
         ret.add(event['objects'][1])
     return list(ret)
 
-def filter_objects_from_enter_container_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
-    assert len(inputs) == 1
-    # Assumes single container
-    basket_id = get_basket_unique_id(scene_structs)
-    container_end_up_events = [event for event in inputs[0] if event['type'] == 'ContainerEndUp']
-    ret = set()
-    for event in container_end_up_events:
-        if event['objects'][0] != basket_id:
-            ret.add(event['objects'][0])
-        else:
-            ret.add(event['objects'][1])
-    return list(ret)
-
 def counterfact_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     object_removed_variation_simulation = variations_outputs['variations_outputs'][str(inputs[0])]
@@ -356,7 +343,6 @@ execute_handlers = {
     'filter_dynamic_objects': filter_dynamic_objects_handler,
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,
-    'filter_objects_from_enter_container_events': filter_objects_from_enter_container_events_handler,
     'counterfact_events': counterfact_events_handler,
     'counterfact_events_list': counterfact_events_list_handler,
     'filter_before': filter_before_handler,

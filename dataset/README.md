@@ -279,4 +279,10 @@ Other clevrer filters that are needed to be discussed.
 |"Does the large cyan circle prevent the tiny brown circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene8.gif)|![](/dataset/examples/ExampleScene8Variation1.gif)|
 |"Does the large purple circle prevent the small green circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene9.gif)|![](/dataset/examples/ExampleScene9Variation1.gif)|
 
+### Relationships between Enable, Cause and Prevent Tasks
+
+In order to have better understanding about the differences between the Enable, Cause, and Prevent tasks, one should understand the notion of "intention" in our environments. We identify the intention in a simulation by looking at the initial linear velocity of the corresponding object. If the magnitude of the velocity is greater than zero, then the object **is intended to** to the task specified in the question text, such as entering the basket or colliding with the ground. If the magnitude of the velocity is zero, then the object **is not intended to** to the task, even if there is an external force, such as gravity, upon it at the start of the simulation. Therefore, an affector object or event can only **enable** a patient object to do the task if the patient object is intended to do it but fails without the affector. Similarly, an affector object or event can only **cause** a patient object to do the task if the patient object is **not** intended to do it. Furthermore, an affector object or event can only **prevent** a patient object **not** to do the task if the patient object is indended to it and succeeds without the affector.
+
+Here are some examples to make these more clear:
+
 

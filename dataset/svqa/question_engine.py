@@ -42,7 +42,7 @@ def get_basket_unique_id(scene_structs):
 
 def is_object_moving(obj):
     eps = 0.001
-    if obj['bodyType']!= 0 and (math.fabs(obj['2dLinearVelocity'][0])>eps or math.fabs(obj['2dLinearVelocity'][1])>eps or math.fabs(obj['angularVelocity']))>eps: #0 is a static body
+    if obj['bodyType']!= 0 and (math.fabs(obj['2dLinearVelocity'][0])>eps or math.fabs(obj['2dLinearVelocity'][1])>eps): #0 is a static body
         return True
     return False
 
@@ -252,7 +252,7 @@ def event_partner_handler(variations_outputs, scene_structs, causal_graph, input
 def filter_moving_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs): #This is false
     assert len(inputs) == 2
     scene_struct = scene_structs[inputs[1]]
-    return [objIdx for objIdx in inputs[0] if is_object_moving(scene_struct['objects'][objIdx])]
+    return [objIdx for objIdx in inputs[0] if is_object_moving(object_with_unique_id(scene_struct, objIdx))]
 
 def filter_dynamic_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1

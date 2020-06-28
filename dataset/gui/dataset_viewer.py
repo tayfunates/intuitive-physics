@@ -1,27 +1,34 @@
 import json
+import logging
 import os
 import sys
-import logging
 from glob import glob
 from pathlib import Path
 
 import vlc
-from PyQt5 import QtWidgets, uic, QtGui, QtMultimediaWidgets, QtMultimedia
-from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtMultimediaWidgets import QVideoWidget
-from PyQt5.QtWidgets import QFrame, QListWidget, QLineEdit, QPushButton, QSlider, QLabel, QHBoxLayout, QVBoxLayout, \
-    QStyle, QSizePolicy
-
-import autorun.dataset_utils as dataset_utils
+from PyQt5 import QtWidgets, uic
+from PyQt5.QtWidgets import QFrame, QListWidget, QLineEdit, QPushButton
 
 
-# Maybe create a dataset viewer GUI to inspect data comfortably?
+def minimized_dataset(dataset_json) -> dict:
+    video_to_qa = {}
+    for qa_json in dataset_json:
+        video_to_qa[Path(qa_json["questions"]["info"]["video_filename"]).name] = \
+            [
+                {
+                    "question": question_obj["question"],
+                    "answer": question_obj["answer"],
+                    "template_filename": question_obj["template_filename"]
+                }
+                for question_obj in qa_json["questions"]["questions"]
+            ]
+    return video_to_qa
+
 
 class Dataset:
 
     def __init__(self, dataset_json):
-        self.video_to_qa = dataset_utils.minimized_dataset(dataset_json)
+        self.video_to_qa = minimized_dataset(dataset_json)
 
 
 class Ui(QtWidgets.QMainWindow):

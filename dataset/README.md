@@ -146,7 +146,6 @@ We do not have any other side inputs now, but there may some in the future, such
 | AnyFalse  | Returns true if there is at least one false in a bool list | BoolList  | Bool | ![GREEN] |
 | FilterObjectsFromEvents  | Returns objects from events | EventSet  | ObjectSet  | ![Green]  |
 | FilterObjectsFromEnterContainerEvents  | Returns objects which enters to unique container in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
-| FilterObjectFromEnterContainerEventsList  | Applies FilterObjectFromEnterContainerEvents to each item in a list of event set | EventSetList  | ObjectSetList  | ![Green]  |
 | GetCounterfactEvents  | Returns event list if a specific object is removed from the scene   | Object  | EventSet  | ![Green]  |
 | GetCounterfactEventsList  | Returns event list for all objects in an object set | ObjectSet  | EventSetList  | ![Green]  |
 | FilterDynamic  | Returns dynamic objects from an object set   | ObjectSet  | ObjectSet  | ![Green]  |
@@ -200,11 +199,10 @@ or the entire video (when input frame is “null”)
 | 26. "Are there any collisions before the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
 | 27. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to **fall to** the **ground**?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the **ground**?" | Enable |
 | 28. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **enable** the **Z2** **C2** **S2** to **enter** the **basket**?" | Enable |
-| 29. "Is there any object which **enables** the **Z** **C** **S** to **enter** the **basket**?", "Are there any objects which **enable** the **Z** **C** **S** to **enter** the **basket**?" | Enable |
-| 30. "How many objects does the **Z** **C** **S** **enable** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **enable** to **enter** the **basket**?" | Enable |
-| 31. "How many objects does the **Z** **C** **S** **enable** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **enable** to **fall to** the **ground**?" | Enable |
-| 32. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?" | Prevent |
-| 33. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?" | Prevent |
+| 29. "How many objects does the **Z** **C** **S** **enable** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **enable** to **enter** the **basket**?" | Enable |
+| 30. "How many objects does the **Z** **C** **S** **enable** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **enable** to **fall to** the **ground**?" | Enable |
+| 31. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?" | Prevent |
+| 32. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?" | Prevent |
 
 ### Samples
 

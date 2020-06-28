@@ -462,6 +462,14 @@
       "terminal": false
     },
     {
+      "name": "filter_last",
+      "inputs": [
+        "EventSet"
+      ],
+      "output": "Event",
+      "terminal": false
+    },
+    {
       "name": "event_partner",
       "inputs": [
         "Object",

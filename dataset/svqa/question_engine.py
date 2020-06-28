@@ -235,6 +235,12 @@ def filter_first_handler(variations_outputs, scene_structs, causal_graph, inputs
     assert len(inputs[0]) > 0
     return inputs[0][0]
 
+def filter_last_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    assert len(inputs[0]) > 0
+    return inputs[0][len(inputs[0])-1]
+
 def event_partner_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(inputs[1]['objects']) == 2
@@ -337,6 +343,7 @@ execute_handlers = {
     'filter_enter_container': make_filter_events_handler('ContainerEndUp'),
     'filter_collide_ground': filter_collide_ground_handler,
     'filter_first': filter_first_handler,
+    'filter_last': filter_last_handler,
     'event_partner': event_partner_handler,
     'filter_moving_objects': filter_moving_objects_handler,
     'filter_objects_from_events': filter_objects_from_events_handler,

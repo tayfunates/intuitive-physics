@@ -170,8 +170,8 @@ or the entire video (when input frame is “null”)
 
 | Task  |  Category |
 |---|---|
-| 1. "What color is the object that first collides with the **Z** **C** **S**?", "What is the color of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what color is it?", "There is an object that first collides with the **Z** **C** **S**; what is its color?" | Descriptive |
-| 2. "What shape is the object that first collides with the **Z** **C** **S**?", "What is the shape of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what shape is it?", "There is an object that first collides with the **Z** **C** **S**; what is its shape?" | Descriptive |
+| 1. "What color is the object that the **Z** **C** **S** first collides with?", "What is the color of object that the **Z** **C** **S** first collides with?" | Descriptive |
+| 2. "What shape is the object that the **Z** **C** **S** first collides with?", "What is the shape of object that the **Z** **C** **S** first collides with?" | Descriptive |
 | 3. "How many **S**s are moving when the video ends?", "How many **S**s are in motion at the end of the video?" | Descriptive |
 | 4. "How many **C** objects are moving when the video ends?", "How many **C** objects are in motion at the end of the video?" | Descriptive |
 | 5. "How many **Z** objects are moving when the video ends?", "How many **Z** objects are in motion at the end of the video?" | Descriptive |
@@ -222,18 +222,18 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "What color is the object that first collides with the **Z** **C** **S**?", "What is the color of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what color is it?", "There is an object that first collides with the **Z** **C** **S**; what is its color?" | **TODO** | Color | ![GREEN] |
+| "What color is the object that the **Z** **C** **S** first collides with?", "What is the color of object that the **Z** **C** **S** first collides with?" | **TODO** | Color | ![GREEN] |
 
 
 | Question | Answer | Original Video|
 |---|---|---|
-|"What color is the object that first collides with big purple circle?"|"green"|![](/dataset/examples/ExampleScene9.gif)|
+|"What color is the object that the big purple circle first collides with?"|"green"|![](/dataset/examples/ExampleScene9.gif)|
 
 ##### Query Shape
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "What shape is the object that first collides with the **Z** **C** **S**?", "What is the shape of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what shape is it?", "There is an object that first collides with the **Z** **C** **S**; what is its shape?" | **TODO** | Shape | ![GREEN] |
+| "What shape is the object that the **Z** **C** **S** first collides with?", "What is the shape of object that the **Z** **C** **S** first collides with?" | **TODO** | Shape | ![GREEN] |
 
 
 ##### Counting

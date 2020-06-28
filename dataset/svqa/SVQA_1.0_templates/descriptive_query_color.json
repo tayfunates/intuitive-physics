@@ -2,7 +2,9 @@
   {
     "text": [
       "What color is the object that the <Z> <C> <S> first collides with?",
-      "What is the color of object that the <Z> <C> <S> first collides with?"
+      "What color is the first object to collide with the <Z> <C> <S>?",
+      "What is the color of object that the <Z> <C> <S> first collides with?",
+      "What is the color of first object to collide with the <Z> <C> <S>?"
     ],
     "nodes": [
       {

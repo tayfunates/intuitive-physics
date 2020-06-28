@@ -285,4 +285,12 @@ In order to have better understanding about the differences between the Enable, 
 
 Here are some examples to make these more clear:
 
+![](/dataset/examples/ExampleScene12.gif)
+
+**"Does the small purple triangle cause the tiny green triangle to get into the bucket?"**
+
+The answer to this question is true since the green tiny triangle is not intended to enter the bucket (its initial x and y velocties are 0) and without the purple object, it does not enter the bucket.
+
+
+
 

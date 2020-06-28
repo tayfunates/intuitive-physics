@@ -291,6 +291,16 @@ Here are some examples to make these more clear:
 
 The answer to this question is true since the green tiny triangle is not intended to enter the bucket (its initial x and y velocties are 0) and without the purple object, it does not enter the bucket.
 
+**Does the large cyan triangle enable the tiny purple triangle to hit the bottom?**
 
+The answer to this question is true since tiny purple triangle is intended to hit the bottom (its initial x and/or y velocities are not 0s) and without the large cyan triangle, the blue box would not collide with the purple triangle leading it to hit the bottom.
+
+If we switch **cause** and **enable** keywords in these questions, then the answers become **false** because of the patient object intentions.
+
+Similarly,
+
+**Does the big cyan triangle hold the big blue block from going into the basket?**
+
+The answer to this question is true since big blue block is intended to enter the basket, and without the cyan triangle, it succeeds to do so.
 
 

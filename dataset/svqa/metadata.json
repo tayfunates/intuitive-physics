@@ -518,14 +518,6 @@
       "terminal": false
     },
     {
-      "name": "filter_objects_from_enter_container_events_from_list",
-      "inputs": [
-        "EventSetList"
-      ],
-      "output": "ObjectSetList",
-      "terminal": false
-    },
-    {
       "name": "counterfact_events",
       "inputs": [
         "Object"

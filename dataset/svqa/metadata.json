@@ -462,6 +462,14 @@
       "terminal": false
     },
     {
+      "name": "filter_last",
+      "inputs": [
+        "EventSet"
+      ],
+      "output": "Event",
+      "terminal": false
+    },
+    {
       "name": "event_partner",
       "inputs": [
         "Object",
@@ -472,6 +480,15 @@
     },
     {
       "name": "filter_moving_objects",
+      "inputs": [
+        "ObjectSet",
+        "Integer"
+      ],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
+      "name": "filter_stationary_objects",
       "inputs": [
         "ObjectSet",
         "Integer"
@@ -507,22 +524,6 @@
       "inputs": [
       ],
       "output": "Integer",
-      "terminal": false
-    },
-    {
-      "name": "filter_objects_from_enter_container_events",
-      "inputs": [
-        "EventSet"
-      ],
-      "output": "ObjectSet",
-      "terminal": false
-    },
-    {
-      "name": "filter_objects_from_enter_container_events_from_list",
-      "inputs": [
-        "EventSetList"
-      ],
-      "output": "ObjectSetList",
       "terminal": false
     },
     {

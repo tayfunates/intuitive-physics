@@ -68,7 +68,6 @@ Internal tagging information:
 - Event: A dictionary holding information of a specific event: id, type, time step, participating objects
 - EventSet: A list of unique events
 - EventSetList: A list of EventSet
-- ![RED] Order: A tag indicating chronological ordering of events: such as first, second and last
 - Color: A tag indicating the color of an object
 - Shape: A tag indicating the shape of an object
 - ![RED] Frame or Step: An integer representing when an event happened 
@@ -83,8 +82,6 @@ Internal tagging information:
 - **Z**: Size
 - **C**: Color
 - **S**: Shape
-  
-We do not have any other side inputs now, but there may some in the future, such as Order type in Clevrer.
 
 ### Synonmys
 
@@ -103,6 +100,8 @@ We do not have any other side inputs now, but there may some in the future, such
 "prevent": "prevent", "keep", "hold"</br>
 "enable": "enable", "help", "allow"</br>
 "enables": "enables", "helps", "allows"</br>
+"cause": "cause", "stimulate"</br>
+"causes": "causes", "stimulates"</br>
 "enter": "enter", "go into", "get into", "end up in"</br>
 "entering": "entering", "going into", "getting into", "ending up in"</br>
 "enters": "enters", "goes into", "gets into", "ends up in"</br>
@@ -134,7 +133,9 @@ We do not have any other side inputs now, but there may some in the future, such
 | FilterBefore  | Returns events from the input list that happened before input event  | EventSet, Event  | EventSet  | ![Green]  |
 | FilterAfter  | Returns events from the input list that happened after input event  | EventSet, Event  | EventSet  | ![GREEN]  |
 | FilterMoving  | Returns objects if they are moving at step specified by an Integer   | ObjectSet, Integer  | ObjectSet  | ![Green]  |
+| FilterStationary  | Returns objects if they are stationary at step specified by an Integer   | ObjectSet, Integer  | ObjectSet  | ![Green]  |
 | FilterFirst  | Returns the first event from the input list  | EventSet  | Event  | ![GREEN]  |
+| FilterLast  | Returns the last event from the input list  | EventSet  | Event  | ![GREEN]  |
 | FilterUnique  | Returns unique object from input list with possible side inputs Size, Color, Shape  | Objects, ObjectSideInputs | Object  | ![GREEN]  |
 | Unique  | Returns the single object from the input list, if list has more than one elements returns INVALID  | Objects | Object  | ![GREEN]  |
 | EventPartner (CE, STE, ETE) | Returns object from the object list of the input event which is not input object  | Event, Object  | Object  | ![GREEN]  |
@@ -145,16 +146,12 @@ We do not have any other side inputs now, but there may some in the future, such
 | ExistList  | Applies Exist to each item in input list returning a list of Bool | ObjectSetList | BoolList  | ![GREEN] for ObjectSetList ![BLUE] for EventSetList |
 | AnyFalse  | Returns true if there is at least one false in a bool list | BoolList  | Bool | ![GREEN] |
 | FilterObjectsFromEvents  | Returns objects from events | EventSet  | ObjectSet  | ![Green]  |
-| FilterObjectsFromEnterContainerEvents  | Returns objects which enters to unique container in a specific event set   | EventSet  | ObjectSet  | ![Green]  |
-| FilterObjectFromEnterContainerEventsList  | Applies FilterObjectFromEnterContainerEvents to each item in a list of event set | EventSetList  | ObjectSetList  | ![Green]  |
 | GetCounterfactEvents  | Returns event list if a specific object is removed from the scene   | Object  | EventSet  | ![Green]  |
 | GetCounterfactEventsList  | Returns event list for all objects in an object set | ObjectSet  | EventSetList  | ![Green]  |
 | FilterDynamic  | Returns dynamic objects from an object set   | ObjectSet  | ObjectSet  | ![Green]  |
 | AsList  | Returns single elemen object set created with a specific object | Object | ObjectSet  | ![GREEN] |
 
 Other clevrer filters that are needed to be discussed.
-- ![RED]: FilterStationary: Selects all stationary objects in the input frame
-or the entire video (when input frame is “null”)
 - ![RED]: FilterIn: Selects all incoming events of the input objects
 - ![RED]: FilterOut: Selects all exiting events of the input objects
 
@@ -172,39 +169,42 @@ or the entire video (when input frame is “null”)
 
 | Task  |  Category |
 |---|---|
-| 1. "What color is the object that first collides with the **Z** **C** **S**?", "What is the color of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what color is it?", "There is an object that first collides with the **Z** **C** **S**; what is its color?" | Descriptive |
-| 2. "What shape is the object that first collides with the **Z** **C** **S**?", "What is the shape of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what shape is it?", "There is an object that first collides with the **Z** **C** **S**; what is its shape?" | Descriptive |
-| 3. "How many **S**s are moving when the video ends?", "How many **S**s are in motion at the end of the video?" | Descriptive |
-| 4. "How many **C** objects are moving when the video ends?", "How many **C** objects are in motion at the end of the video?" | Descriptive |
-| 5. "How many **Z** objects are moving when the video ends?", "How many **Z** objects are in motion at the end of the video?" | Descriptive |
-| 6. "How many objects are moving when the video ends?", "How many objects are in motion at the end of the video?" | Descriptive |
-| 7. "How many **S**s **enter** the **basket**?" | Descriptive|
-| 8. "How many **C** objects **enter** the **basket**?" | Descriptive |
-| 9. "How many **Z** objects **enter** the **basket**?" | Descriptive |
-| 10. "How many objects **enter** the **basket**?" | Descriptive |
-| 11. "How many **S**s **fall** to the **ground**?" | Descriptive |
-| 12. "How many **C** objects **fall** to the **ground**?" | Descriptive |
-| 13. "How many **Z** objects **fall** to the **ground**?" | Descriptive |
-| 14. "How many objects **fall** to the **ground**?" | Descriptive |
-| 15. "How many objects **enter** the **basket** after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
-| 16. "How many objects **enter** the **basket** before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
-| 17. "How many objects **fall** to the **ground** after the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
-| 18. "How many objects **fall** to the **ground** before the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
-| 19. "After **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
-| 20. "Before **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
-| 21. "After **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
-| 22. "Before **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
-| 23. "Are there any collisions after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
-| 24. "Are there any collisions before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
-| 25. "Are there any collisions after the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
-| 26. "Are there any collisions before the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
-| 27. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to **fall to** the **ground**?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the **ground**?" | Enable |
-| 28. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **enable** the **Z2** **C2** **S2** to **enter** the **basket**?" | Enable |
-| 29. "Is there any object which **enables** the **Z** **C** **S** to **enter** the **basket**?", "Are there any objects which **enable** the **Z** **C** **S** to **enter** the **basket**?" | Enable |
-| 30. "How many objects does the **Z** **C** **S** **enable** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **enable** to **enter** the **basket**?" | Enable |
-| 31. "How many objects does the **Z** **C** **S** **enable** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **enable** to **fall to** the **ground**?" | Enable |
-| 32. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?" | Prevent |
-| 33. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?" | Prevent |
+| 1. "What color is the object that the **Z** **C** **S** first collides with?", "What color is the first object to collide with the **Z>** **C** **S**?", "What is the color of object that the **Z** **C** **S** first collides with?", "What is the color of first object to collide with the **Z** **C** **S**?" | Descriptive |
+| 2. "What shape is the object that the **Z** **C** **S** first collides with?", "What shape is the first object to collide with the **Z** **C** **S**?", "What is the shape of object that the **Z** **C** **S** first collides with?", "What is the shape of first object to collide with the **Z** **C** **S**?" | Descriptive |
+| 3. "What color is the object that the **Z** **C** **S** last collides with?", "What color is the last object to collide with the **Z>** **C** **S**?", "What is the color of object that the **Z** **C** **S** last collides with?", "What is the color of last object to collide with the **Z** **C** **S**?" | Descriptive |
+| 4. "What shape is the object that the **Z** **C** **S** last collides with?", "What shape is the last object to collide with the **Z** **C** **S**?", "What is the shape of object that the **Z** **C** **S** last collides with?", "What is the shape of last object to collide with the **Z** **C** **S**?" | Descriptive |
+| 5. "How many **S**s are moving when the video ends?", "How many **S**s are in motion at the end of the video?" | Descriptive |
+| 6. "How many **C** objects are moving when the video ends?", "How many **C** objects are in motion at the end of the video?" | Descriptive |
+| 7. "How many **Z** objects are moving when the video ends?", "How many **Z** objects are in motion at the end of the video?" | Descriptive |
+| 8. "How many objects are moving when the video ends?", "How many objects are in motion at the end of the video?" | Descriptive |
+| 9. "How many **S**s **enter** the **basket**?" | Descriptive|
+| 10. "How many **C** objects **enter** the **basket**?" | Descriptive |
+| 11. "How many **Z** objects **enter** the **basket**?" | Descriptive |
+| 12. "How many objects **enter** the **basket**?" | Descriptive |
+| 13. "How many **S**s **fall** to the **ground**?" | Descriptive |
+| 14. "How many **C** objects **fall** to the **ground**?" | Descriptive |
+| 15. "How many **Z** objects **fall** to the **ground**?" | Descriptive |
+| 16. "How many objects **fall** to the **ground**?" | Descriptive |
+| 17. "How many objects **enter** the **basket** after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
+| 18. "How many objects **enter** the **basket** before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
+| 19. "How many objects **fall** to the **ground** after the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
+| 20. "How many objects **fall** to the **ground** before the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
+| 21. "After **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 22. "Before **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 23. "After **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 24. "Before **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 25. "Are there any collisions after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
+| 26. "Are there any collisions before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
+| 27. "Are there any collisions after the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
+| 28. "Are there any collisions before the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
+| 29. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to **fall to** the **ground**?" | Enable |
+| 30. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **enable** the **Z2** **C2** **S2** to **enter** the **basket**?" | Enable |
+| 31. "How many objects does the **Z** **C** **S** **enable** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **enable** to **enter** the **basket**?" | Enable |
+| 32. "How many objects does the **Z** **C** **S** **enable** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **enable** to **fall to** the **ground**?" | Enable |
+| 33. "Does the **Z** **C** **S** **cause** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **cause** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **cause** the **Z2** **C2** **S2** to **fall to** the **ground**?" | Cause |
+| 35. "Does the **Z** **C** **S** **cause** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **cause** the **Z2** **C2** **S2** to **enter** the **basket**?" | Cause |
+| 36. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?" | Prevent |
+| 37. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?" | Prevent |
 
 ### Samples
 
@@ -223,42 +223,14 @@ or the entire video (when input frame is “null”)
 
 ##### Query Color
 
-| Question  |  Program | Output Type  | Implementation Status |
-|---|---|---|---|
-| "What color is the object that first collides with the **Z** **C** **S**?", "What is the color of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what color is it?", "There is an object that first collides with the **Z** **C** **S**; what is its color?" | **TODO** | Color | ![GREEN] |
-
-
 | Question | Answer | Original Video|
 |---|---|---|
-|"What color is the object that first collides with big purple circle?"|"green"|![](/dataset/examples/ExampleScene9.gif)|
+|"What color is the object that the big purple circle first collides with?"|"green"|![](/dataset/examples/ExampleScene9.gif)|
 
 ##### Query Shape
 
-| Question  |  Program | Output Type  | Implementation Status |
-|---|---|---|---|
-| "What shape is the object that first collides with the **Z** **C** **S**?", "What is the shape of object that first collides with the **Z** **C** **S**?", "There is an object that first collides with the **Z** **C** **S**; what shape is it?", "There is an object that first collides with the **Z** **C** **S**; what is its shape?" | **TODO** | Shape | ![GREEN] |
-
 
 ##### Counting
-
-| Question  |  Program | Output Type  | Implementation Status |
-|---|---|---|---|
-| "How many **S**s are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
-| "How many **C** objects are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
-| "How many **Z** objects are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
-| "How many objects are moving when the video ends?" | **TODO** | Integer | ![GREEN] |
-| "How many **S**s enter the basket?" | **TODO** | Integer | ![GREEN] |
-| "How many **C** objects enter the basket?" | **TODO** | Integer | ![GREEN] |
-| "How many **Z** objects enter the basket?" | **TODO** | Integer | ![GREEN] |
-| "How many objects enter the basket?" | **TODO** | Integer | ![GREEN] |
-| "How many **S**s fall to the ground?" | **TODO** | Integer | ![GREEN] |
-| "How many **C** objects fall to the ground?" | **TODO** | Integer | ![GREEN] |
-| "How many **Z** objects fall to the ground?" | **TODO** | Integer | ![GREEN] |
-| "How many objects fall to the ground?" | **TODO** | Integer | ![GREEN] |
-| "How many objects enters the basket after the **Z** **C** **S** enters the basket?" | **TODO** | Integer | ![GREEN] |
-| "How many objects enters the basket before the **Z** **C** **S** enters the basket?" | **TODO** | Integer | ![GREEN] |
-| "How many objects fall to the ground after the **Z** **C** **S** falls to the ground?" | **TODO** | Integer | ![GREEN] |
-| "How many objects fall to the ground before the **Z** **C** **S** falls to the ground?" | **TODO** | Integer | ![GREEN] |
 
 | Question | Answer | Original Video|
 |---|---|---|
@@ -274,27 +246,12 @@ or the entire video (when input frame is “null”)
 
 ##### Yes/No
 
-| Question  |  Program | Output Type  | Implementation Status |
-|---|---|---|---|
-| "Before entering the basket, does the **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
-| "Before falling to the ground, does the **Z** **C** **S** collide with other objects?" | **TODO** | Bool | ![GREEN] |
-| "Are there any collisions after the **Z** **C** **S** enters the basket?" | **TODO** | Bool | ![GREEN] |
-| "Are there any collisions after the **Z** **C** **S** falls to the ground?" | **TODO** | Bool | ![GREEN] |
-
 | Question | Answer | Original Video |
 |---|---|---|
 |"Before entering the basket, does tiny cyan circle collide with other objects?"|"true"|![](/dataset/examples/ExampleScene11.gif)|
 |"Are there any collisions after the brown ball enters the basket?"|"true"|![](/dataset/examples/ExampleScene6.gif)|
 
 ##### Enable
-
-| Question  |  Program | Output Type  | Implementation Status |
-|---|---|---|---|
-| "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to fall to the ground?", "Does the **Z** **C** **S** enable the collision between the **Z2** **C2** **S2** and the ground?", "There is a **Z** **C** **S**, does it enable **Z2** **C2** **S2** to fall to the ground?", "Is the **Z** **C** **S** responsible for the collision between the **Z2** **C2** **S2** and the ground?" | **TODO**  | Bool | ![GREEN] |
-| "Does the **Z** **C** **S** enable the **Z2** **C2** **S2** to enter the basket?", "There is a **Z** **C** **S**, does it enable the **Z2** **C2** **S2** to enter the basket?" | **TODO**  | Bool | ![GREEN] |
-| "Is there any object which enables the **Z** **C** **S** to enter the basket?", "Are there any objects which enable the **Z** **C** **S** to enter the basket?" | **TODO**  | Bool | ![GREEN] |
-| "How many objects does the **Z** **C** **S** enable to enter the basket?", "What is the number of objects that the **Z** **C** **S** enable to enter the basket?" | **TODO**  | Integer | ![GREEN] |
-| "How many objects does the **Z** **C** **S** enable to fall to the ground?", "What is the number of objects that the **Z** **C** **S** enable to fall to the ground?" | **TODO**  | Integer | ![GREEN] |
 
 
 | Question | Answer | Original Video| Variation Video |
@@ -309,13 +266,10 @@ or the entire video (when input frame is “null”)
 |"Is there any object which enables the small green circle to enter the basket?"|"**true**"|![](/dataset/examples/ExampleScene7.gif)|![](/dataset/examples/ExampleScene7Variation1.gif)|
 |"What is the number of objects that the large cyan circle enable to fall to the ground?"|"1"|![](/dataset/examples/ExampleScene8.gif)|![](/dataset/examples/ExampleScene8Variation1.gif)|
 |"There is a tiny red circle, does it enable the small purple circle to enter the basket?"|"**true**"|![](/dataset/examples/ExampleScene10.gif)|![](/dataset/examples/ExampleScene10Variation1.gif)|
+
+##### Cause
   
 ##### Prevent
-
-| Question  |  Program | Output Type  | Implementation Status |
-|---|---|---|---|
-| "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from falling to the ground?" | **TODO**  | Bool | ![GREEN] |
-| "Does the **Z** **C** **S** prevent the **Z2** **C2** **S2** from entering to the basket?" | **TODO**  | Bool | ![GREEN] |
 
 | Question | Answer | Original Video| Variation Video |
 |---|---|---|---|
@@ -324,5 +278,29 @@ or the entire video (when input frame is “null”)
 |"Does the tiny purple circle prevent the big blue circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene6.gif)|![](/dataset/examples/ExampleScene6Variation1.gif)|
 |"Does the large cyan circle prevent the tiny brown circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene8.gif)|![](/dataset/examples/ExampleScene8Variation1.gif)|
 |"Does the large purple circle prevent the small green circle from entering to the basket?"|"true"|![](/dataset/examples/ExampleScene9.gif)|![](/dataset/examples/ExampleScene9Variation1.gif)|
+
+### Relationships between Enable, Cause and Prevent Tasks
+
+In order to have better understanding about the differences between the Enable, Cause, and Prevent tasks, one should understand the notion of "intention" in our environments. We identify the intention in a simulation by looking at the initial linear velocity of the corresponding object. If the magnitude of the velocity is greater than zero, then the object **is intended to** do the task specified in the question text, such as entering the basket or colliding with the ground. If the magnitude of the velocity is zero, then the object **is not intended to** do the task, even if there is an external force, such as gravity, upon it at the start of the simulation. Therefore, an affector object or event can only **enable** a patient object to do the task if the patient object is intended to do it but fails without the affector. Similarly, an affector object or event can only **cause** a patient object to do the task if the patient object is **not** intended to do it. Furthermore, an affector object or event can only **prevent** a patient object **not** to do the task if the patient object is intended to do it and succeeds without the affector.
+
+Here are some examples to make these more clear:
+
+![](/dataset/examples/ExampleScene12.gif)
+
+**"Does the small purple triangle cause the tiny green triangle to get into the bucket?"**
+
+The answer to this question is true since the green tiny triangle is not intended to enter the bucket (its initial x and y velocties are 0) and without the purple object, it does not enter the bucket.
+
+**Does the large cyan triangle enable the tiny purple triangle to hit the bottom?**
+
+The answer to this question is true since tiny purple triangle is intended to hit the bottom (its initial x and/or y velocities are not 0s) and without the large cyan triangle, the blue box would not collide with the purple triangle leading it to hit the bottom.
+
+If we switch **cause** and **enable** keywords in these questions, then the answers become **false** because of the patient object intentions.
+
+Similarly,
+
+**Does the big cyan triangle hold the big blue block from going into the basket?**
+
+The answer to this question is true since big blue block is intended to enter the basket, and without the cyan triangle, it succeeds to do so.
 
 

@@ -42,7 +42,7 @@ def get_basket_unique_id(scene_structs):
 
 def is_object_moving(obj):
     eps = 0.001
-    if obj['bodyType']!= 0 and (math.fabs(obj['2dLinearVelocity'][0])>eps or math.fabs(obj['2dLinearVelocity'][1])>eps or math.fabs(obj['angularVelocity']))>eps: #0 is a static body
+    if obj['bodyType']!= 0 and (math.fabs(obj['2dLinearVelocity'][0])>eps or math.fabs(obj['2dLinearVelocity'][1])>eps): #0 is a static body
         return True
     return False
 
@@ -235,6 +235,12 @@ def filter_first_handler(variations_outputs, scene_structs, causal_graph, inputs
     assert len(inputs[0]) > 0
     return inputs[0][0]
 
+def filter_last_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    assert len(inputs[0]) > 0
+    return inputs[0][len(inputs[0])-1]
+
 def event_partner_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(inputs[1]['objects']) == 2
@@ -243,10 +249,15 @@ def event_partner_handler(variations_outputs, scene_structs, causal_graph, input
         return inputs[1]['objects'][0]
     return inputs[1]['objects'][1]
 
-def filter_moving_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs): #This is false
+def filter_moving_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     scene_struct = scene_structs[inputs[1]]
-    return [objIdx for objIdx in inputs[0] if is_object_moving(scene_struct['objects'][objIdx])]
+    return [objIdx for objIdx in inputs[0] if is_object_moving(object_with_unique_id(scene_struct, objIdx))]
+
+def filter_stationary_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 2
+    scene_struct = scene_structs[inputs[1]]
+    return [objIdx for objIdx in inputs[0] if not is_object_moving(object_with_unique_id(scene_struct, objIdx))]
 
 def filter_dynamic_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
@@ -267,35 +278,6 @@ def filter_objects_from_events_handler(variations_outputs, scene_structs, causal
         ret.add(event['objects'][0])
         ret.add(event['objects'][1])
     return list(ret)
-
-def filter_objects_from_enter_container_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
-    assert len(inputs) == 1
-    # Assumes single container
-    basket_id = get_basket_unique_id(scene_structs)
-    container_end_up_events = [event for event in inputs[0] if event['type'] == 'ContainerEndUp']
-    ret = set()
-    for event in container_end_up_events:
-        if event['objects'][0] != basket_id:
-            ret.add(event['objects'][0])
-        else:
-            ret.add(event['objects'][1])
-    return list(ret)
-
-def filter_objects_from_enter_container_events_from_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
-    assert len(inputs) == 1
-    # Assumes single container
-    basket_id = get_basket_unique_id(scene_structs)
-    ret = []
-    for eventList in inputs[0]:
-        container_end_up_events = [event for event in eventList if event['type'] == 'ContainerEndUp']
-        retObjects = set()
-        for event in container_end_up_events:
-            if event['objects'][0] != basket_id:
-                retObjects.add(event['objects'][0])
-            else:
-                retObjects.add(event['objects'][1])
-        ret.append(list(retObjects))
-    return ret
 
 def counterfact_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
@@ -366,14 +348,14 @@ execute_handlers = {
     'filter_enter_container': make_filter_events_handler('ContainerEndUp'),
     'filter_collide_ground': filter_collide_ground_handler,
     'filter_first': filter_first_handler,
+    'filter_last': filter_last_handler,
     'event_partner': event_partner_handler,
     'filter_moving_objects': filter_moving_objects_handler,
+    'filter_stationary_objects': filter_stationary_objects_handler,
     'filter_objects_from_events': filter_objects_from_events_handler,
     'filter_dynamic_objects': filter_dynamic_objects_handler,
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,
-    'filter_objects_from_enter_container_events': filter_objects_from_enter_container_events_handler,
-    'filter_objects_from_enter_container_events_from_list': filter_objects_from_enter_container_events_from_list_handler,
     'counterfact_events': counterfact_events_handler,
     'counterfact_events_list': counterfact_events_list_handler,
     'filter_before': filter_before_handler,

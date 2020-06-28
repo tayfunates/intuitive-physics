@@ -3,8 +3,7 @@
     "text": [
       "Does the <Z> <C> <S> *enable* the <Z2> <C2> <S2> to *fall to* the *ground*?",
       "Does the <Z> <C> <S> *enable* the collision between the <Z2> <C2> <S2> and the *ground*?",
-      "There is a <Z> <C> <S>, does it *enable* the <Z2> <C2> <S2> to *fall to* the *ground*?",
-      "Is the <Z> <C> <S> responsible for the collision between the <Z2> <C2> <S2> and the *ground*?"
+      "There is a <Z> <C> <S>, does it *enable* the <Z2> <C2> <S2> to *fall to* the *ground*?"
     ],
     "nodes": [
       {
@@ -154,8 +153,18 @@
         "type": "intersect"
       },
       {
+        "inputs": [],
+        "type": "start_scene_step"
+      },
+      {
         "inputs": [
-          21
+          21, 22
+        ],
+        "type": "filter_moving_objects"
+      },
+      {
+        "inputs": [
+          23
         ],
         "type": "exist"
       }
@@ -206,7 +215,13 @@
         "inputs": [
           1
         ],
-        "type": "filter_objects_from_enter_container_events"
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_objects_from_events"
       },
       {
         "side_inputs": [
@@ -222,7 +237,7 @@
           "<C>"
         ],
         "inputs": [
-          3
+          4
         ],
         "type": "filter_color"
       },
@@ -231,43 +246,49 @@
           "<S>"
         ],
         "inputs": [
-          4
+          5
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          5
+          6
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          6
+          7
         ],
         "type": "as_list"
       },
       {
         "inputs": [
-          2, 7
+          3, 8
         ],
         "type": "difference"
       },
       {
         "inputs": [
-          6
+          7
         ],
         "type": "counterfact_events"
       },
       {
         "inputs": [
-          9
+          10
         ],
-        "type": "filter_objects_from_enter_container_events"
+        "type": "filter_enter_container"
       },
       {
         "inputs": [
-          2, 10
+          11
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          3, 12
         ],
         "type": "difference"
       },
@@ -276,7 +297,7 @@
           "<Z2>"
         ],
         "inputs": [
-          8
+          9
         ],
         "type": "filter_size"
       },
@@ -285,7 +306,7 @@
           "<C2>"
         ],
         "inputs": [
-          12
+          14
         ],
         "type": "filter_color"
       },
@@ -294,31 +315,41 @@
           "<S2>"
         ],
         "inputs": [
-          13
+          15
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          14
+          16
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          15
+          17
         ],
         "type": "as_list"
       },
       {
         "inputs": [
-          11, 16
+          13, 18
         ],
         "type": "intersect"
       },
       {
+        "inputs": [],
+        "type": "start_scene_step"
+      },
+      {
         "inputs": [
-          17
+          19, 20
+        ],
+        "type": "filter_moving_objects"
+      },
+      {
+        "inputs": [
+          21
         ],
         "type": "exist"
       }
@@ -347,125 +378,6 @@
       {
         "type": "Shape",
         "name": "<S2>"
-      }
-    ],
-    "constraints": []
-  },
-  {
-    "text": [
-      "Is there any object which *enables* the <Z> <C> <S> to *enter* the *basket*?",
-      "Are there any objects which *enable* the <Z> <C> <S> to *enter* the *basket*?"
-    ],
-    "nodes": [
-      {
-        "inputs": [],
-        "type": "start_scene"
-      },
-      {
-        "inputs": [],
-        "type": "events"
-      },
-      {
-        "inputs": [
-          1
-        ],
-        "type": "filter_objects_from_enter_container_events"
-      },
-      {
-        "side_inputs": [
-          "<Z>"
-        ],
-        "inputs": [
-          2
-        ],
-        "type": "filter_size"
-      },
-      {
-        "side_inputs": [
-          "<C>"
-        ],
-        "inputs": [
-          3
-        ],
-        "type": "filter_color"
-      },
-      {
-        "side_inputs": [
-          "<S>"
-        ],
-        "inputs": [
-          4
-        ],
-        "type": "filter_shape"
-      },
-      {
-        "inputs": [
-          5
-        ],
-        "type": "unique"
-      },
-
-      {
-        "inputs": [
-          6
-        ],
-        "type": "as_list"
-      },
-      {
-        "inputs": [
-          0
-        ],
-        "type": "filter_dynamic_objects"
-      },
-      {
-        "inputs": [
-          8, 7
-        ],
-        "type": "difference"
-      },
-      {
-        "inputs": [
-          9
-        ],
-        "type": "counterfact_events_list"
-      },
-      {
-        "inputs": [
-          10
-        ],
-        "type": "filter_objects_from_enter_container_events_from_list"
-      },
-      {
-        "inputs": [
-          11, 7
-        ],
-        "type": "intersect_list"
-      },
-      {
-        "inputs": [
-          12
-        ],
-        "type": "exist_list"
-      },
-      {
-        "inputs": [
-          13
-        ],
-        "type": "any_false"
-      }
-    ],
-    "params": [
-      {
-        "type": "Size",
-        "name": "<Z>"
-      },
-      {
-        "type": "Color",
-        "name": "<C>"
-      },
-      {
-        "type": "Shape",
-        "name": "<S>"
       }
     ],
     "constraints": []
@@ -527,7 +439,13 @@
         "inputs": [
           1
         ],
-        "type": "filter_objects_from_enter_container_events"
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "filter_objects_from_events"
       },
       {
         "inputs": [
@@ -537,25 +455,31 @@
       },
       {
         "inputs": [
-          8
+          9
         ],
-        "type": "filter_objects_from_enter_container_events"
+        "type": "filter_enter_container"
       },
       {
         "inputs": [
-          7, 9
+          10
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          8, 11
         ],
         "type": "difference"
       },
       {
         "inputs": [
-          10, 6
+          12, 6
         ],
         "type": "difference"
       },
       {
         "inputs": [
-          11
+          13
         ],
         "type": "count"
       }

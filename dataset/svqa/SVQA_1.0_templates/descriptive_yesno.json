@@ -16,14 +16,20 @@
           "inputs": [
             1
           ],
-          "type": "filter_objects_from_enter_container_events"
+          "type": "filter_enter_container"
+        },
+        {
+          "inputs": [
+            2
+          ],
+          "type": "filter_objects_from_events"
         },
         {
           "side_inputs": [
             "<Z>"
           ],
           "inputs": [
-            2
+            3
           ],
           "type": "filter_size"
         },
@@ -32,7 +38,7 @@
             "<C>"
           ],
           "inputs": [
-            3
+            4
           ],
           "type": "filter_color"
         },
@@ -41,49 +47,49 @@
             "<S>"
           ],
           "inputs": [
-            4
+            5
           ],
           "type": "filter_shape"
         },
         {
           "inputs": [
-            5
+            6
           ],
           "type": "unique"
         },
         {
           "inputs": [
-            1, 6
+            1, 7
           ],
           "type": "filter_events"
         },
         {
           "inputs": [
-            7
+            8
           ],
           "type": "filter_enter_container"
         },
         {
           "inputs": [
-            8
+            9
           ],
           "type": "filter_first"
         },
         {
           "inputs": [
-            7
+            8
           ],
           "type": "filter_collision_with_dynamics"
         },
         {
           "inputs": [
-            10, 9
+            11, 10
           ],
           "type": "filter_after"
         },
         {
           "inputs": [
-            11
+            12
           ],
           "type": "event_exist"
         }
@@ -121,14 +127,20 @@
           "inputs": [
             1
           ],
-          "type": "filter_objects_from_enter_container_events"
+          "type": "filter_enter_container"
+        },
+        {
+          "inputs": [
+            2
+          ],
+          "type": "filter_objects_from_events"
         },
         {
           "side_inputs": [
             "<Z>"
           ],
           "inputs": [
-            2
+            3
           ],
           "type": "filter_size"
         },
@@ -137,7 +149,7 @@
             "<C>"
           ],
           "inputs": [
-            3
+            4
           ],
           "type": "filter_color"
         },
@@ -146,49 +158,49 @@
             "<S>"
           ],
           "inputs": [
-            4
+            5
           ],
           "type": "filter_shape"
         },
         {
           "inputs": [
-            5
+            6
           ],
           "type": "unique"
         },
         {
           "inputs": [
-            1, 6
+            1, 7
           ],
           "type": "filter_events"
         },
         {
           "inputs": [
-            7
+            8
           ],
           "type": "filter_enter_container"
         },
         {
           "inputs": [
-            8
+            9
           ],
           "type": "filter_first"
         },
         {
           "inputs": [
-            7
+            8
           ],
           "type": "filter_collision_with_dynamics"
         },
         {
           "inputs": [
-            10, 9
+            11, 10
           ],
           "type": "filter_before"
         },
         {
           "inputs": [
-            11
+            12
           ],
           "type": "event_exist"
         }
@@ -448,14 +460,20 @@
           "inputs": [
             1
           ],
-          "type": "filter_objects_from_enter_container_events"
+          "type": "filter_enter_container"
+        },
+        {
+          "inputs": [
+            2
+          ],
+          "type": "filter_objects_from_events"
         },
         {
           "side_inputs": [
             "<Z>"
           ],
           "inputs": [
-            2
+            3
           ],
           "type": "filter_size"
         },
@@ -464,7 +482,7 @@
             "<C>"
           ],
           "inputs": [
-            3
+            4
           ],
           "type": "filter_color"
         },
@@ -473,31 +491,31 @@
             "<S>"
           ],
           "inputs": [
-            4
+            5
           ],
           "type": "filter_shape"
         },
         {
           "inputs": [
-            5
+            6
           ],
           "type": "unique"
         },
         {
           "inputs": [
-            1, 6
+            1, 7
           ],
           "type": "filter_events"
         },
         {
           "inputs": [
-            7
+            8
           ],
           "type": "filter_enter_container"
         },
         {
           "inputs": [
-            8
+            9
           ],
           "type": "filter_first"
         },
@@ -509,13 +527,13 @@
         },
         {
           "inputs": [
-            10, 9
+            11, 10
           ],
           "type": "filter_after"
         },
         {
           "inputs": [
-            11
+            12
           ],
           "type": "event_exist"
         }
@@ -553,14 +571,20 @@
           "inputs": [
             1
           ],
-          "type": "filter_objects_from_enter_container_events"
+          "type": "filter_enter_container"
+        },
+        {
+          "inputs": [
+            2
+          ],
+          "type": "filter_objects_from_events"
         },
         {
           "side_inputs": [
             "<Z>"
           ],
           "inputs": [
-            2
+            3
           ],
           "type": "filter_size"
         },
@@ -569,7 +593,7 @@
             "<C>"
           ],
           "inputs": [
-            3
+            4
           ],
           "type": "filter_color"
         },
@@ -578,31 +602,31 @@
             "<S>"
           ],
           "inputs": [
-            4
+            5
           ],
           "type": "filter_shape"
         },
         {
           "inputs": [
-            5
+            6
           ],
           "type": "unique"
         },
         {
           "inputs": [
-            1, 6
+            1, 7
           ],
           "type": "filter_events"
         },
         {
           "inputs": [
-            7
+            8
           ],
           "type": "filter_enter_container"
         },
         {
           "inputs": [
-            8
+            9
           ],
           "type": "filter_first"
         },
@@ -614,13 +638,13 @@
         },
         {
           "inputs": [
-            10, 9
+            11, 10
           ],
           "type": "filter_before"
         },
         {
           "inputs": [
-            11
+            12
           ],
           "type": "event_exist"
         }

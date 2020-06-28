@@ -1,7 +1,8 @@
 [
   {
     "text": [
-      "Does the <Z> <C> <S> *prevent* the <Z2> <C2> <S2> from *falling to* the *ground*?"
+      "Does the <Z> <C> <S> *prevent* the <Z2> <C2> <S2> from *falling to* the *ground*?",
+      "There is a <Z> <C> <S>, does it *prevent* the <Z2> <C2> <S2> from *falling to* the *ground*?"
     ],
     "nodes": [
       {
@@ -157,8 +158,18 @@
         "type": "intersect"
       },
       {
+        "inputs": [],
+        "type": "start_scene_step"
+      },
+      {
         "inputs": [
-          22
+          22, 23
+        ],
+        "type": "filter_moving_objects"
+      },
+      {
+        "inputs": [
+          24
         ],
         "type": "exist"
       }

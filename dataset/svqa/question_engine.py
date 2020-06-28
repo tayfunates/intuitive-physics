@@ -249,10 +249,15 @@ def event_partner_handler(variations_outputs, scene_structs, causal_graph, input
         return inputs[1]['objects'][0]
     return inputs[1]['objects'][1]
 
-def filter_moving_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs): #This is false
+def filter_moving_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     scene_struct = scene_structs[inputs[1]]
     return [objIdx for objIdx in inputs[0] if is_object_moving(object_with_unique_id(scene_struct, objIdx))]
+
+def filter_stationary_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 2
+    scene_struct = scene_structs[inputs[1]]
+    return [objIdx for objIdx in inputs[0] if not is_object_moving(object_with_unique_id(scene_struct, objIdx))]
 
 def filter_dynamic_objects_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
@@ -346,6 +351,7 @@ execute_handlers = {
     'filter_last': filter_last_handler,
     'event_partner': event_partner_handler,
     'filter_moving_objects': filter_moving_objects_handler,
+    'filter_stationary_objects': filter_stationary_objects_handler,
     'filter_objects_from_events': filter_objects_from_events_handler,
     'filter_dynamic_objects': filter_dynamic_objects_handler,
     'start_scene_step': start_scene_step_handler,

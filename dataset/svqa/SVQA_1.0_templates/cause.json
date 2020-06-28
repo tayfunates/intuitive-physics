@@ -1,0 +1,200 @@
+[
+  {
+    "text": [
+      "Does the <Z> <C> <S> *cause* the <Z2> <C2> <S2> to *fall to* the *ground*?",
+      "Does the <Z> <C> <S> *cause* the collision between the <Z2> <C2> <S2> and the *ground*?",
+      "There is a <Z> <C> <S>, does it *cause* the <Z2> <C2> <S2> to *fall to* the *ground*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "inputs": [],
+        "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_collide_ground"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          5
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          6
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          8
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          4, 9
+        ],
+        "type": "difference"
+      },
+      {
+        "inputs": [
+          8
+        ],
+        "type": "counterfact_events"
+      },
+      {
+        "inputs": [
+          11
+        ],
+        "type": "filter_collide_ground"
+      },
+      {
+        "inputs": [
+          12
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+         13
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          4, 14
+        ],
+        "type": "difference"
+      },
+      {
+        "side_inputs": [
+          "<Z2>"
+        ],
+        "inputs": [
+          10
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C2>"
+        ],
+        "inputs": [
+          16
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S2>"
+        ],
+        "inputs": [
+          17
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          18
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          19
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          15, 20
+        ],
+        "type": "intersect"
+      },
+      {
+        "inputs": [],
+        "type": "start_scene_step"
+      },
+      {
+        "inputs": [
+          21, 22
+        ],
+        "type": "filter_stationary_objects"
+      },
+      {
+        "inputs": [
+          23
+        ],
+        "type": "exist"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      },
+      {
+        "type": "Size",
+        "name": "<Z2>"
+      },
+      {
+        "type": "Color",
+        "name": "<C2>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S2>"
+      }
+    ],
+    "constraints": []
+  }
+]

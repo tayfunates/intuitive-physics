@@ -3,8 +3,7 @@
     "text": [
       "Does the <Z> <C> <S> *enable* the <Z2> <C2> <S2> to *fall to* the *ground*?",
       "Does the <Z> <C> <S> *enable* the collision between the <Z2> <C2> <S2> and the *ground*?",
-      "There is a <Z> <C> <S>, does it *enable* the <Z2> <C2> <S2> to *fall to* the *ground*?",
-      "Is the <Z> <C> <S> responsible for the collision between the <Z2> <C2> <S2> and the *ground*?"
+      "There is a <Z> <C> <S>, does it *enable* the <Z2> <C2> <S2> to *fall to* the *ground*?"
     ],
     "nodes": [
       {
@@ -154,8 +153,18 @@
         "type": "intersect"
       },
       {
+        "inputs": [],
+        "type": "start_scene_step"
+      },
+      {
         "inputs": [
-          21
+          21, 22
+        ],
+        "type": "filter_moving_objects"
+      },
+      {
+        "inputs": [
+          23
         ],
         "type": "exist"
       }

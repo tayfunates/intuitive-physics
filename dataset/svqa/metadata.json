@@ -488,6 +488,15 @@
       "terminal": false
     },
     {
+      "name": "filter_stationary_objects",
+      "inputs": [
+        "ObjectSet",
+        "Integer"
+      ],
+      "output": "ObjectSet",
+      "terminal": false
+    },
+    {
       "name": "filter_objects_from_events",
       "inputs": [
         "EventSet"

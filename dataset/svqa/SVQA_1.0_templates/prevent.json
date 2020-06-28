@@ -348,8 +348,18 @@
         "type": "intersect"
       },
       {
+        "inputs": [],
+        "type": "start_scene_step"
+      },
+      {
         "inputs": [
-          20
+          20, 21
+        ],
+        "type": "filter_moving_objects"
+      },
+      {
+        "inputs": [
+          22
         ],
         "type": "exist"
       }

@@ -170,8 +170,8 @@ or the entire video (when input frame is “null”)
 
 | Task  |  Category |
 |---|---|
-| 1. "What color is the object that the **Z** **C** **S** first collides with?", "What is the color of object that the **Z** **C** **S** first collides with?" | Descriptive |
-| 2. "What shape is the object that the **Z** **C** **S** first collides with?", "What is the shape of object that the **Z** **C** **S** first collides with?" | Descriptive |
+| 1. "What color is the object that the **Z** **C** **S** first collides with?", "What color is the first object to collide with the **Z>** **C** **S**?", "What is the color of object that the **Z** **C** **S** first collides with?", "What is the color of first object to collide with the **Z** **C** **S**?" | Descriptive |
+| 2. "What shape is the object that the **Z** **C** **S** first collides with?", "What shape is the first object to collide with the **Z** **C** **S**?", "What is the shape of object that the **Z** **C** **S** first collides with?", "What is the shape of first object to collide with the **Z** **C** **S**?" | Descriptive |
 | 3. "How many **S**s are moving when the video ends?", "How many **S**s are in motion at the end of the video?" | Descriptive |
 | 4. "How many **C** objects are moving when the video ends?", "How many **C** objects are in motion at the end of the video?" | Descriptive |
 | 5. "How many **Z** objects are moving when the video ends?", "How many **Z** objects are in motion at the end of the video?" | Descriptive |
@@ -222,7 +222,7 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "What color is the object that the **Z** **C** **S** first collides with?", "What is the color of object that the **Z** **C** **S** first collides with?" | **TODO** | Color | ![GREEN] |
+| "What color is the object that the **Z** **C** **S** first collides with?", "What color is the first object to collide with the **Z** **C** **S**?", "What is the color of object that the **Z** **C** **S** first collides with?", "What is the color of first object to collide with the **Z** **C** **S**?" | **TODO** | Color | ![GREEN] |
 
 
 | Question | Answer | Original Video|
@@ -233,7 +233,7 @@ or the entire video (when input frame is “null”)
 
 | Question  |  Program | Output Type  | Implementation Status |
 |---|---|---|---|
-| "What shape is the object that the **Z** **C** **S** first collides with?", "What is the shape of object that the **Z** **C** **S** first collides with?" | **TODO** | Shape | ![GREEN] |
+| "What shape is the object that the **Z** **C** **S** first collides with?", "What shape is the first object to collide with the **Z** **C** **S**?", "What is the shape of object that the **Z** **C** **S** first collides with?", "What is the shape of first object to collide with the **Z** **C** **S**?" | **TODO** | Shape | ![GREEN] |
 
 
 ##### Counting

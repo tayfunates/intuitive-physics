@@ -1,10 +1,8 @@
 [
   {
     "text": [
-      "What shape is the object that first collides with the <Z> <C> <S>?",
-      "What is the shape of object that first collides with the <Z> <C> <S>?",
-      "There is an object that first collides with the <Z> <C> <S>; what shape is it?",
-      "There is an object that first collides with the <Z> <C> <S>; what is its shape?"
+      "What shape is the object that the <Z> <C> <S> first collides with?",
+      "What is the shape of object that the <Z> <C> <S> first collides with?"
     ],
     "nodes": [
       {

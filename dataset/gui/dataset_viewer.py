@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import json
 import logging
 import os
@@ -66,7 +68,7 @@ class Ui(QtWidgets.QMainWindow):
         filename = item.text()
 
         files = []
-        start_dir = f"{self.path}/videos"
+        start_dir = Path(f"{self.path}").joinpath("videos")
         pattern = "*.mpg"
 
         for dir, _, _ in os.walk(start_dir):
@@ -95,7 +97,7 @@ class Ui(QtWidgets.QMainWindow):
     def load_dataset(self):
         logging.info("Loading dataset...")
         self.path = self.le_dataset_folder.text()
-        with open(f"{self.path}/dataset.json", "r") as json_file:
+        with open(Path(f"{self.path}").joinpath("dataset.json"), "r") as json_file:
             global g_dataset
             g_dataset = Dataset(json.load(json_file))
         logging.info(f"Dataset at {self.path} loaded...")

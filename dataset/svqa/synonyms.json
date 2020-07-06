@@ -77,6 +77,11 @@
     "keep",
     "hold"
   ],
+  "prevents": [
+    "prevents",
+    "keeps",
+    "holds"
+  ],
   "enter": [
     "enter",
     "go into",

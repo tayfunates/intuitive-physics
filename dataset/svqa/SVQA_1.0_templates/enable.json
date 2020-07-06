@@ -385,7 +385,7 @@
   {
     "text": [
       "How many objects does the <Z> <C> <S> *enable* to *enter* the *basket*?",
-      "What is the number of objects that the <Z> <C> <S> *enable* to *enter* the *basket*?"
+      "What is the number of objects that the <Z> <C> <S> *enables* to *enter* the *basket*?"
     ],
     "nodes": [
       {
@@ -525,7 +525,7 @@
   {
     "text": [
       "How many objects does the <Z> <C> <S> *enable* *falling to* the *ground*?",
-      "What is the number of objects that the <Z> <C> <S> *enable* *falling to* the *ground*?"
+      "What is the number of objects that the <Z> <C> <S> *enables* *falling to* the *ground*?"
     ],
     "nodes": [
       {

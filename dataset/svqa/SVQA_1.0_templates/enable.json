@@ -449,31 +449,43 @@
       },
       {
         "inputs": [
+          8
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
           5
         ],
         "type": "counterfact_events"
       },
       {
         "inputs": [
-          9
+          10
         ],
         "type": "filter_enter_container"
       },
       {
         "inputs": [
-          10
+          11
         ],
         "type": "filter_objects_from_events"
       },
       {
         "inputs": [
-          8, 11
+          12
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          9, 13
         ],
         "type": "difference"
       },
       {
         "inputs": [
-          12, 6
+          14, 6
         ],
         "type": "difference"
       },
@@ -483,13 +495,13 @@
       },
       {
         "inputs": [
-          13, 14
+          15, 16
         ],
         "type": "filter_moving_objects"
       },
       {
         "inputs": [
-          15
+          17
         ],
         "type": "count"
       }

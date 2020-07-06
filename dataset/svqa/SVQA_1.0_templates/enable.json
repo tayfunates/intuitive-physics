@@ -478,8 +478,18 @@
         "type": "difference"
       },
       {
+        "inputs": [],
+        "type": "start_scene_step"
+      },
+      {
         "inputs": [
-          13
+          13, 14
+        ],
+        "type": "filter_moving_objects"
+      },
+      {
+        "inputs": [
+          15
         ],
         "type": "count"
       }
@@ -608,8 +618,18 @@
         "type": "difference"
       },
       {
+        "inputs": [],
+        "type": "start_scene_step"
+      },
+      {
         "inputs": [
-          15
+          15, 16
+        ],
+        "type": "filter_moving_objects"
+      },
+      {
+        "inputs": [
+          17
         ],
         "type": "count"
       }

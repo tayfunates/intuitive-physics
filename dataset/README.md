@@ -199,12 +199,12 @@ Other clevrer filters that are needed to be discussed.
 | 28. "Are there any collisions before the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
 | 29. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to **fall to** the **ground**?" | Enable |
 | 30. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **enable** the **Z2** **C2** **S2** to **enter** the **basket**?" | Enable |
-| 31. "How many objects does the **Z** **C** **S** **enable** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **enable** to **enter** the **basket**?" | Enable |
-| 32. "How many objects does the **Z** **C** **S** **enable** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **enable** to **fall to** the **ground**?" | Enable |
+| 31. "How many objects does the **Z** **C** **S** **enable** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **enables** to **fall to** the **ground**?" | Enable |
+| 32. "How many objects does the **Z** **C** **S** **enable** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **enables** to **enter** the **basket**?" | Enable |
 | 33. "Does the **Z** **C** **S** **cause** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **cause** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **cause** the **Z2** **C2** **S2** to **fall to** the **ground**?" | Cause |
 | 35. "Does the **Z** **C** **S** **cause** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **cause** the **Z2** **C2** **S2** to **enter** the **basket**?" | Cause |
-| 36. "How many objects does the **Z** **C** **S** **cause** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **cause** to **enter** the **basket**?" | Cause |
-| 37. "How many objects does the **Z** **C** **S** **cause** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **cause** to **fall to** the **ground**?" | Cause |
+| 36. "How many objects does the **Z** **C** **S** **cause** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **causes** to **fall to** the **ground**?" | Cause |
+| 37. "How many objects does the **Z** **C** **S** **cause** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **causes** to **enter** the **basket**?" | Cause |
 | 38. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?" | Prevent |
 | 39. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?" | Prevent |
 

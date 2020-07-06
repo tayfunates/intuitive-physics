@@ -98,6 +98,7 @@ Internal tagging information:
 #### Verb Synonyms
 
 "prevent": "prevent", "keep", "hold"</br>
+"prevents": "prevents", "keeps", "holds"</br>
 "enable": "enable", "help", "allow"</br>
 "enables": "enables", "helps", "allows"</br>
 "cause": "cause", "stimulate"</br>
@@ -207,6 +208,8 @@ Other clevrer filters that are needed to be discussed.
 | 37. "How many objects does the **Z** **C** **S** **cause** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **causes** to **enter** the **basket**?" | Cause |
 | 38. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?" | Prevent |
 | 39. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?" | Prevent |
+| 40. "How many objects does the **Z** **C** **S** **prevent** from **falling to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **falling to** the **ground**?" | Prevent |
+| 41. "How many objects does the **Z** **C** **S** **prevent** from **entering** the **basket**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **entering** the **basket**?" | Prevent |
 
 ### Samples
 

@@ -193,8 +193,8 @@ Other clevrer filters that are needed to be discussed.
 | 20. "How many objects collide with the **basket**?" | Descriptive |
 | 21. "How many objects **enter** the **basket** after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
 | 22. "How many objects **enter** the **basket** before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
-| 23. "How many objects **fall** to the **ground** after the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
-| 24. "How many objects **fall** to the **ground** before the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
+| 23. "How many objects **fall to** the **ground** after the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
+| 24. "How many objects **fall to** the **ground** before the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
 | 25. "How many objects collide with the **basket** after the **Z** **C** **S** collide with the **basket**?" | Descriptive |
 | 26. "How many objects collide with the **basket** before the **Z** **C** **S** collide with the **basket**?" | Descriptive |
 | 27. "After **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |

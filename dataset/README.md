@@ -223,8 +223,10 @@ Other clevrer filters that are needed to be discussed.
 | 50. "How many objects does the **Z** **C** **S** **cause** to collide with the **basket**?", "What is the number of objects that the **Z** **C** **S** **causes** to collide with the **basket**?" | Cause |
 | 51. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?" | Prevent |
 | 52. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?" | Prevent |
-| 53. "How many objects does the **Z** **C** **S** **prevent** from **falling to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **falling to** the **ground**?" | Prevent |
-| 54. "How many objects does the **Z** **C** **S** **prevent** from **entering** the **basket**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **entering** the **basket**?" | Prevent |
+| 53. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from colliding with the **basket**?" | Prevent |
+| 54. "How many objects does the **Z** **C** **S** **prevent** from **falling to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **falling to** the **ground**?" | Prevent |
+| 55. "How many objects does the **Z** **C** **S** **prevent** from **entering** the **basket**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **entering** the **basket**?" | Prevent |
+| 56. "How many objects does the **Z** **C** **S** **prevent** from colliding with the **basket**?", "What is the number of objects that the **Z** **C** **S** **prevents** from colliding with the **basket**?" | Prevent |
 
 ### Samples
 

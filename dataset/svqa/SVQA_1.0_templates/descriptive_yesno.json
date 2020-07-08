@@ -445,6 +445,228 @@
   },
   {
     "text": [
+      "After colliding with the *basket*, does the <Z> <C> <S> collide with other objects?"
+    ],
+      "nodes": [
+        {
+          "inputs": [],
+          "type": "start_scene"
+        },
+        {
+          "inputs": [],
+          "type": "events"
+        },
+        {
+          "inputs": [
+            1
+          ],
+          "type": "filter_collide_basket"
+        },
+        {
+          "inputs": [
+            2
+          ],
+          "type": "filter_objects_from_events"
+        },
+        {
+          "side_inputs": [
+            "<Z>"
+          ],
+          "inputs": [
+            3
+          ],
+          "type": "filter_size"
+        },
+        {
+          "side_inputs": [
+            "<C>"
+          ],
+          "inputs": [
+            4
+          ],
+          "type": "filter_color"
+        },
+        {
+          "side_inputs": [
+            "<S>"
+          ],
+          "inputs": [
+            5
+          ],
+          "type": "filter_shape"
+        },
+        {
+          "inputs": [
+            6
+          ],
+          "type": "unique"
+        },
+        {
+          "inputs": [
+            1, 7
+          ],
+          "type": "filter_events"
+        },
+        {
+          "inputs": [
+            8
+          ],
+          "type": "filter_collide_basket"
+        },
+        {
+          "inputs": [
+            9
+          ],
+          "type": "filter_first"
+        },
+        {
+          "inputs": [
+            8
+          ],
+          "type": "filter_collision_with_dynamics"
+        },
+        {
+          "inputs": [
+            11, 10
+          ],
+          "type": "filter_after"
+        },
+        {
+          "inputs": [
+            12
+          ],
+          "type": "event_exist"
+        }
+      ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "Before colliding with the *basket*, does the <Z> <C> <S> collide with other objects?"
+    ],
+      "nodes": [
+        {
+          "inputs": [],
+          "type": "start_scene"
+        },
+        {
+          "inputs": [],
+          "type": "events"
+        },
+        {
+          "inputs": [
+            1
+          ],
+          "type": "filter_collide_basket"
+        },
+        {
+          "inputs": [
+            2
+          ],
+          "type": "filter_objects_from_events"
+        },
+        {
+          "side_inputs": [
+            "<Z>"
+          ],
+          "inputs": [
+            3
+          ],
+          "type": "filter_size"
+        },
+        {
+          "side_inputs": [
+            "<C>"
+          ],
+          "inputs": [
+            4
+          ],
+          "type": "filter_color"
+        },
+        {
+          "side_inputs": [
+            "<S>"
+          ],
+          "inputs": [
+            5
+          ],
+          "type": "filter_shape"
+        },
+        {
+          "inputs": [
+            6
+          ],
+          "type": "unique"
+        },
+        {
+          "inputs": [
+            1, 7
+          ],
+          "type": "filter_events"
+        },
+        {
+          "inputs": [
+            8
+          ],
+          "type": "filter_collide_basket"
+        },
+        {
+          "inputs": [
+            9
+          ],
+          "type": "filter_first"
+        },
+        {
+          "inputs": [
+            8
+          ],
+          "type": "filter_collision_with_dynamics"
+        },
+        {
+          "inputs": [
+            11, 10
+          ],
+          "type": "filter_before"
+        },
+        {
+          "inputs": [
+            12
+          ],
+          "type": "event_exist"
+        }
+      ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
       "Are there any collisions after the <Z> <C> <S> *enters* the *basket*?"
     ],
       "nodes": [

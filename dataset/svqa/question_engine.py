@@ -30,6 +30,9 @@ def object_with_unique_id(scene_struct, unique_object_id):
 def is_ground(scene_structs, unique_object_id):
     return unique_object_id == get_ground_unique_id(scene_structs)
 
+def is_basket(scene_structs, unique_object_id):
+    return unique_object_id == get_basket_unique_id(scene_structs)
+
 def get_ground_unique_id(scene_structs):
     objs = [o for o in scene_structs[0]['objects'] if o['shape'] == 'ground']
     assert (len(objs) == 1)
@@ -221,6 +224,12 @@ def filter_collide_ground_handler(variations_outputs, scene_structs, causal_grap
     collision_events = [event for event in inputs[0] if event['type'] == 'Collision']
     return [event for event in collision_events if is_ground(scene_structs, event['objects'][0]) or is_ground(scene_structs, event['objects'][1])]
 
+def filter_collide_basket_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    collision_events = [event for event in inputs[0] if event['type'] == 'Collision']
+    return [event for event in collision_events if is_basket(scene_structs, event['objects'][0]) or is_basket(scene_structs, event['objects'][1])]
+
 def make_filter_events_with_dynamics_handler(event_type):
     def event_type_filter_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
         assert len(inputs) == 1
@@ -347,6 +356,7 @@ execute_handlers = {
     'filter_collision_with_dynamics': make_filter_events_with_dynamics_handler('Collision'),
     'filter_enter_container': make_filter_events_handler('ContainerEndUp'),
     'filter_collide_ground': filter_collide_ground_handler,
+    'filter_collide_basket': filter_collide_basket_handler,
     'filter_first': filter_first_handler,
     'filter_last': filter_last_handler,
     'event_partner': event_partner_handler,

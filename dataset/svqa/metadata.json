@@ -454,6 +454,14 @@
       "terminal": false
     },
     {
+      "name": "filter_collide_basket",
+      "inputs": [
+        "EventSet"
+      ],
+      "output": "EventSet",
+      "terminal": false
+    },
+    {
       "name": "filter_first",
       "inputs": [
         "EventSet"

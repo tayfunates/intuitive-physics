@@ -369,7 +369,7 @@
     ],
     "constraints": []
   },
-    {
+  {
     "text": [
       "How many <S>s *fall to* the *ground*?"
     ],
@@ -552,6 +552,213 @@
           1
         ],
         "type": "filter_collide_ground"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          4
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+    ],
+    "constraints": []
+  },
+    {
+    "text": [
+      "How many <S>s collide with the *basket*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+          "inputs": [],
+          "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_collide_basket"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          4
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "How many <C> objects collide with the *basket*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+          "inputs": [],
+          "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_collide_basket"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          4
+        ],
+        "type": "filter_color"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+      {
+        "type": "Color",
+        "name": "<C>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "How many <Z> objects collide with the *basket*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+          "inputs": [],
+          "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_collide_basket"
+      },
+      {
+        "inputs": [
+          2
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          4
+        ],
+        "type": "filter_size"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "How many objects collide with the *basket*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+          "inputs": [],
+          "type": "events"
+      },
+      {
+        "inputs": [
+          1
+        ],
+        "type": "filter_collide_basket"
       },
       {
         "inputs": [

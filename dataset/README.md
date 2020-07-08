@@ -207,8 +207,8 @@ Other clevrer filters that are needed to be discussed.
 | 34. "Are there any collisions between objects before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
 | 35. "Are there any collisions between objects after the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
 | 36. "Are there any collisions between objects before the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
-| 37. "Are there any collisions between objects after the **Z** **C** **S** collide with the **basket**?" | Descriptive |
-| 38. "Are there any collisions between objects before the **Z** **C** **S** collide with the **basket**?" | Descriptive |
+| 37. "Are there any collisions between objects after the **Z** **C** **S** collides with the **basket**?" | Descriptive |
+| 38. "Are there any collisions between objects before the **Z** **C** **S** collides with the **basket**?" | Descriptive |
 | 39. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to **fall to** the **ground**?" | Enable |
 | 40. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **enable** the **Z2** **C2** **S2** to **enter** the **basket**?" | Enable |
 | 41. "How many objects does the **Z** **C** **S** **enable** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **enables** to **fall to** the **ground**?" | Enable |

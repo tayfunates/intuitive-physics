@@ -771,7 +771,7 @@ def main(args):
                 toc = time.time()
                 print('that took ', toc - tic)
 
-            output_name_splitted = os.path.splitext(scene_fn)[0].split('_')
+            output_name_splitted = os.path.splitext(os.path.basename(scene_fn))[0].split('_')
             video_index = int(output_name_splitted[-1])
             split = output_name_splitted[-2]
 
@@ -785,7 +785,7 @@ def main(args):
                     'split': scene_info['split'],
                     'video_filename': scene_info['video_filename'],
                     'video_index': scene_info['video_index'],
-                    'video': os.path.splitext(scene_fn)[0],
+                    'video': os.path.splitext(os.path.basename(scene_fn))[0],
                     'question': t,
                     'program': q,
                     'answer': a,

@@ -1,0 +1,92 @@
+[
+    {
+    "text": [
+      "How many objects *enter* the *basket*, if <Z> <C> <S> is removed?",
+      "If <Z> <C> <S> is removed, how many objects *enter* the *basket*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          1
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          2
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          4
+        ],
+        "type": "counterfact_events"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          6
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          8
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+            {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  }
+]

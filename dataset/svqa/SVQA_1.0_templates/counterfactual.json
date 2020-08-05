@@ -1,10 +1,8 @@
 [
   {
     "text": [
-      "What color is the object that the <Z> <C> <S> first collides with?",
-      "What color is the first object to collide with the <Z> <C> <S>?",
-      "What is the color of object that the <Z> <C> <S> first collides with?",
-      "What is the color of first object to collide with the <Z> <C> <S>?"
+      "How many objects *enter* the *basket*, if the <Z> <C> <S> is removed?",
+      "If the <Z> <C> <S> is removed, how many objects *enter* the *basket*?"
     ],
     "nodes": [
       {
@@ -12,27 +10,11 @@
         "type": "start_scene"
       },
       {
-        "inputs": [],
-        "type": "events"
-      },
-      {
-        "inputs": [
-          1
-        ],
-        "type": "filter_collision_with_dynamics"
-      },
-      {
-        "inputs": [
-          2
-        ],
-        "type": "filter_objects_from_events"
-      },
-      {
         "side_inputs": [
           "<Z>"
         ],
         "inputs": [
-          3
+          0
         ],
         "type": "filter_size"
       },
@@ -41,7 +23,7 @@
           "<C>"
         ],
         "inputs": [
-          4
+          1
         ],
         "type": "filter_color"
       },
@@ -50,49 +32,49 @@
           "<S>"
         ],
         "inputs": [
-          5
+          2
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          6
+          3
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          1, 7
+          4
         ],
-        "type": "filter_events"
+        "type": "counterfact_events"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          6
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "filter_dynamic_objects"
       },
       {
         "inputs": [
           8
         ],
-        "type": "filter_collision_with_dynamics"
-      },
-      {
-        "inputs": [
-          9
-        ],
-        "type": "filter_first"
-      },
-      {
-        "inputs": [
-          7, 10
-        ],
-        "type": "event_partner"
-      },
-      {
-        "inputs": [
-          11
-        ],
-        "type": "query_color"
+        "type": "count"
       }
     ],
     "params": [
-      {
+            {
         "type": "Size",
         "name": "<Z>"
       },
@@ -107,12 +89,10 @@
     ],
     "constraints": []
   },
-    {
+  {
     "text": [
-      "What color is the object that the <Z> <C> <S> last collides with?",
-      "What color is the last object to collide with the <Z> <C> <S>?",
-      "What is the color of object that the <Z> <C> <S> last collides with?",
-      "What is the color of last object to collide with the <Z> <C> <S>?"
+      "How many objects *fall to* the *ground*, if the <Z> <C> <S> is removed?",
+      "If the <Z> <C> <S> is removed, how many objects *fall to* the *ground*?"
     ],
     "nodes": [
       {
@@ -120,27 +100,11 @@
         "type": "start_scene"
       },
       {
-        "inputs": [],
-        "type": "events"
-      },
-      {
-        "inputs": [
-          1
-        ],
-        "type": "filter_collision_with_dynamics"
-      },
-      {
-        "inputs": [
-          2
-        ],
-        "type": "filter_objects_from_events"
-      },
-      {
         "side_inputs": [
           "<Z>"
         ],
         "inputs": [
-          3
+          0
         ],
         "type": "filter_size"
       },
@@ -149,7 +113,7 @@
           "<C>"
         ],
         "inputs": [
-          4
+          1
         ],
         "type": "filter_color"
       },
@@ -158,49 +122,139 @@
           "<S>"
         ],
         "inputs": [
-          5
+          2
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          6
+          3
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          1, 7
+          4
         ],
-        "type": "filter_events"
+        "type": "counterfact_events"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "filter_collide_ground"
+      },
+      {
+        "inputs": [
+          6
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "filter_dynamic_objects"
       },
       {
         "inputs": [
           8
         ],
-        "type": "filter_collision_with_dynamics"
-      },
-      {
-        "inputs": [
-          9
-        ],
-        "type": "filter_last"
-      },
-      {
-        "inputs": [
-          7, 10
-        ],
-        "type": "event_partner"
-      },
-      {
-        "inputs": [
-          11
-        ],
-        "type": "query_color"
+        "type": "count"
       }
     ],
     "params": [
+            {
+        "type": "Size",
+        "name": "<Z>"
+      },
       {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "How many objects collide with the *basket*, if the <Z> <C> <S> is removed?",
+      "If the <Z> <C> <S> is removed, how many objects collide with the *basket*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          1
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          2
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          4
+        ],
+        "type": "counterfact_events"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "filter_collide_basket"
+      },
+      {
+        "inputs": [
+          6
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "type": "filter_dynamic_objects"
+      },
+      {
+        "inputs": [
+          8
+        ],
+        "type": "count"
+      }
+    ],
+    "params": [
+            {
         "type": "Size",
         "name": "<Z>"
       },

@@ -332,4 +332,8 @@ Similarly,
 
 The answer to this question is true since big blue block is intended to enter the basket, and without the cyan triangle, it succeeds to do so.
 
+### Future Work
+
+- Currently, our programs of tasks depend on the end results of the simulations to be able to provide correct answers to the questions. As an example, consider the following prevent task, "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?". For the answer of this question to be "true", we check the end state of the object **Z2** **C2** **S2** to observe whether it falls to the ground or not. Our programs do not consider local temporal attemps of the object **Z** **C** **S** whether it is trying to prevent in a small time interval. Therefore, our questions do not integrate verbs like "impede", "interfere" or "restrain" instead of "prevent" in different tasks. Similarly, verbs like "help", "aid" or "facilitate" are not integrated instead of "enable".
+
 

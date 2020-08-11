@@ -76,13 +76,15 @@
     "prevent",
     "keep",
     "hold",
-    "block"
+    "block",
+    "hinder"
   ],
   "prevents": [
     "prevents",
     "keeps",
     "holds",
-    "blocks"
+    "blocks",
+    "hinders"
   ],
     "prevented": [
     "prevented",

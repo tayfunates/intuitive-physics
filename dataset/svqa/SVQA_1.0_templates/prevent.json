@@ -603,6 +603,7 @@
     "text": [
       "How many objects does the <Z> <C> <S> *prevent* from *falling to* the *ground*?",
       "What is the number of objects that the <Z> <C> <S> *prevents* from *falling to* the *ground*?",
+      "How many objects are *prevented* by the <Z> <C> <S> from *falling to* the *ground*?",
       "What is the number of objects that is *prevented* by the <Z> <C> <S> from *falling to* the *ground*?"
     ],
     "nodes": [
@@ -750,6 +751,7 @@
     "text": [
       "How many objects does the <Z> <C> <S> *prevent* from *entering* the *basket*?",
       "What is the number of objects that the <Z> <C> <S> *prevents* from *entering* the *basket*?",
+      "How many objects are *prevented* by the <Z> <C> <S> from *entering* the *basket*?",
       "What is the number of objects that is *prevented* by the <Z> <C> <S> from *entering* the *basket*?"
     ],
     "nodes": [
@@ -897,6 +899,7 @@
     "text": [
       "How many objects does the <Z> <C> <S> *prevent* from colliding with the *basket*?",
       "What is the number of objects that the <Z> <C> <S> *prevents* from colliding with the *basket*?",
+      "How many objects are *prevented* by the <Z> <C> <S> from colliding with the *basket*?",
       "What is the number of objects that is *prevented* by the <Z> <C> <S> from colliding with the *basket*?"
     ],
     "nodes": [

@@ -258,16 +258,6 @@ def generate(config: Config):
         logging.info(f"Approx. {round((np.mean(times) * (len(splits) - i - 1)) / 60, 2)} "
                      "minutes remaining...".ljust(75, " "))
 
-    logging.info(f"Dataset generation is complete. Process took {round((time.time() - start_time) / 60, 2)} minutes.")
-
-    # Print questions and answer frequencies for each template in the generated dataset.
-    for split in ["train", "validation", "test"]:
-        logging.info(f"Answers for split: {split}")
-        table = generate_questions.get_answer_frequencies(
-            generate_questions.convert_to_question_tuple_list(generated_questions[split]))
-        logging.info(f"{os.linesep}"
-                     f"{table}")
-
     dataset = dataset_utils.relativize_paths(dataset, config.output_folder_path)
 
     json.dump(
@@ -282,6 +272,16 @@ def generate(config: Config):
         open(f"{config.output_folder_path}/dataset_minimal.json", "w"),
         indent=2
     )
+
+    logging.info(f"Dataset generation is complete. Process took {round((time.time() - start_time) / 60, 2)} minutes.")
+
+    # Print questions and answer frequencies for each template in the generated dataset.
+    for split in ["train", "validation", "test"]:
+        logging.info(f"Answers for split: {split}")
+        table = generate_questions.get_answer_frequencies(
+            generate_questions.convert_to_question_tuple_list(generated_questions[split]))
+        logging.info(f"{os.linesep}"
+                     f"{table}")
 
 
 def main(args):

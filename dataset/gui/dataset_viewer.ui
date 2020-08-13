@@ -69,6 +69,9 @@
       <height>551</height>
      </rect>
     </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
     </property>
@@ -105,7 +108,7 @@
      <x>0</x>
      <y>0</y>
      <width>1051</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

@@ -54,6 +54,7 @@ class Ui(QtWidgets.QMainWindow):
         elif sys.platform == "win32":  # for Windows
             self.vlc_media_player.set_hwnd(self.f_video.winId())
         elif sys.platform == "darwin":  # for MacOS
+            #self.vlc_media_player.set_xwindow(self.f_video.winId())
             self.vlc_media_player.set_nsobject(self.f_video.winId())
 
         self.initialize_listeners()

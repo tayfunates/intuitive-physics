@@ -210,12 +210,12 @@ Other clevrer filters that are needed to be discussed.
 | 36. "Are there any collisions between objects before the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
 | 37. "Are there any collisions between objects after the **Z** **C** **S** collides with the **basket**?" | Descriptive |
 | 38. "Are there any collisions between objects before the **Z** **C** **S** collides with the **basket**?" | Descriptive |
-| 39. "Does the **Z2** **C2** **S2** **enter** the **basket**, what if the **Z** **C** **S** is removed?", "What if the **Z** **C** **S** is removed, does the **Z2** **C2** **S2** **enter** the **basket**?" | Counterfactual |
-| 40. "Does the **Z2** **C2** **S2** **fall to** the **ground**, what if the **Z** **C** **S** is removed?", "What if the **Z** **C** **S** is removed, does the **Z2** **C2** **S2** **fall to** the **ground**?" | Counterfactual |
-| 41. "Does the **Z2** **C2** **S2** collide with the **basket**, what if the **Z** **C** **S** is removed?", "What if the **Z** **C** **S** is removed, does the **Z2** **C2** **S2** collide with the **basket**?" | Counterfactual |
-| 42. "How many objects **enter** the **basket**, what if the **Z** **C** **S** is removed?", "What if the **Z** **C** **S** is removed, how many objects **enter** the **basket**?" | Counterfactual |
-| 43. "How many objects **fall to** the **ground**, what if the **Z** **C** **S** is removed?", "What if the **Z** **C** **S** is removed, how many objects **fall to** the **ground**?" | Counterfactual |
-| 44. "How many objects collide with the **basket**, what if the **Z** **C** **S** is removed?", "What if the **Z** **C** **S** is removed, how many objects collide with the **basket**?" | Counterfactual |
+| 39. "Does the **Z2** **C2** **S2** **enter** the **basket**, if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, does the **Z2** **C2** **S2** **enter** the **basket**?" | Counterfactual |
+| 40. "Does the **Z2** **C2** **S2** **fall to** the **ground**, if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, does the **Z2** **C2** **S2** **fall to** the **ground**?" | Counterfactual |
+| 41. "Does the **Z2** **C2** **S2** collide with the **basket**, if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, does the **Z2** **C2** **S2** collide with the **basket**?" | Counterfactual |
+| 42. "How many objects **enter** the **basket**, if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, how many objects **enter** the **basket**?" | Counterfactual |
+| 43. "How many objects **fall to** the **ground**, if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, how many objects **fall to** the **ground**?" | Counterfactual |
+| 44. "How many objects collide with the **basket**, if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, how many objects collide with the **basket**?" | Counterfactual |
 | 45. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to **fall to** the **ground**?" | Enable |
 | 46. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **enable** the **Z2** **C2** **S2** to **enter** the **basket**?" | Enable |
 | 47. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to collide with the **basket**?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the **basket**?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to collide with the **basket**?" | Enable |
@@ -284,8 +284,8 @@ Other clevrer filters that are needed to be discussed.
 
 | Question | Answer | Original Video| Variation Video |
 |---|---|---|---|
-|"How many objects get into the basket, what if the large green circle is removed?"|3|![](/dataset/examples/ExampleScene13.gif)|![](/dataset/examples/ExampleScene13Variation1.gif)|
-|"Does the large blue circle collide with the container, what if the big green circle is removed?"|"true"|![](/dataset/examples/ExampleScene13.gif)|![](/dataset/examples/ExampleScene13Variation1.gif)|
+|"How many objects get into the basket, if the large green circle is removed?"|3|![](/dataset/examples/ExampleScene13.gif)|![](/dataset/examples/ExampleScene13Variation1.gif)|
+|"Does the large blue circle collide with the container, if the big green circle is removed?"|"true"|![](/dataset/examples/ExampleScene13.gif)|![](/dataset/examples/ExampleScene13Variation1.gif)|
 
 ##### Enable
 

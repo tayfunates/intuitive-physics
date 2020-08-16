@@ -67,12 +67,14 @@
     "cause": [
     "cause",
     "stimulate",
-    "lead"
+    "lead",
+    "trigger"
   ],
     "causes": [
     "causes",
     "stimulates",
-    "leads"
+    "leads",
+    "triggers"
   ],
     "prevent": [
     "prevent",

@@ -1,4 +1,427 @@
 [
+    {
+    "text": [
+      "Does the <Z2> <C2> <S2> *enter* the *basket*, what if the <Z> <C> <S> is removed?",
+      "What if the <Z> <C> <S> is removed, does the <Z2> <C2> <S2> *enter* the *basket*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          1
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          2
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          4
+        ],
+        "type": "counterfact_events"
+      },
+            {
+        "side_inputs": [
+          "<Z2>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C2>"
+        ],
+        "inputs": [
+          6
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S2>"
+        ],
+        "inputs": [
+          7
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          8
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          9
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "filter_enter_container"
+      },
+      {
+        "inputs": [
+          11
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          10, 12
+        ],
+        "type": "intersect"
+      },
+      {
+        "inputs": [
+          13
+        ],
+        "type": "exist"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      },
+            {
+        "type": "Size",
+        "name": "<Z2>"
+      },
+      {
+        "type": "Color",
+        "name": "<C2>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S2>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "Does the <Z2> <C2> <S2> *fall to* the *ground*, what if the <Z> <C> <S> is removed?",
+      "What if the <Z> <C> <S> is removed, does the <Z2> <C2> <S2> *fall to* the *ground*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          1
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          2
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          4
+        ],
+        "type": "counterfact_events"
+      },
+            {
+        "side_inputs": [
+          "<Z2>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C2>"
+        ],
+        "inputs": [
+          6
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S2>"
+        ],
+        "inputs": [
+          7
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          8
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          9
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "filter_collide_ground"
+      },
+      {
+        "inputs": [
+          11
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          10, 12
+        ],
+        "type": "intersect"
+      },
+      {
+        "inputs": [
+          13
+        ],
+        "type": "exist"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      },
+            {
+        "type": "Size",
+        "name": "<Z2>"
+      },
+      {
+        "type": "Color",
+        "name": "<C2>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S2>"
+      }
+    ],
+    "constraints": []
+  },
+  {
+    "text": [
+      "Does the <Z2> <C2> <S2> collide with the *basket*, what if the <Z> <C> <S> is removed?",
+      "What if the <Z> <C> <S> is removed, does the <Z2> <C2> <S2> collide with the *basket*?"
+    ],
+    "nodes": [
+      {
+        "inputs": [],
+        "type": "start_scene"
+      },
+      {
+        "side_inputs": [
+          "<Z>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C>"
+        ],
+        "inputs": [
+          1
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S>"
+        ],
+        "inputs": [
+          2
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          3
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          4
+        ],
+        "type": "counterfact_events"
+      },
+            {
+        "side_inputs": [
+          "<Z2>"
+        ],
+        "inputs": [
+          0
+        ],
+        "type": "filter_size"
+      },
+      {
+        "side_inputs": [
+          "<C2>"
+        ],
+        "inputs": [
+          6
+        ],
+        "type": "filter_color"
+      },
+      {
+        "side_inputs": [
+          "<S2>"
+        ],
+        "inputs": [
+          7
+        ],
+        "type": "filter_shape"
+      },
+      {
+        "inputs": [
+          8
+        ],
+        "type": "unique"
+      },
+      {
+        "inputs": [
+          9
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          5
+        ],
+        "type": "filter_collide_basket"
+      },
+      {
+        "inputs": [
+          11
+        ],
+        "type": "filter_objects_from_events"
+      },
+      {
+        "inputs": [
+          10, 12
+        ],
+        "type": "intersect"
+      },
+      {
+        "inputs": [
+          13
+        ],
+        "type": "exist"
+      }
+    ],
+    "params": [
+      {
+        "type": "Size",
+        "name": "<Z>"
+      },
+      {
+        "type": "Color",
+        "name": "<C>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S>"
+      },
+            {
+        "type": "Size",
+        "name": "<Z2>"
+      },
+      {
+        "type": "Color",
+        "name": "<C2>"
+      },
+      {
+        "type": "Shape",
+        "name": "<S2>"
+      }
+    ],
+    "constraints": []
+  },
   {
     "text": [
       "How many objects *enter* the *basket*, what if the <Z> <C> <S> is removed?",

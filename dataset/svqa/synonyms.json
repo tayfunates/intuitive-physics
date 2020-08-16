@@ -56,12 +56,12 @@
   ],
   "enable": [
     "enable",
-    "help",
+    "permit",
     "allow"
   ],
   "enables": [
     "enables",
-    "helps",
+    "permits",
     "allows"
   ],
     "cause": [

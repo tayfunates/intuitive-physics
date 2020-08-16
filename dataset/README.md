@@ -102,8 +102,8 @@ Internal tagging information:
 "prevented": "prevented", "kept", "held", "blocked"</br>
 "enable": "enable", "permit", "allow"</br>
 "enables": "enables", "permits", "allows"</br>
-"cause": "cause", "stimulate", "lead"</br>
-"causes": "causes", "stimulates", "leads"</br>
+"cause": "cause", "stimulate", "lead", "trigger"</br>
+"causes": "causes", "stimulates", "leads", "triggers"</br>
 "enter": "enter", "go into", "get into", "end up in"</br>
 "entering": "entering", "going into", "getting into", "ending up in"</br>
 "enters": "enters", "goes into", "gets into", "ends up in"</br>

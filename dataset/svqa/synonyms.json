@@ -100,19 +100,22 @@
     "enter",
     "go into",
     "get into",
-    "end up in"
+    "end up in",
+    "fall into"
   ],
   "entering": [
     "entering",
     "going into",
     "getting into",
-    "ending up in"
+    "ending up in",
+    "falling into"
   ],
   "enters": [
     "enters",
     "goes into",
     "gets into",
-    "ends up in"
+    "ends up in",
+    "falls into"
   ],
   "fall to": [
     "fall to",

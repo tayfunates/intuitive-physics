@@ -75,12 +75,22 @@
     "prevent": [
     "prevent",
     "keep",
-    "hold"
+    "hold",
+    "block",
+    "hinder"
   ],
   "prevents": [
     "prevents",
     "keeps",
-    "holds"
+    "holds",
+    "blocks",
+    "hinders"
+  ],
+    "prevented": [
+    "prevented",
+    "kept",
+    "held",
+    "blocked"
   ],
   "enter": [
     "enter",

@@ -131,6 +131,15 @@
       "terminal": false
     },
     {
+      "name": "intersect_list",
+      "inputs": [
+        "ObjectSetList",
+        "ObjectSet"
+      ],
+      "output": "ObjectSetList",
+      "terminal": false
+    },
+    {
       "name": "difference",
       "inputs": [
         "ObjectSet",
@@ -197,6 +206,14 @@
     },
     {
       "name": "any_false",
+      "inputs": [
+        "BoolList"
+      ],
+      "output": "Bool",
+      "terminal": true
+    },
+    {
+      "name": "any_true",
       "inputs": [
         "BoolList"
       ],
@@ -446,6 +463,14 @@
       "terminal": false
     },
     {
+      "name": "filter_enter_container_list",
+      "inputs": [
+        "EventSetList"
+      ],
+      "output": "EventSetList",
+      "terminal": false
+    },
+    {
       "name": "filter_collide_ground",
       "inputs": [
         "EventSet"
@@ -454,11 +479,27 @@
       "terminal": false
     },
     {
+      "name": "filter_collide_ground_list",
+      "inputs": [
+        "EventSetList"
+      ],
+      "output": "EventSetList",
+      "terminal": false
+    },
+    {
       "name": "filter_collide_basket",
       "inputs": [
         "EventSet"
       ],
       "output": "EventSet",
+      "terminal": false
+    },
+    {
+      "name": "filter_collide_basket_list",
+      "inputs": [
+        "EventSetList"
+      ],
+      "output": "EventSetList",
       "terminal": false
     },
     {
@@ -510,6 +551,14 @@
         "EventSet"
       ],
       "output": "ObjectSet",
+      "terminal": false
+    },
+    {
+      "name": "filter_objects_from_events_list",
+      "inputs": [
+        "EventSetList"
+      ],
+      "output": "ObjectSetList",
       "terminal": false
     },
     {

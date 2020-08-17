@@ -186,6 +186,12 @@ def any_false_handler(variations_outputs, scene_structs, causal_graph, inputs, s
     ret = False in inputs[0]
     return ret
 
+def any_true_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    ret = True in inputs[0]
+    return ret
+
 def equal_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 2
     assert len(side_inputs) == 0
@@ -218,17 +224,46 @@ def make_filter_events_handler(event_type):
 
     return event_type_filter_handler
 
+def make_filter_events_list_handler(event_type):
+    def event_type_filter_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+        assert len(inputs) == 1
+        assert len(side_inputs) == 0
+        ret = []
+        for variation_simulation in inputs[0]:
+            ret.append([event for event in variation_simulation if event['type'] == event_type])
+        return ret
+
+    return event_type_filter_handler
+
 def filter_collide_ground_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     assert len(side_inputs) == 0
     collision_events = [event for event in inputs[0] if event['type'] == 'Collision']
     return [event for event in collision_events if is_ground(scene_structs, event['objects'][0]) or is_ground(scene_structs, event['objects'][1])]
 
+def filter_collide_ground_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    ret = []
+    for variation_simulation in inputs[0]:
+        collision_events = [event for event in variation_simulation if event['type'] == 'Collision']
+        ret.append([event for event in collision_events if is_ground(scene_structs, event['objects'][0]) or is_ground(scene_structs, event['objects'][1])])
+    return ret
+
 def filter_collide_basket_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     assert len(side_inputs) == 0
     collision_events = [event for event in inputs[0] if event['type'] == 'Collision']
     return [event for event in collision_events if is_basket(scene_structs, event['objects'][0]) or is_basket(scene_structs, event['objects'][1])]
+
+def filter_collide_basket_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    assert len(side_inputs) == 0
+    ret = []
+    for variation_simulation in inputs[0]:
+        collision_events = [event for event in variation_simulation if event['type'] == 'Collision']
+        ret.append([event for event in collision_events if is_basket(scene_structs, event['objects'][0]) or is_basket(scene_structs, event['objects'][1])])
+    return ret
 
 def make_filter_events_with_dynamics_handler(event_type):
     def event_type_filter_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
@@ -288,6 +323,17 @@ def filter_objects_from_events_handler(variations_outputs, scene_structs, causal
         ret.add(event['objects'][1])
     return list(ret)
 
+def filter_objects_from_events_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 1
+    ret = []
+    for variation_simulation in inputs[0]:
+        sim_ret = set()
+        for event in variation_simulation:
+            sim_ret.add(event['objects'][0])
+            sim_ret.add(event['objects'][1])
+        ret.append(list(sim_ret))
+    return ret
+
 def counterfact_events_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     object_removed_variation_simulation = variations_outputs['variations_outputs'][str(inputs[0])]
@@ -340,6 +386,7 @@ execute_handlers = {
     'event_exist': exist_handler,
     'exist_list': exist_list_handler,
     'any_false': any_false_handler,
+    'any_true': any_true_handler,
     'equal_color': equal_handler,
     'equal_shape': equal_handler,
     'equal_integer': equal_handler,
@@ -355,14 +402,18 @@ execute_handlers = {
     'filter_collision': make_filter_events_handler('Collision'),
     'filter_collision_with_dynamics': make_filter_events_with_dynamics_handler('Collision'),
     'filter_enter_container': make_filter_events_handler('ContainerEndUp'),
+    'filter_enter_container_list': make_filter_events_list_handler('ContainerEndUp'),
     'filter_collide_ground': filter_collide_ground_handler,
+    'filter_collide_ground_list': filter_collide_ground_list_handler,
     'filter_collide_basket': filter_collide_basket_handler,
+    'filter_collide_basket_list': filter_collide_basket_list_handler,
     'filter_first': filter_first_handler,
     'filter_last': filter_last_handler,
     'event_partner': event_partner_handler,
     'filter_moving_objects': filter_moving_objects_handler,
     'filter_stationary_objects': filter_stationary_objects_handler,
     'filter_objects_from_events': filter_objects_from_events_handler,
+    'filter_objects_from_events_list': filter_objects_from_events_list_handler,
     'filter_dynamic_objects': filter_dynamic_objects_handler,
     'start_scene_step': start_scene_step_handler,
     'end_scene_step': end_scene_step_handler,

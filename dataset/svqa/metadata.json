@@ -131,15 +131,6 @@
       "terminal": false
     },
     {
-      "name": "intersect_list",
-      "inputs": [
-        "ObjectSetList",
-        "ObjectSet"
-      ],
-      "output": "ObjectSetList",
-      "terminal": false
-    },
-    {
       "name": "difference",
       "inputs": [
         "ObjectSet",

@@ -39,6 +39,8 @@ This section includes literature overview for different methods developed for di
 
 - [Clevrer: collision events for video representation and reasoning](#clevrer-collision-events-for-video-representation-and-reasoning)
 
+- [Forward prediction for physical reasoning](#forward-prediction-for-physical-reasoning)
+
 #### Cognitive Science
 
 - [Innate ideas revisited for a principle of persistence in infants’ physical reasoning](#innate-ideas-revisited-for-a-principle-of-persistence-in-infants-physical-reasoning)
@@ -48,6 +50,10 @@ This section includes literature overview for different methods developed for di
 - [Causal reasoning with forces](#causal-reasoning-with-forces)
 
 ### Papers by Year
+
+#### 2020
+
+- [Forward prediction for physical reasoning](#forward-prediction-for-physical-reasoning)
 
 #### 2019
 
@@ -91,6 +97,8 @@ This section includes literature overview for different methods developed for di
 #### Next Frame Prediction
 
 - [Clevrer: collision events for video representation and reasoning](#clevrer-collision-events-for-video-representation-and-reasoning)
+
+- [Forward prediction for physical reasoning](#forward-prediction-for-physical-reasoning)
 
 ##### Motion Estimation
 
@@ -255,6 +263,11 @@ Authors provide a new dataset for evaluating reasoning performance of the models
 Understanding how people perceive events or statements requiring causal reasoning is important. In order to understand this hierarchical perception of humans there exist several theories, from them some are mental model theory and causal model theory whose units of perceptions are abstract. Mentam model theory states that logical operations are used in sub-relations of complex compositions to produce a single conclusion, whereas causal model theory is based on a Bayesian network where the relations are represented probabilistically. Authors propose a new theory which they title as force theory for which their first claim is that the units of perception need not to be abstract as in the previous theories and can resemblance to real world entities. They represent cause, help or prevent relations by different configurations of the forces appeared in affector and patient. Therefore, composition of sub-relations to obtain the final (possibly more than one) result can be achieved by transferring or eliminating the forces existing in the relation. In their experiments, they created physical environments based on 3D simulators and compared participants' perception results with the outputs of three models mentioned. They observe that the force theory predicts as well as or better than the theories which are based on abstract units. They also provide experiment results evaluating abstract causation performances. They compared how close predictions of force theory to humans when compared to other theories when provided causal compositions such as "Stress causes for getfulness and forgetfulness causes confusion". This time the forces are not real world forces but are approximate influences of affectors on again patients. They observe a similar pattern in their experiments evaluating abstract causation. All three models are very successful mimicing human performances with few mistakes. However, depending on iconic representations, can better explain how these events might be perceived.
 
 ![Iconic Representation of Forces](/images/CausalReasoningWithForces.png)
+
+#### Forward prediction for physical reasoning
+
+Given an initial state of the scene, physical reasoning tasks mostly require forward prediction. In this work, authors try to evaluate the performance of forward prediction models on pyhsical reasoning tasks, specifically on the PHYRE benchmark. They observed that although incorporating forward prediction models improves performance of physical reasoning tasks, this does not always mean that better forward prediction models are more successful at understanding the physical dynamics of the scene. Furthermore, they also observed that object based forward predictors outperforms pixels based forward predictor while using pixel based predictors are more helpful in physical reasoning. When using different set of test and train templates of PHYRE, authors' experiments with forward predictors also state that their effects are limited. This suggests that forward predictors brings negligible improvements for cross-template settings. Within the templates, they also experimented to see which tasks benefit more from using forward predictors. Although their success metric for the tasks (AUCCESS) decreases, the improvements when using forward predictors becomes much more visible when the number objects is increased.
+
 
 ### Read Queue
 

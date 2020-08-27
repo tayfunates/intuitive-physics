@@ -1,6 +1,7 @@
 import copy
 import json
 import math
+import os
 import pathlib
 from collections import defaultdict, Counter
 from math import exp
@@ -333,4 +334,21 @@ def retain_questions(dataset_json, video_index, question_indices: list):
         question for question in dataset_json[video_index]["questions"]["questions"]
         if question["question_index"] in question_indices
     ]
+
+
+def dataset_grouped_by_simulation_ids(dataset_json) -> dict:
+    ids = defaultdict(list)
+
+    for qa_json in dataset_json:
+        question_list = qa_json["questions"]["questions"]
+        simulation_id = qa_json["simulation_id"]
+        for question_obj in question_list:
+            video_index = question_obj["video_index"]
+            question = get_question_from_question_obj(question_obj, simulation_id)
+            if question["answer_type"] == "Count" and int(question["answer"]) > 3:
+                continue
+            ids[str(video_index)].append(question)
+
+    return ids
+
 

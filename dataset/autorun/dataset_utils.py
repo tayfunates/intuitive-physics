@@ -57,9 +57,10 @@ def dataset_grouped_by_templates(dataset_json) -> dict:
 
     for qa_json in dataset_json:
         question_list = qa_json["questions"]["questions"]
+        simulation_id = qa_json["simulation_id"]
         for question_obj in question_list:
             template_filename = question_obj["template_filename"]
-            question = get_question_from_question_obj(question_obj)
+            question = get_question_from_question_obj(question_obj, simulation_id)
             if question["answer_type"] == "Count" and int(question["answer"]) > 3:
                 continue
             templates[template_filename].append(question)
@@ -67,14 +68,31 @@ def dataset_grouped_by_templates(dataset_json) -> dict:
     return templates
 
 
+def dataset_grouped_by(dataset_json, field) -> dict:
+    grouped = defaultdict(list)
+
+    for qa_json in dataset_json:
+        question_list = qa_json["questions"]["questions"]
+        simulation_id = qa_json["simulation_id"]
+        for question_obj in question_list:
+            value = question_obj[field]
+            question = get_question_from_question_obj(question_obj, simulation_id)
+            if question["answer_type"] == "Count" and int(question["answer"]) > 3:
+                continue
+            grouped[value].append(question)
+
+    return grouped
+
+
 def dataset_grouped_by_video_indices(dataset_json) -> dict:
     videos = defaultdict(list)
 
     for qa_json in dataset_json:
         question_list = qa_json["questions"]["questions"]
+        simulation_id = qa_json["simulation_id"]
         for question_obj in question_list:
             video_index = question_obj["video_index"]
-            question = get_question_from_question_obj(question_obj)
+            question = get_question_from_question_obj(question_obj, simulation_id)
             if question["answer_type"] == "Count" and int(question["answer"]) > 3:
                 continue
             videos[str(video_index)].append(question)
@@ -131,13 +149,14 @@ def get_all_questions_as_list(dataset_json):
     return questions
 
 
-def get_question_from_question_obj(question_obj):
+def get_question_from_question_obj(question_obj, simulation_id):
     template_filename = question_obj["template_filename"]
     answer = str(question_obj["answer"])
     question = question_obj["question"]
     video_file_path = question_obj["video_filename"]
     video_index = question_obj["video_index"]
     question_index = question_obj["question_index"]
+    question_family_index = question_obj["question_family_index"]
 
     return {"question": question,
             "answer": answer,
@@ -145,14 +164,17 @@ def get_question_from_question_obj(question_obj):
             "template_filename": template_filename,
             "video_file_path": video_file_path,
             "video_index": video_index,
-            "question_index": question_index}
+            "question_index": question_index,
+            "question_family_index": question_family_index,
+            "simulation_id": simulation_id}
 
 
 def get_question_list_from_qa_json(qa_json):
     questions = []
     question_list = qa_json["questions"]["questions"]
+    simulation_id = qa_json["simulation_id"]
     for question_obj in question_list:
-        questions.append(get_question_from_question_obj(question_obj))
+        questions.append(get_question_from_question_obj(question_obj, simulation_id))
 
     return questions
 

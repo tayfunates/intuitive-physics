@@ -323,3 +323,14 @@ def get_answer_frequencies(q_a_t_f_list):
     return tabulate(template_count_list, headers=["Template File", "Question Count"] + answer_set_header(answer_set),
                     tablefmt="github")
 
+
+def remove_question(dataset_json, video_index, question_index):
+    dataset_json[video_index]["questions"]["questions"].pop(question_index)
+
+
+def retain_questions(dataset_json, video_index, question_indices: list):
+    dataset_json[video_index]["questions"]["questions"] = [
+        question for question in dataset_json[video_index]["questions"]["questions"]
+        if question["question_index"] in question_indices
+    ]
+

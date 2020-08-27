@@ -265,6 +265,10 @@ def generate_pie_chart(answer_counts, title):
     ax1.set_title(title)
     plt.tight_layout()
 
+    if not os.path.exists("statistics"):
+        os.makedirs("statistics")
+    plt.savefig("statistics" + os.path.sep + title + ".png")
+
 
 def convert_to_question_tuple_list(questions):
     return [(q["question"], q["answer"], q["template_filename"][:-5], q["video_file_path"]) for q in

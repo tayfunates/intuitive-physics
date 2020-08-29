@@ -247,11 +247,6 @@ def generate(config: Config):
                         }}""")
         )
 
-        json.dump(
-            dataset,
-            open(f"{config.output_folder_path}/dataset.json", "w"),
-            indent=2
-        )
 
         diff = time.time() - t1
         times = np.append(times, diff)

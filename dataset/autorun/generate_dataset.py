@@ -133,6 +133,7 @@ def generate(config: Config):
     """
     Generates a dataset with parameters specified in the configuration file.
     """
+
     os.makedirs(config.output_folder_path, exist_ok=True)
 
     dataset = json.loads("[]")
@@ -150,6 +151,8 @@ def generate(config: Config):
     for sim in config.simulation_configs:
         os.makedirs(f"{intermediates_folder_path}/sim-id-{sim['id']}/debug", exist_ok=True)
         os.makedirs(f"{config.output_folder_path}/videos/sim-id-{sim['id']}", exist_ok=True)
+
+    logging.info(f"Configuring splits...")
 
     train = int(float(config.train_set_ratio) * config.dataset_size)
     val = int(float(config.validation_set_ratio) * config.dataset_size)
@@ -175,8 +178,20 @@ def generate(config: Config):
     # To measure remaining time.
     start_time = time.time()
     times = np.array([])
-    for i in range(len(splits)):
+
+    state_file_path = f"{config.output_folder_path}/dataset_generation_state"
+    start = 0
+    if os.path.exists(state_file_path):
+        with open(state_file_path, "r") as state_file:
+            start = int(state_file.read())
+        logging.info(f"Dataset generation state file found at output folder path, continuing from {start}...")
+
+    for i in range(start, len(splits)):
         t1 = time.time()  # To measure remaining time.
+
+        with(open(state_file_path, "w")) as state_file:
+            state_file.write(f"{i}")
+            state_file.close()
 
         split_v_id = splits[i]
         split = split_v_id[0]
@@ -237,6 +252,19 @@ def generate(config: Config):
         except Exception as e:
             traceback.print_exception(type(e), e, e.__traceback__)
 
+        diff = time.time() - t1
+        times = np.append(times, diff)
+        logging.info(f"Approx. {round((np.mean(times) * (len(splits) - i - 1)) / 60, 2)} "
+                     "minutes remaining...".ljust(75, " "))
+
+    logging.info(f"Inflating dataset JSON object in memory...")
+    for i in range(len(splits)):
+        split_v_id = splits[i]
+        split = split_v_id[0]
+        sim = next((x for x in config.simulation_configs if x['id'] == split_v_id[1]), None)
+
+        questions_file_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/qa_{split}_{i:06d}.json"
+
         # Add them into dataset.json
         dataset.append(
             json.loads(f"""{{
@@ -247,23 +275,13 @@ def generate(config: Config):
                         }}""")
         )
 
-        json.dump(
-            dataset,
-            open(f"{config.output_folder_path}/dataset.json", "w"),
-            indent=2
-        )
-
-        diff = time.time() - t1
-        times = np.append(times, diff)
-        logging.info(f"Approx. {round((np.mean(times) * (len(splits) - i - 1)) / 60, 2)} "
-                     "minutes remaining...".ljust(75, " "))
-
+    logging.info(f"Converting absolute paths to relative paths based on current working directory...")
     dataset = dataset_utils.relativize_paths(dataset, config.output_folder_path)
 
+    logging.info(f"Dumping dataset, this may take a while...")
     json.dump(
         dataset,
-        open(f"{config.output_folder_path}/dataset.json", "w"),
-        indent=2
+        open(f"{config.output_folder_path}/dataset.json", "w")
     )
 
     # Dump minimal version of the dataset for easier debugging.
@@ -272,6 +290,8 @@ def generate(config: Config):
         open(f"{config.output_folder_path}/dataset_minimal.json", "w"),
         indent=2
     )
+
+    os.remove(state_file_path)
 
     logging.info(f"Dataset generation is complete. Process took {round((time.time() - start_time) / 60, 2)} minutes.")
 

@@ -225,3 +225,67 @@ class DatasetStatistics:
         self.generate_stat__answer_counts(answer_counts, f'Answer frequencies (Total: {sum(answer_counts.values())})')
 
 
+class DatasetUtils:
+    @staticmethod
+    def convert_to_list(array):
+        dataset = []
+        for i, elem in enumerate(array):
+            obj = array[i][0]
+            dataset.append(obj)
+        return dataset
+
+    @staticmethod
+    def convert_to_ndarray(dataset: list):
+        m = np.array([obj for obj in dataset])
+        return m
+
+    @staticmethod
+    def imblearn_random_undersampling(dataset: list, class_name):
+        freq = defaultdict(int)
+        for q in dataset:
+            freq[q[class_name]] += 1
+
+        if len(freq.keys()) <= 1:
+            return dataset
+
+        outliers = set()
+        s = sum(freq.values())
+        for c, count in freq.items():
+            if count / s < 0.1:
+                outliers.add(c)
+
+        to_be_resampled = []
+        passed = []
+        for q in dataset:
+            if q[class_name] not in outliers:
+                to_be_resampled.append(q)
+            else:
+                passed.append(q)
+
+        data = DatasetUtils.convert_to_ndarray(to_be_resampled)
+
+        labels = np.array([])
+        for item in data:
+            labels = np.append(labels, f"{item[class_name]}")
+
+        if len(set(labels)) <= 1:
+            return dataset
+
+        reshaped = data.reshape((-1, 1))
+
+        from imblearn.under_sampling import RandomUnderSampler
+        rus = RandomUnderSampler()
+        X_rus, y_rus = rus.fit_resample(reshaped, labels)
+
+        undersampled_dataset = DatasetUtils.convert_to_list(X_rus)
+
+        undersampled_dataset.extend(passed)
+
+        return undersampled_dataset
+
+    @staticmethod
+    def retain_questions(dataset_json, video_index, question_indices: list):
+        dataset_json[video_index]["questions"]["questions"] = [
+            question for question in dataset_json[video_index]["questions"]["questions"]
+            if question["question_index"] in question_indices
+        ]

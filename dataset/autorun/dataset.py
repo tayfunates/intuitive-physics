@@ -197,7 +197,7 @@ class DatasetStatistics:
                 .get_result()
 
             answer_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
-            self.generate_stat__answer_counts(answer_counts, f'Template ID={tid} - "{questions[0]["question"]}"')
+            self.generate_stat__answer_counts(answer_counts, f'Template ID={tid} - {questions[0]["question"]}'.replace("?", ""))
             for answer, count in answer_counts.items():
                 answer_freq_v_template_id.append({"template_id": tid, "answer": answer, "count": count})
         df = pd.DataFrame(answer_freq_v_template_id)
@@ -222,7 +222,7 @@ class DatasetStatistics:
 
     def generate_stat__answer_frequencies(self):
         answer_counts = DatasetStatistics.counts_from_question_list(self.dataset.questions, "answer")
-        self.generate_stat__answer_counts(answer_counts, f'Answer frequencies (Total: {sum(answer_counts.values())})')
+        self.generate_stat__answer_counts(answer_counts, f'Answer frequencies - Total={sum(answer_counts.values())}')
 
 
 class DatasetUtils:

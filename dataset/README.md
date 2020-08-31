@@ -345,6 +345,27 @@ Similarly,
 
 The answer to this question is true since big blue block is intended to enter the basket, and without the cyan triangle, it succeeds to do so.
 
+### Dataset Statistics
+
+#### Answer Distribution for Different Simulations
+
+| All | Simulation=1 | Simulation=2|
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20(Total%3D63498).png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D1.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D2.png)|
+
+| Simulation=3 | Simulation=4 | Simulation=5|
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D3.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D4.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D5.png)|
+
+| Simulation=6 | Simulation=7 | Simulation=8|
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D6.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D7.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D8.png)|
+
+| Simulation=9 | Simulation=10 |
+|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D9.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D10.png)|
+
+
 ### Future Work
 
 - Currently, our programs of tasks depend on the end results of the simulations to be able to provide correct answers to the questions. As an example, consider the following prevent task, "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?". For the answer of this question to be "true", we check the end state of the object **Z2** **C2** **S2** to observe whether it falls to the ground or not. Our programs do not consider local temporal attemps of the object **Z** **C** **S** whether it is trying to prevent in a small time interval. Therefore, our questions do not integrate verbs like "impede", "interfere" or "restrain" instead of "prevent" in different tasks. Similarly, verbs like "help", "aid" or "facilitate" are not integrated instead of "enable".

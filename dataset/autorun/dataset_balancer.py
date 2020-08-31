@@ -13,6 +13,13 @@ class DatasetBalancer:
     def get_unique_values(self, column: str) -> set:
         return set(pd.DataFrame(self.questions)[column].to_list())
 
+    @staticmethod
+    def answer_discard_strategy(class_name: str, val):
+        if class_name == "answer":
+            return val in range(3, 11)
+        return False
+
+
     def balance_answers_within_answer_types(self):
         questions = []
 
@@ -21,7 +28,41 @@ class DatasetBalancer:
             questions_with_this_answer_type = Funnel(self.questions) \
                 .filter(lambda x: x["answer_type"] == answer_type) \
                 .get_result()
-            questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_answer_type, "answer"))
+            questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_answer_type, "answer",
+                                                                        discard_strategy_fn=DatasetBalancer.answer_discard_strategy))
+
+        self.questions = questions
+        return self
+
+    def balance_answers_within_each_simulation_id(self):
+        questions = []
+        answer_types = self.get_unique_values("answer_type")
+        sim_ids = self.get_unique_values("simulation_id")
+        for answer_type in answer_types:
+            questions_with_this_answer_type = Funnel(self.questions) \
+                .filter(lambda x: x["answer_type"] == answer_type) \
+                .get_result()
+            for sid in sim_ids:
+                questions_with_this_simulation_id = Funnel(questions_with_this_answer_type) \
+                    .filter(lambda x: x["simulation_id"] == sid) \
+                    .get_result()
+                questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_simulation_id, "answer",
+                                                                            discard_strategy_fn=DatasetBalancer.answer_discard_strategy))
+        self.questions = questions
+        return self
+
+    def balance_answers_within_each_template_and_simulation_ids(self):
+        questions = []
+        sim_ids = self.get_unique_values("simulation_id")
+        template_ids = self.get_unique_values("template_id")
+        for sid in sim_ids:
+            for template_id in template_ids:
+                questions_with_this_template_id = Funnel(self.questions) \
+                    .filter(lambda x: x["template_id"] == template_id and x["simulation_id"] == sid) \
+                    .get_result()
+                undersampled = DatasetUtils.imblearn_random_undersampling(questions_with_this_template_id, "answer",
+                                                                          discard_strategy_fn=DatasetBalancer.answer_discard_strategy)
+                questions.extend(undersampled)
 
         self.questions = questions
         return self
@@ -34,7 +75,21 @@ class DatasetBalancer:
             questions_with_this_template_id = Funnel(self.questions) \
                 .filter(lambda x: x["template_id"] == template_id) \
                 .get_result()
-            questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_template_id, "answer"))
+            questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_template_id, "answer",
+                                                                        discard_strategy_fn=DatasetBalancer.answer_discard_strategy))
+
+        self.questions = questions
+        return self
+
+    def balance_template_ids_within_each_simulation_id(self):
+        questions = []
+
+        simulation_ids = self.get_unique_values("simulation_id")
+        for sid in simulation_ids:
+            questions_with_this_sid = Funnel(self.questions) \
+                .filter(lambda x: x["simulation_id"] == sid) \
+                .get_result()
+            questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_sid, "template_id"))
 
         self.questions = questions
         return self
@@ -85,9 +140,10 @@ if __name__ == '__main__':
     dataset_obj.generate_statistics(output_folder="imbalanced")
 
     logging.info(f"Performing various undersampling operations on dataset...")
-    DatasetBalancer(dataset_obj, args.output_dataset_file_path) \
-        .balance_answers_within_answer_types() \
-        .balance_answers_within_each_template_id().dump()
+    DatasetBalancer(dataset_obj, args.output_dataset_file_path)\
+        .balance_answers_within_each_template_and_simulation_ids()\
+        .dump()
     balanced_dataset = SVQADataset(args.output_dataset_file_path, args.metadata_file_path)
+
 
     balanced_dataset.generate_statistics(output_folder="balanced")

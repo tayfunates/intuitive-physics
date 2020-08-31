@@ -13,7 +13,7 @@ import logging
 
 import autorun.variation_run as variation_run
 import svqa.generate_questions as generate_questions
-import autorun.dataset_utils as dataset_utils
+from autorun.dataset import DatasetUtils
 
 """
 Generates a dataset that contains simulation outputs with variations and their videos.
@@ -310,7 +310,7 @@ def dump_dataset(config: Config, splits=None):
             continue
 
     logging.info(f"Converting absolute paths to relative paths based on current working directory...")
-    dataset = dataset_utils.relativize_paths(dataset, config.output_folder_path)
+    dataset = DatasetUtils.relativize_paths(dataset, config.output_folder_path)
 
     logging.info(f"Dumping dataset, this may take a while...")
     json.dump(
@@ -320,7 +320,7 @@ def dump_dataset(config: Config, splits=None):
 
     # Dump minimal version of the dataset for easier debugging.
     json.dump(
-        dataset_utils.minimized_dataset(dataset),
+        DatasetUtils.minimized_dataset(dataset),
         open(f"{config.output_folder_path}/dataset_minimal.json", "w"),
         indent=2
     )

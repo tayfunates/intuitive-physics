@@ -349,19 +349,19 @@ The answer to this question is true since big blue block is intended to enter th
 
 #### Answer Distribution for Different Simulations
 
-| All | Simulation=1 | Simulation=2|
+| All | SID=1 | SID=2|
 |---|---|---|
 |![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20(Total%3D63498).png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D1.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D2.png)|
 
-| Simulation=3 | Simulation=4 | Simulation=5|
+| SID=3 | SID=4 | SID=5|
 |---|---|---|
 |![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D3.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D4.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D5.png)|
 
-| Simulation=6 | Simulation=7 | Simulation=8|
+| SID=6 | SID=7 | SID=8|
 |---|---|---|
 |![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D6.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D7.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D8.png)|
 
-| Simulation=9 | Simulation=10 |
+| SID=9 | SID=10 |
 |---|---|
 |![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D9.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D10.png)|
 

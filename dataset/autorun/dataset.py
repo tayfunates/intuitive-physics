@@ -1,5 +1,6 @@
 import json
 import os
+import pathlib
 from collections import defaultdict
 
 import pandas as pd
@@ -102,6 +103,10 @@ class SVQADataset:
         stats.generate_stat__template_per_sim_id()
         logging.info(f"Generating statistics: Answer frequencies in the dataset")
         stats.generate_stat__answer_frequencies()
+        logging.info(f"Generating statistics: Answer frequencies per simulation ID")
+        stats.generate_stat__answer_frequencies_per_sim_id()
+        logging.info(f"Generating statistics: Answer frequencies per TID and SID")
+        stats.generate_stat__answer_per_template_and_simulation()
 
 
 class DatasetStatistics:
@@ -203,6 +208,41 @@ class DatasetStatistics:
         df = pd.DataFrame(answer_freq_v_template_id)
         write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID.csv", df.to_csv())
 
+    def generate_stat__answer_per_template_and_simulation(self):
+        answer_freq_v_template_id = []
+        template_ids = self.dataset.get_unique_values("template_id")
+        simulation_ids = self.dataset.get_unique_values("simulation_id")
+        for sid in simulation_ids:
+            for tid in template_ids:
+                questions = Funnel(self.dataset.questions) \
+                    .filter(lambda q: q["template_id"] == tid and q["simulation_id"] == sid) \
+                    .get_result()
+
+                answer_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
+                self.generate_stat__answer_counts(answer_counts, f'SID={sid}-TID={tid}')
+                for answer, count in answer_counts.items():
+                    answer_freq_v_template_id.append({"template_id": tid,"simulation_id": sid, "answer": answer, "count": count})
+
+        df = pd.DataFrame(answer_freq_v_template_id)
+        write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID and sim ID.csv", df.to_csv())
+
+    def generate_stat__answer_frequencies_per_sim_id(self):
+        sim_id_v_answer_freq = []
+        sim_ids = self.dataset.get_unique_values("simulation_id")
+        for sid in sim_ids:
+            questions = Funnel(self.dataset.questions) \
+                .filter(lambda q: q["simulation_id"] == sid) \
+                .get_result()
+
+            answer_id_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
+            self.generate_stat__answer_counts(answer_id_counts, f'Answer frequencies for Simulation ID={sid}')
+            for answer, count in answer_id_counts.items():
+                sim_id_v_answer_freq.append({"simulation_id": sid, "answer": answer, "count": count})
+
+        df = pd.DataFrame(sim_id_v_answer_freq)
+        write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies for each simulation ID.csv",
+                      df.to_csv())
+
     def generate_stat__template_per_sim_id(self):
         sim_id_v_template_freq = []
         sim_ids = self.dataset.get_unique_values("simulation_id")
@@ -240,7 +280,7 @@ class DatasetUtils:
         return m
 
     @staticmethod
-    def imblearn_random_undersampling(dataset: list, class_name):
+    def imblearn_random_undersampling(dataset: list, class_name, discard_strategy_fn=None):
         freq = defaultdict(int)
         for q in dataset:
             freq[q[class_name]] += 1
@@ -249,10 +289,10 @@ class DatasetUtils:
             return dataset
 
         outliers = set()
-        s = sum(freq.values())
-        for c, count in freq.items():
-            if count / s < 0.1:
-                outliers.add(c)
+        if discard_strategy_fn is not None:
+            for val in freq.keys():
+                if discard_strategy_fn(class_name, val):
+                    outliers.add(val)
 
         to_be_resampled = []
         passed = []
@@ -289,3 +329,23 @@ class DatasetUtils:
             question for question in dataset_json[video_index]["questions"]["questions"]
             if question["question_index"] in question_indices
         ]
+
+    @staticmethod
+    def relativize_paths(dataset_json, dataset_folder_path) -> dict:
+        folder_name = pathlib.Path(dataset_folder_path).name
+        return json.loads(json.dumps(dataset_json).replace(dataset_folder_path, f"./{folder_name}"))
+
+    @staticmethod
+    def minimized_dataset(dataset_json) -> dict:
+        video_to_qa = {}
+        for qa_json in dataset_json:
+            video_to_qa[pathlib.Path(qa_json["questions"]["info"]["video_filename"]).name] = \
+                [
+                    {
+                        "question": question_obj["question"],
+                        "answer": question_obj["answer"],
+                        "template_filename": question_obj["template_filename"]
+                    }
+                    for question_obj in qa_json["questions"]["questions"]
+                ]
+        return video_to_qa

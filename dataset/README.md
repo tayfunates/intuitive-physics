@@ -347,7 +347,7 @@ The answer to this question is true since big blue block is intended to enter th
 
 ### Dataset Statistics
 
-#### Answer Distribution for Different Simulations
+#### Answer Distributions for Different Simulations
 
 | All | SID=1 | SID=2|
 |---|---|---|
@@ -365,7 +365,98 @@ The answer to this question is true since big blue block is intended to enter th
 |---|---|
 |![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D9.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Answer%20frequencies%20for%20Simulation%20ID%3D10.png)|
 
-#### Answer Distribution for Simulation and Task Pairs
+#### Answer Distributions for Different Tasks
+
+| TID=cause_0 | TID=cause_1 | TID=cause_2 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcause_0.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcause_1.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcause_2.png)|
+
+| TID=cause_3 | TID=cause_4 | TID=cause_5 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcause_3.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcause_4.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcause_5.png)|
+
+| TID=counterfactual_0 | TID=counterfactual_1 | TID=counterfactual_2 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcounterfactual_0.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcounterfactual_1.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcounterfactual_2.png)|
+
+| TID=counterfactual_3 | TID=counterfactual_4 | TID=counterfactual_5 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcounterfactual_3.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcounterfactual_4.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcounterfactual_5.png)|
+
+| TID=counterfactual_6 | TID=counterfactual_7 | TID=counterfactual_8 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcounterfactual_6.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcounterfactual_7.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dcounterfactual_8.png)|
+
+| TID=descriptive_0 | TID=descriptive_1 | TID=descriptive_2 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_0.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_1.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_2.png)|
+
+| TID=descriptive_3 | TID=descriptive_4 | TID=descriptive_5 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_3.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_4.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_5.png)|
+
+| TID=descriptive_6 | TID=descriptive_7 | TID=descriptive_8 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_6.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_7.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_8.png)|
+
+| TID=descriptive_9 | TID=descriptive_10 | TID=descriptive_11 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_9.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_10.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_11.png)|
+
+| TID=descriptive_12 | TID=descriptive_13 | TID=descriptive_14 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_12.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_13.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_14.png)|
+
+| TID=descriptive_15 | TID=descriptive_16 | TID=descriptive_17 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_15.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_16.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_17.png)|
+
+| TID=descriptive_18 | TID=descriptive_19 | TID=descriptive_20 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_18.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_19.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_20.png)|
+
+| TID=descriptive_21 | TID=descriptive_22 | TID=descriptive_23 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_21.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_22.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_23.png)|
+
+| TID=descriptive_24 | TID=descriptive_25 | TID=descriptive_26 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_24.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_25.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_26.png)|
+
+| TID=descriptive_27 | TID=descriptive_28 | TID=descriptive_29 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_27.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_28.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_29.png)|
+
+| TID=descriptive_30 | TID=descriptive_31 | TID=descriptive_32 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_30.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_31.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_32.png)|
+
+| TID=descriptive_33 | TID=descriptive_34 | TID=descriptive_35 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_33.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_34.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_35.png)|
+
+| TID=descriptive_36 | TID=descriptive_37 |
+|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_36.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Ddescriptive_37.png)|
+
+| TID=enable_0 | TID=enable_1 | TID=enable_2 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Denable_0.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Denable_1.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Denable_2.png)|
+
+| TID=enable_3 | TID=enable_4 | TID=enable_5 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Denable_3.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Denable_4.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Denable_5.png)|
+
+| TID=prevent_0 | TID=prevent_1 | TID=prevent_2 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dprevent_0.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dprevent_1.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dprevent_2.png)|
+
+| TID=prevent_3 | TID=prevent_4 | TID=prevent_5 |
+|---|---|---|
+|![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dprevent_3.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dprevent_4.png)| ![](/dataset/autorun/stats/dataset_3000_270820_stats/balanced/Template%20ID%3Dprevent_5.png)|
+
+
+#### Answer Distributions for Simulation and Task Pairs
 
 | SID=1, TID=cause_0| SID=1, TID=cause_1| SID=1, TID=cause_2 | SID=1, TID=cause_3|SID=1, TID=cause_4 |
 |---|---|---|---|---|

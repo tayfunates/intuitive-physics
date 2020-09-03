@@ -13,7 +13,7 @@ import logging
 
 import autorun.variation_run as variation_run
 import svqa.generate_questions as generate_questions
-import autorun.dataset_utils as dataset_utils
+from autorun.dataset import DatasetUtils
 
 """
 Generates a dataset that contains simulation outputs with variations and their videos.
@@ -105,6 +105,12 @@ def init_args():
                                     File path to a JSON file that includes parameters for generating a dataset.
                                """)
 
+    parser.add_argument('-merge', '--merge-and-dump', action='store', dest='merge_and_dump', required=False,
+                        default=False,
+                        help="""
+                                    Only merges the individual files into a single dataset rather than generating new dataset.
+                               """)
+
     parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
     return parser.parse_args()
@@ -133,6 +139,7 @@ def generate(config: Config):
     """
     Generates a dataset with parameters specified in the configuration file.
     """
+
     os.makedirs(config.output_folder_path, exist_ok=True)
 
     dataset = json.loads("[]")
@@ -146,37 +153,29 @@ def generate(config: Config):
         indent=4
     )
 
-    intermediates_folder_path = f"{config.output_folder_path}/intermediates"
     for sim in config.simulation_configs:
-        os.makedirs(f"{intermediates_folder_path}/sim-id-{sim['id']}/debug", exist_ok=True)
+        os.makedirs(f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/debug", exist_ok=True)
         os.makedirs(f"{config.output_folder_path}/videos/sim-id-{sim['id']}", exist_ok=True)
 
-    train = int(float(config.train_set_ratio) * config.dataset_size)
-    val = int(float(config.validation_set_ratio) * config.dataset_size)
-    test = int(float(config.test_set_ratio) * config.dataset_size)
-
-    train_simulations = config.sim_ids_for_each_split["train"]
-    validation_simulations = config.sim_ids_for_each_split["validation"]
-    test_simulations = config.sim_ids_for_each_split["test"]
-
-    # If no simulation id specified for a split, use all.
-    if train_simulations is None:
-        train_simulations = [config["id"] for config in config.simulation_configs]
-    if validation_simulations is None:
-        validation_simulations = [config["id"] for config in config.simulation_configs]
-    if test_simulations is None:
-        test_simulations = [config["id"] for config in config.simulation_configs]
-
-    # Breakup split ratios to each scene ID.
-    splits = [("train", sid) for sid in train_simulations * (train // len(train_simulations))]
-    splits.extend([("validation", sid) for sid in validation_simulations] * (val // len(validation_simulations)))
-    splits.extend([("test", sid) for sid in test_simulations] * (test // len(test_simulations)))
+    splits = configure_splits(config)
 
     # To measure remaining time.
     start_time = time.time()
     times = np.array([])
-    for i in range(len(splits)):
+
+    state_file_path = f"{config.output_folder_path}/dataset_generation_state"
+    start = 0
+    if os.path.exists(state_file_path):
+        with open(state_file_path, "r") as state_file:
+            start = int(state_file.read())
+        logging.info(f"Dataset generation state file found at output folder path, continuing from {start}...")
+
+    for i in range(start, len(splits)):
         t1 = time.time()  # To measure remaining time.
+
+        with(open(state_file_path, "w")) as state_file:
+            state_file.write(f"{i}")
+            state_file.close()
 
         split_v_id = splits[i]
         split = split_v_id[0]
@@ -186,8 +185,8 @@ def generate(config: Config):
         logging.info(f"Running, split: {split}, sim_id: {sim['id']}, N: {i:06d}")
 
         # Create controller file.
-        controller_json_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/controller_{split}_{i:06d}.json"
-        output_json_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/{split}_{i:06d}.json"
+        controller_json_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/debug/controller_{split}_{i:06d}.json"
+        output_json_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/debug/{split}_{i:06d}.json"
 
         with open(controller_json_path, 'w') as controller_file:
             json.dump(
@@ -211,16 +210,16 @@ def generate(config: Config):
 
         # Run simulation.
         run_simulation(config.executable_path, f"{controller_json_path}",
-                       f"{intermediates_folder_path}/sim-id-{sim['id']}/debug/cl_debug_{split}_{i:06d}.txt")
+                       f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/debug/cl_debug_{split}_{i:06d}.txt")
 
         # Run its variations.
-        variations_output_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/{split}_{i:06d}.json"
+        variations_output_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/{split}_{i:06d}.json"
         variation_run.run_variations(variation_run.init_args(['-exec', config.executable_path,
                                                               '-c', controller_json_path,
                                                               '-p', output_json_path,
                                                               '-o', variations_output_path]))
 
-        questions_file_path = f"{intermediates_folder_path}/sim-id-{sim['id']}/qa_{split}_{i:06d}.json"
+        questions_file_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/qa_{split}_{i:06d}.json"
 
         # Generate questions.
         try:
@@ -237,41 +236,14 @@ def generate(config: Config):
         except Exception as e:
             traceback.print_exception(type(e), e, e.__traceback__)
 
-        # Add them into dataset.json
-        dataset.append(
-            json.loads(f"""{{
-                            "simulation_id": "{sim['id']}",
-                            "split": "{split}",
-                            "video_path": "{config.output_folder_path}/videos/sim-id-{sim['id']}/{split}_{i:06d}.mpg",
-                            "questions": {json.dumps(json.load(open(questions_file_path, "r")))}
-                        }}""")
-        )
-
-        json.dump(
-            dataset,
-            open(f"{config.output_folder_path}/dataset.json", "w"),
-            indent=2
-        )
-
         diff = time.time() - t1
         times = np.append(times, diff)
         logging.info(f"Approx. {round((np.mean(times) * (len(splits) - i - 1)) / 60, 2)} "
                      "minutes remaining...".ljust(75, " "))
 
-    dataset = dataset_utils.relativize_paths(dataset, config.output_folder_path)
+    dump_dataset(config, splits)
 
-    json.dump(
-        dataset,
-        open(f"{config.output_folder_path}/dataset.json", "w"),
-        indent=2
-    )
-
-    # Dump minimal version of the dataset for easier debugging.
-    json.dump(
-        dataset_utils.minimized_dataset(dataset),
-        open(f"{config.output_folder_path}/dataset_minimal.json", "w"),
-        indent=2
-    )
+    os.remove(state_file_path)
 
     logging.info(f"Dataset generation is complete. Process took {round((time.time() - start_time) / 60, 2)} minutes.")
 
@@ -282,6 +254,76 @@ def generate(config: Config):
             generate_questions.convert_to_question_tuple_list(generated_questions[split]))
         logging.info(f"{os.linesep}"
                      f"{table}")
+
+
+def configure_splits(config: Config) -> list:
+    logging.info(f"Configuring splits...")
+
+    train = int(float(config.train_set_ratio) * config.dataset_size)
+    val = int(float(config.validation_set_ratio) * config.dataset_size)
+    test = int(float(config.test_set_ratio) * config.dataset_size)
+
+    train_simulations = config.sim_ids_for_each_split["train"]
+    validation_simulations = config.sim_ids_for_each_split["validation"]
+    test_simulations = config.sim_ids_for_each_split["test"]
+
+    # If no simulation id specified for a split, use all.
+    if train_simulations is None:
+        train_simulations = [config["id"] for config in config.simulation_configs]
+    if validation_simulations is None:
+        validation_simulations = [config["id"] for config in config.simulation_configs]
+    if test_simulations is None:
+        test_simulations = [config["id"] for config in config.simulation_configs]
+
+    # Breakup split ratios to each scene ID.
+    splits = [("train", sid) for sid in train_simulations * (train // len(train_simulations))]
+    splits.extend([("validation", sid) for sid in validation_simulations] * (val // len(validation_simulations)))
+    splits.extend([("test", sid) for sid in test_simulations] * (test // len(test_simulations)))
+    return splits
+
+
+def dump_dataset(config: Config, splits=None):
+    dataset = json.loads("[]")
+
+    if splits is None:
+        splits = configure_splits(config)
+
+    logging.info(f"Inflating dataset JSON object in memory...")
+    for i in range(len(splits)):
+        split_v_id = splits[i]
+        split = split_v_id[0]
+        sim = next((x for x in config.simulation_configs if x['id'] == split_v_id[1]), None)
+
+        questions_file_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/qa_{split}_{i:06d}.json"
+
+        try:
+            # Add them into dataset.json
+            dataset.append(
+                json.loads(f"""{{
+                                "simulation_id": "{sim['id']}",
+                                "split": "{split}",
+                                "video_path": "{config.output_folder_path}/videos/sim-id-{sim['id']}/{split}_{i:06d}.mpg",
+                                "questions": {json.dumps(json.load(open(questions_file_path, "r")))}
+                            }}""")
+            )
+        except FileNotFoundError:
+            continue
+
+    logging.info(f"Converting absolute paths to relative paths based on current working directory...")
+    dataset = DatasetUtils.relativize_paths(dataset, config.output_folder_path)
+
+    logging.info(f"Dumping dataset, this may take a while...")
+    json.dump(
+        dataset,
+        open(f"{config.output_folder_path}/dataset.json", "w")
+    )
+
+    # Dump minimal version of the dataset for easier debugging.
+    json.dump(
+        DatasetUtils.minimized_dataset(dataset),
+        open(f"{config.output_folder_path}/dataset_minimal.json", "w"),
+        indent=2
+    )
 
 
 def main(args):
@@ -296,8 +338,11 @@ def main(args):
         config = Config(json.loads(s))
         logging.debug(f"Configuration:{os.linesep}{s}")
 
-    logging.info("Running simulations...")
-    generate(config)
+    if args.merge_and_dump:
+        dump_dataset(config)
+    else:
+        logging.info("Running simulations...")
+        generate(config)
 
 
 if __name__ == "__main__":

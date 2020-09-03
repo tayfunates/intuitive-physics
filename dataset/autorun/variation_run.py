@@ -58,7 +58,7 @@ def get_variation_output(controller: str):
 
 
 def is_equal_without_step(event1, event2):
-    return (set(event1["objects"]) == set(event2["objects"]) and event1["type"] == event2["type"])
+    return set(event1["objects"]) == set(event2["objects"]) and event1["type"] == event2["type"]
 
 
 def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare: CausalGraph, object_props: dict, discarded_object_id: int):

@@ -2,65 +2,81 @@ import json
 import os
 import subprocess
 
-def get_all_combinations(snapshot: json) -> list:
+"""
+STEPS
+1- read all snaphot.json's
+2- create snapshot.json for all individual object
+3- create controllers for all snapshots created at step 2
+4- run all controllers
+"""
+
+## STEP 1
+def read_old_snapshots(folder_path: str):
+    all_snapshots = list()
+    for file_name in os.listdir(folder_path):     # filename: 5_375.json
+        full_path = folder_path + "/" + file_name
+        sim_id = (file_name[:-5]).split("_")[0]       # simulation_id = 5
+        frame = (file_name[:-5]).split("_")[1]        # current_frame = 375
+
+        with open(full_path) as json_file:
+            d = dict()
+            d["frame"] = frame
+            d["simulation_id"] = sim_id
+            d["snapshot"] = json.load(json_file)
+            all_snapshots.append(d)
+    return all_snapshots
+
+## STEP 2
+
+def create_all_combinations_from_one_snapshot(snapshot: dict) -> list:
+    shape_list = ["cube", "circle", "triangle"]
     result = []
-    python_dict = json.loads(snapshot)
-    object_list = python_dict["objects"]
-    shape_list = ["cube", "circle"]
-    for obj in object_list:
+    for obj in snapshot["objects"]:
         if obj["shape"] in shape_list:
             temp = dict()
-            temp["directions"] = python_dict["directions"]
+            temp["directions"] = snapshot["directions"]
             temp["objects"] = [obj]
-            result.append(json.dumps(temp, indent=4))
+            result.append(temp)
+
     return result
 
-
-def get_unique_object_name(field: dict, step_count: int) -> str:
-    return field["size"] + "_" + field["color"] + "_" + field["shape"] + "_" + str(step_count)
-
-
-def read_all_snapshot_jsons(path: str) -> list:
-    all_snapshot_jsons = []
-    for file_name in os.listdir(path):
-        full_path = path + "/" + file_name
-        frame = int(file_name.split(".")[0][5:])  # filename: frame375.json
-        with open(full_path) as json_file:
-            all_snapshot_jsons.append([frame, json.load(json_file)])
-    return all_snapshot_jsons
-
-
-def get_all_combinations_with_name(path: str):
+def create_all_combinations(all_old_snapshots_dict: list):
     result = []
-    for snapshot_json in read_all_snapshot_jsons(path):
-        frame = snapshot_json[0]
-        ss = snapshot_json[1]
 
-        all_comb = get_all_combinations(json.dumps(ss,indent=4))
-        for i in all_comb:
-            d = json.loads(i)["objects"]
-            name = get_unique_object_name(d[0], frame)
-            result.append([name, i])
-            print(name)
+    for custom_dict in all_old_snapshots_dict:
+        actual_snapshot = custom_dict["snapshot"]
+        all_comb_from_this_ss = create_all_combinations_from_one_snapshot(actual_snapshot)
+
+        for i in all_comb_from_this_ss:
+            d = dict()
+            d["frame"] = custom_dict["frame"]
+            d["simulation_id"] = custom_dict["simulation_id"]
+            d["snapshot"] = i
+            result.append(d)
+
     return result
 
-def write_to_file(input_path, output_path):
-    arr = get_all_combinations_with_name(input_path)
-    if not os.path.exists(output_path):
-        os.makedirs(output_path)
+def write_new_snapshots_to_file(old_snapshots_folder_path: str, new_snapshots_folder_path: str):
+    all_old_snapshots = read_old_snapshots(old_snapshots_folder_path)
 
+    arr = create_all_combinations(all_old_snapshots)
+
+    if not os.path.exists(new_snapshots_folder_path):
+        os.makedirs(new_snapshots_folder_path)
 
     for snapshot in arr:
-        name = snapshot[0]
-        snapshot_json = snapshot[1]
-        print(name)
-        print(snapshot_json)
-        f = open(output_path + "/" + name + ".json", "w")
-        f.write(snapshot_json)
+        shape = snapshot["snapshot"]["objects"][0]["shape"]
+        size = snapshot["snapshot"]["objects"][0]["size"]
+        name = "id" + snapshot["simulation_id"] + "_" + "frame" + snapshot["frame"] + "_" + size + "_" + shape
+        f = open(new_snapshots_folder_path + "/" + name + ".json", "w")
+        f.write(json.dumps(snapshot["snapshot"],indent=4))
         f.close()
 
 
-def get_json(base_path: str, controller_name: str, simulation_id: int):
+
+
+
+def get_controller_json(base_path: str, controller_name: str, simulation_id: int):
     return json.loads(
         f"""{{
                 "simulationID": {simulation_id},
@@ -70,25 +86,22 @@ def get_json(base_path: str, controller_name: str, simulation_id: int):
                 "width": 256,
                 "height": 256,
                 "inputScenePath":  "{base_path}/{controller_name}",
-                "numberOfObjects": 2,
-                "numberOfObstacles": 1,
-                "numberOfPendulums": 1,
                 "stepCount": 1
             }}""")
 
 
-
-def write_new_jsons(basepath: str, output_folder: str):
-    new_controllers = os.listdir(basepath)
+def write_new_controller_to_file(new_snapshots: str, output_folder: str):
+    new_controllers = os.listdir(new_snapshots)
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
     for f in new_controllers:
-        j = get_json(basepath,f, simulation_id= 11)
+        if f == ".DS_Store":
+            continue
+        j = get_controller_json(new_snapshots, f, int(f.split("_")[0][2:]) )
         file = open(output_folder + "/" + f , "w")
-        file.write(json.dumps(j))
+        file.write(json.dumps(j, indent=4))
         file.close()
-
 
 
 def run_simulation(exec_path: str, controller_json_path: str):
@@ -105,18 +118,23 @@ def run(controller_base_path: str, exe_path: str):
 
 
 
-input_path = "/Users/cagatayyigit/Desktop/snapshots" # this snapshots folders must contains snapshots with name format :  snapshot58.json
-output_path = "/Users/cagatayyigit/Desktop/new_snapshots" # new_snapshots is folder name
-new_controller_path = "/Users/cagatayyigit/Desktop/newControllers"
+def x(old_snapshots_folder: str, new_snapshots_folder: str, new_controllers_folder: str, exec_path: str):
+    write_new_snapshots_to_file(old_snapshots_folder, new_snapshots_folder)
+    write_new_controller_to_file(new_snapshots_folder, new_controllers_folder)
+    run(new_controllers_folder, exec_path)
+
+
+
+old_snapshots_folder = "/Users/cagatayyigit/Desktop/snapshots"
+new_snapshots_folder = "/Users/cagatayyigit/Desktop/new_snapshots"
+new_controllers_folder = "/Users/cagatayyigit/Desktop/new_controllers"
 exec_path = "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
 
 
-
-write_new_jsons(output_path, new_controller_path)
-run(new_controller_path, exec_path)
-
-
-
+x(old_snapshots_folder,
+  new_snapshots_folder,
+  new_controllers_folder ,
+  exec_path)
 
 
 

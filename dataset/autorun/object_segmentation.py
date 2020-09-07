@@ -32,7 +32,7 @@ def create_all_combinations_from_one_snapshot(snapshot: dict) -> list:
     shape_list = ["cube", "circle", "triangle"]
     result = []
     for obj in snapshot["objects"]:
-        if obj["shape"] in shape_list:
+        if obj["shape"] in shape_list and obj["size"]   == "large":
             temp = dict()
             temp["directions"] = snapshot["directions"]
             temp["objects"] = [obj]
@@ -83,10 +83,10 @@ def get_controller_json(base_path: str, controller_name: str, simulation_id: int
                 "offline": true,
                 "outputVideoPath": "output.mpg",
                 "outputJSONPath":  "output.json",
-                "width": 256,
-                "height": 256,
+                "width": 1024,
+                "height": 1024,
                 "inputScenePath":  "{base_path}/{controller_name}",
-                "stepCount": 1
+                "stepCount": 3
             }}""")
 
 
@@ -114,7 +114,7 @@ def run(controller_base_path: str, exe_path: str):
     for f in files:
         full_controller_path = controller_base_path + "/" +f
         print("RUNNING SIMULATION::" + full_controller_path)
-        run_simulation(exe_path, controller_base_path)
+        run_simulation(exe_path, full_controller_path)
 
 
 
@@ -131,12 +131,38 @@ new_controllers_folder = "/Users/cagatayyigit/Desktop/new_controllers"
 exec_path = "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
 
 
-x(old_snapshots_folder,
-  new_snapshots_folder,
-  new_controllers_folder ,
-  exec_path)
+#x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder , exec_path)
 
 
 
+from PIL import Image
+
+img_base_path  = "/Users/cagatayyigit/Desktop/screenshots/"
+img1 = Image.open(img_base_path + "id5_frame140_large_circle.png")
+img2 = Image.open(img_base_path + "id5_frame510_large_circle.png")
+
+
+
+
+
+img = Image.blend(img1,img2, 0.9)
+
+#img.show()
+
+
+def abc():
+    result = Image.blend(img1, img2, 0.5)
+
+    files = os.listdir(img_base_path)
+    i = 0.0
+    for f in files:
+        if f == ".DS_Store":
+            continue
+
+        new_img = Image.open(img_base_path + f)
+        result = Image.blend(new_img, result, 0.5)
+
+
+    result.show()
 
 

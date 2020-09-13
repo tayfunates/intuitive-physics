@@ -165,13 +165,6 @@ def x(old_snapshots_folder: str, new_snapshots_folder: str, new_controllers_fold
 
 
 
-old_snapshots_folder = "/Users/cagatayyigit/Desktop/snapshots"
-new_snapshots_folder = "/Users/cagatayyigit/Desktop/new_snapshots"
-new_controllers_folder = "/Users/cagatayyigit/Desktop/new_controllers"
-exec_path = "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
-
-
-#x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
 
 
 from PIL import Image
@@ -236,18 +229,18 @@ def get_all_image(base_path):
             count += 1
             result.append([get_transparent_image(full_path), frame])
 
-    return result
+    return [result,len(frame_arr)]
 
 def combine():
     m1 = get_transparent_image("/Users/cagatayyigit/Desktop/screenshots/idstatic.png")
-    images = get_all_image("/Users/cagatayyigit/Desktop/screenshots/")
-    i = int(255 / 20)
+    images, frame_per_object = get_all_image("/Users/cagatayyigit/Desktop/screenshots/")
+    i = int(255 / frame_per_object)
     j = 1
     for img in images:
         img[0].putalpha(i * (j + 10))
         img[0] = make_transparent(img[0])
         m1.paste(img[0], (0,0), img[0])
-        if j < 20:
+        if j < frame_per_object:
             j += 1
         else:
             j = 1
@@ -255,4 +248,14 @@ def combine():
     m1.save("/Users/cagatayyigit/Desktop/result.png")
 
 
+
+
+old_snapshots_folder = "/Users/cagatayyigit/Desktop/snapshots"
+new_snapshots_folder = "/Users/cagatayyigit/Desktop/new_snapshots"
+new_controllers_folder = "/Users/cagatayyigit/Desktop/new_controllers"
+exec_path = "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
+
+#run_simulation(exec_path, controller_json_path: str):
+
+x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
 combine()

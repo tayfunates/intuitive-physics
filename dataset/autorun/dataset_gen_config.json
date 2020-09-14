@@ -1,7 +1,7 @@
 {
-  "dataset_size": 100,
+  "dataset_size": 3000,
   "executable_path": "../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
-  "output_folder_path": "Dataset100",
+  "output_folder_path": "Dataset_3000_270820",
   "train_set_ratio": 0.5,
   "validation_set_ratio": 0.3,
   "test_set_ratio": 0.2,
@@ -55,7 +55,28 @@
       "excluded_task_ids": null
     },
     {
+      "id": 7,
+      "step_count": 600,
+      "width": 256,
+      "height": 256,
+      "excluded_task_ids": null
+    },
+    {
+      "id": 8,
+      "step_count": 600,
+      "width": 256,
+      "height": 256,
+      "excluded_task_ids": null
+    },
+    {
       "id": 9,
+      "step_count": 600,
+      "width": 256,
+      "height": 256,
+      "excluded_task_ids": null
+    },
+    {
+      "id": 10,
       "step_count": 600,
       "width": 256,
       "height": 256,

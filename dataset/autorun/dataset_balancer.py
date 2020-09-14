@@ -139,7 +139,7 @@ if __name__ == '__main__':
     dataset_obj = SVQADataset(args.dataset_file_path, args.metadata_file_path)
     dataset_obj.generate_statistics(output_folder="imbalanced")
 
-    logging.info(f"Performing various undersampling operations on dataset...")
+    logging.info(f"Performing various under-sampling operations on dataset...")
     DatasetBalancer(dataset_obj, args.output_dataset_file_path)\
         .balance_answers_within_each_template_and_simulation_ids()\
         .dump()

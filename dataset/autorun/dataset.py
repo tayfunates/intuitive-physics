@@ -1,6 +1,7 @@
 import json
 import os
-import pathlib
+import glob
+from pathlib import Path
 from collections import defaultdict
 
 import pandas as pd
@@ -116,7 +117,7 @@ class SVQADataset:
         return json.dumps(dataset_obj.dataset_json)
 
     def generate_statistics(self, output_folder):
-        stats = DatasetStatistics(self, export_png=True, output_folder=output_folder)
+        stats = DatasetStatisticsExporter(self, export_png=True, output_folder=output_folder)
 
         import logging
         logging.info(f"Generating statistics: Answer frequencies per template ID")
@@ -131,9 +132,9 @@ class SVQADataset:
         stats.generate_stat__answer_per_template_and_simulation()
 
 
-class DatasetStatistics:
+class DatasetStatisticsExporter:
     def __init__(self, dataset: SVQADataset, output_folder="statistics", export_png=True):
-        self.dataset = SVQADataset(dataset.dataset_json_path, dataset.metadata_json_path)
+        self.dataset = SVQADataset(dataset.dataset_folder_path, dataset.metadata_json_path)
         self.export_png = export_png
         self.output_folder = output_folder
 
@@ -223,7 +224,7 @@ class DatasetStatistics:
                 .filter(lambda q: q["template_id"] == tid) \
                 .get_result()
 
-            answer_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
+            answer_counts = DatasetStatisticsExporter.counts_from_question_list(questions, "answer")
             self.generate_stat__answer_counts(answer_counts, f'Template ID={tid} - {questions[0]["question"]}'.replace("?", ""))
             for answer, count in answer_counts.items():
                 answer_freq_v_template_id.append({"template_id": tid, "answer": answer, "count": count})
@@ -240,7 +241,7 @@ class DatasetStatistics:
                     .filter(lambda q: q["template_id"] == tid and q["simulation_id"] == sid) \
                     .get_result()
 
-                answer_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
+                answer_counts = DatasetStatisticsExporter.counts_from_question_list(questions, "answer")
                 self.generate_stat__answer_counts(answer_counts, f'SID={sid}-TID={tid}')
                 for answer, count in answer_counts.items():
                     answer_freq_v_template_id.append({"template_id": tid,"simulation_id": sid, "answer": answer, "count": count})
@@ -256,7 +257,7 @@ class DatasetStatistics:
                 .filter(lambda q: q["simulation_id"] == sid) \
                 .get_result()
 
-            answer_id_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
+            answer_id_counts = DatasetStatisticsExporter.counts_from_question_list(questions, "answer")
             self.generate_stat__answer_counts(answer_id_counts, f'Answer frequencies for Simulation ID={sid}')
             for answer, count in answer_id_counts.items():
                 sim_id_v_answer_freq.append({"simulation_id": sid, "answer": answer, "count": count})
@@ -273,7 +274,7 @@ class DatasetStatistics:
                 .filter(lambda q: q["simulation_id"] == sid) \
                 .get_result()
 
-            template_id_counts = DatasetStatistics.counts_from_question_list(questions, "template_id")
+            template_id_counts = DatasetStatisticsExporter.counts_from_question_list(questions, "template_id")
             self.generate_stat__answer_counts(template_id_counts, f'Template ID frequencies for Simulation ID={sid}')
             for tid, count in template_id_counts.items():
                 sim_id_v_template_freq.append({"simulation_id": sid, "template_id": tid, "count": count})
@@ -283,7 +284,7 @@ class DatasetStatistics:
                       df.to_csv())
 
     def generate_stat__answer_frequencies(self):
-        answer_counts = DatasetStatistics.counts_from_question_list(self.dataset.questions, "answer")
+        answer_counts = DatasetStatisticsExporter.counts_from_question_list(self.dataset.questions, "answer")
         self.generate_stat__answer_counts(answer_counts, f'Answer frequencies - Total={sum(answer_counts.values())}')
 
 
@@ -354,14 +355,13 @@ class DatasetUtils:
 
     @staticmethod
     def relativize_paths(dataset_json, dataset_folder_path) -> dict:
-        folder_name = pathlib.Path(dataset_folder_path).name
-        return json.loads(json.dumps(dataset_json).replace(dataset_folder_path, f"./{folder_name}"))
+        return json.loads(json.dumps(dataset_json).replace(dataset_folder_path, "./"))
 
     @staticmethod
     def minimized_dataset(dataset_json) -> dict:
         video_to_qa = {}
         for qa_json in dataset_json:
-            video_to_qa[pathlib.Path(qa_json["questions"]["info"]["video_filename"]).name] = \
+            video_to_qa[Path(qa_json["questions"]["info"]["video_filename"]).name] = \
                 [
                     {
                         "question": question_obj["question"],
@@ -371,3 +371,9 @@ class DatasetUtils:
                     for question_obj in qa_json["questions"]["questions"]
                 ]
         return video_to_qa
+
+    @staticmethod
+    def dataset_as_list(dataset_json_path, metadata_json_path) -> list:
+       dataset = SVQADataset(dataset_json_path, metadata_json_path)
+       return dataset.questions
+

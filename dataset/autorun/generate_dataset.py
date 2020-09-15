@@ -27,19 +27,19 @@ Single data in the dataset is generated as follows:
 
 - Dataset folder
   - /intermediates          (A folder for intermediate outputs, may be used for debugging purposes.)
-    - /sim-id-0  
-      - train_XXXXXX.json   (One simulation output with variations.)
-      - test_XXXXXX.json    
-      - val_XXXXXX.json      
+    - /sid_0  
+      - XXXXXX.json         (One simulation output with variations.)
+      - XXXXXX.json    
+        ...      
       - /debug              (A folder for intermediate variation outputs, cli outputs, and controller files.)
-    - /sim-id-1
+    - /sid_1
       ...
     ...
   - /videos
-    - /sim-id-0
-      - train_xxxxxx.mpg
-      - test_xxxxxx.mpg
-      - val_xxxxxx.mpg
+    - /sid_0
+      - XXXXXX.mpg
+      - XXXXXX.mpg
+        ...      
   - dataset.json            (This json file contains all the video paths, and questions generated from the outputs.)
 """
 
@@ -154,8 +154,8 @@ def generate(config: Config):
     )
 
     for sim in config.simulation_configs:
-        os.makedirs(f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/debug", exist_ok=True)
-        os.makedirs(f"{config.output_folder_path}/videos/sim-id-{sim['id']}", exist_ok=True)
+        os.makedirs(f"{config.output_folder_path}/intermediates/sid_{sim['id']}/debug", exist_ok=True)
+        os.makedirs(f"{config.output_folder_path}/videos/sid_{sim['id']}", exist_ok=True)
 
     splits = configure_splits(config)
 
@@ -185,8 +185,8 @@ def generate(config: Config):
         logging.info(f"Running, split: {split}, sim_id: {sim['id']}, N: {i:06d}")
 
         # Create controller file.
-        controller_json_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/debug/controller_{split}_{i:06d}.json"
-        output_json_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/debug/{split}_{i:06d}.json"
+        controller_json_path = f"{config.output_folder_path}/intermediates/sid_{sim['id']}/debug/controller_{i:06d}.json"
+        output_json_path = f"{config.output_folder_path}/intermediates/sid_{sim['id']}/debug/{i:06d}.json"
 
         with open(controller_json_path, 'w') as controller_file:
             json.dump(
@@ -194,14 +194,11 @@ def generate(config: Config):
                     f"""{{
                             "simulationID": {sim['id']},
                             "offline": {str(config.offline).lower()},
-                            "outputVideoPath": "{config.output_folder_path}/videos/sim-id-{sim['id']}/{split}_{i:06d}.mpg",
+                            "outputVideoPath": "{config.output_folder_path}/videos/sid_{sim['id']}/{i:06d}.mpg",
                             "outputJSONPath": "{output_json_path}",
                             "width":  {sim['width']},
                             "height": {sim['height']},
                             "inputScenePath":  "",
-                            "numberOfObjects": 2,
-                            "numberOfObstacles": 1,
-                            "numberOfPendulums": 1,
                             "stepCount": {sim['step_count']}
                         }}"""),
                 controller_file,
@@ -210,16 +207,16 @@ def generate(config: Config):
 
         # Run simulation.
         run_simulation(config.executable_path, f"{controller_json_path}",
-                       f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/debug/cl_debug_{split}_{i:06d}.txt")
+                       f"{config.output_folder_path}/intermediates/sid_{sim['id']}/debug/cl_debug_{i:06d}.txt")
 
         # Run its variations.
-        variations_output_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/{split}_{i:06d}.json"
+        variations_output_path = f"{config.output_folder_path}/intermediates/sid_{sim['id']}/{i:06d}.json"
         variation_run.run_variations(variation_run.init_args(['-exec', config.executable_path,
                                                               '-c', controller_json_path,
                                                               '-p', output_json_path,
                                                               '-o', variations_output_path]))
 
-        questions_file_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/qa_{split}_{i:06d}.json"
+        questions_file_path = f"{config.output_folder_path}/intermediates/sid_{sim['id']}/qa_{i:06d}.json"
 
         # Generate questions.
         try:
@@ -294,15 +291,14 @@ def dump_dataset(config: Config, splits=None):
         split = split_v_id[0]
         sim = next((x for x in config.simulation_configs if x['id'] == split_v_id[1]), None)
 
-        questions_file_path = f"{config.output_folder_path}/intermediates/sim-id-{sim['id']}/qa_{split}_{i:06d}.json"
+        questions_file_path = f"{config.output_folder_path}/intermediates/sid_{sim['id']}/qa_{i:06d}.json"
 
         try:
             # Add them into dataset.json
             dataset.append(
                 json.loads(f"""{{
                                 "simulation_id": "{sim['id']}",
-                                "split": "{split}",
-                                "video_path": "{config.output_folder_path}/videos/sim-id-{sim['id']}/{split}_{i:06d}.mpg",
+                                "video_path": "{config.output_folder_path}/videos/sid_{sim['id']}/{i:06d}.mpg",
                                 "questions": {json.dumps(json.load(open(questions_file_path, "r")))}
                             }}""")
             )

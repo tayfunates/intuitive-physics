@@ -29,13 +29,35 @@ class Funnel:
 
 class SVQADataset:
 
-    def __init__(self, dataset_json_path, metadata_json_path):
-        self.dataset_json_path = dataset_json_path
+    def __init__(self, dataset_folder_path, metadata_json_path):
+        self.dataset_folder_path = dataset_folder_path
         self.metadata_json_path = metadata_json_path
         self.metadata = json.load(open(metadata_json_path))
-        self.dataset_json = json.load(open(dataset_json_path))
+        self.dataset_json = json.load(open(f"{dataset_folder_path}/dataset.json"))
         self.questions = self.get_all_questions_as_list()
         self.questions_dataframe = pd.DataFrame(self.questions)
+
+    @property
+    def intermediates_folder_path(self):
+        return str(Path(self.dataset_folder_path).joinpath("intermediates"))
+
+    def video_path(self, video_index: int) -> str:
+        files = glob.glob(self.intermediates_folder_path + f"*/{video_index:06d}.mpg", recursive=True)
+        if len(files) == 0:
+            raise FileNotFoundError(f"'{video_index:06d}.mpg' not found in the dataset folder.")
+        return files[0]
+
+    def simulation_output_file_path(self, video_index: int) -> str:
+        files = glob.glob(self.intermediates_folder_path + f"*/{video_index:06d}.json", recursive=True)
+        if len(files) == 0:
+            raise FileNotFoundError(f"'{video_index:06d}.json' not found in the dataset folder.")
+        return files[0]
+
+    def questions_output_file_path(self, video_index: int) -> str:
+        files = glob.glob(self.intermediates_folder_path + f"*/qa_{video_index:06d}.json", recursive=True)
+        if len(files) == 0:
+            raise FileNotFoundError(f"'qa_{video_index:06d}.json' not found in the dataset folder.")
+        return files[0]
 
     def get_answer_type_for_answer(self, answer: str) -> str:
         return ("Boolean" if answer in ["False", "True"]

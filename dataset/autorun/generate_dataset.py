@@ -49,9 +49,9 @@ class Config(object):
         self.dataset_size = config_dict['dataset_size']
         self.executable_path = os.path.abspath(config_dict['executable_path']).replace("\\", "/")
         self.output_folder_path = os.path.abspath(config_dict['output_folder_path']).replace("\\", "/")
-        self.test_set_ratio = config_dict['test_set_ratio']
-        self.validation_set_ratio = config_dict['validation_set_ratio']
-        self.train_set_ratio = config_dict['train_set_ratio']
+        self.test_set_ratio = config_dict['split_ratios']['test']
+        self.validation_set_ratio = config_dict['split_ratios']['validation']
+        self.train_set_ratio = config_dict['split_ratios']['train']
         self.sim_ids_for_each_split = config_dict['sim_ids_for_each_split']
         self.simulation_configs = config_dict['simulation_configs']
         self.offline = config_dict['offline']
@@ -66,9 +66,11 @@ def init_args():
           "dataset_size": 1000,
           "executable_path": "../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
           "output_folder_path": "dataset1000/",
-          "train_set_ratio": 0.6,
-          "validation_set_ratio": 0.2,
-          "test_set_ratio": 0.2,
+          "split_ratios": {
+            "train": 0.5,
+            "validation": 0.3,
+            "test": 0.2
+          },
           "sim_ids_for_each_split": {
             "train": [1], 
             "validation": [1,2],

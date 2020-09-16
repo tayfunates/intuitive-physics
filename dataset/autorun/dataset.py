@@ -1,6 +1,9 @@
 import json
 import os
 import glob
+import subprocess
+import sys
+import traceback
 from pathlib import Path
 from collections import defaultdict
 
@@ -9,12 +12,19 @@ from colour import Color
 import matplotlib.pyplot as plt
 import numpy as np
 
+from autorun import variation_run
+from autorun.simulation_runner import SimulationRunner
+from svqa import generate_questions
+
 
 def write_to_file(file_path, content):
     with open(file_path, "w") as f:
         f.write(content)
         f.close()
 
+
+def run_simulation(exec_path: str, controller_json_path: str):
+    subprocess.call(f"{exec_path} {controller_json_path}", shell=True, universal_newlines=True)
 
 class Funnel:
     def __init__(self, lst: list):
@@ -37,10 +47,93 @@ class SVQADataset:
         self.dataset_json = json.load(open(f"{dataset_folder_path}/dataset.json"))
         self.questions = self.get_all_questions_as_list()
         self.questions_dataframe = pd.DataFrame(self.questions)
+        self.max_video_index = None
+
+    def generate_new_restricted_sample(self, simulation_id: str, answers_needed: dict) -> dict:
+        # TODO: Breakup and refactor this function
+        video_index = self.get_last_video_index() + 1
+
+        output_folder_path = f"{self.dataset_folder_path}/append"
+        os.makedirs(output_folder_path, exist_ok=True)
+
+        controller_json_path = f"{output_folder_path}/controller_{video_index:06d}.json"
+        output_json_path = f"{output_folder_path}/output_{video_index:06d}.json"
+        with open(controller_json_path, 'w') as controller_file:
+            # TODO: Place wxh and step count here
+            json.dump(
+                json.loads(f"""{{
+                                   "simulationID": {int(simulation_id)},
+                                   "offline": {str(False).lower()},
+                                   "outputVideoPath": "{str(Path(self.generate_video_path(video_index)).resolve().as_posix())}",
+                                   "outputJSONPath": "{str(Path(output_json_path).resolve().as_posix())}",
+                                   "width":  256,
+                                   "height": 256,
+                                   "inputScenePath": "",
+                                   "stepCount": 600
+                               }}"""),
+                controller_file,
+                indent=4
+            )
+
+        executable_path = str(Path("../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").resolve().as_posix())
+        run_simulation(executable_path, controller_json_path)
+
+        # Run its variations.
+        variations_output_path = self.generate_simulation_output_file_path(video_index)
+        variation_run.run_variations(variation_run.init_args(['-exec', executable_path,
+                                                              '-c', controller_json_path,
+                                                              '-p', output_json_path,
+                                                              '-o', variations_output_path]))
+
+        questions_file_path = self.generate_questions_output_file_path(video_index)
+
+        # Generate questions.
+        try:
+            questions = generate_questions.main(
+                generate_questions.parser.parse_args(['--input-scene-file', variations_output_path,
+                                                      '--output-questions-file', questions_file_path,
+                                                      '--metadata-file', '../svqa/metadata.json',
+                                                      '--synonyms-json', '../svqa/synonyms.json',
+                                                      '--template-dir', '../svqa/SVQA_1.0_templates',
+                                                      '--restrict-template-count-per-video', False,
+                                                      '--print-stats', False,
+                                                      '--excluded-task-ids', None]))
+        except Exception as e:
+            traceback.print_exception(type(e), e, e.__traceback__)
+
+
+        acceptable_answers = list(range(3, 50))
+
+
+        qa_json = json.load(open(questions_file_path))
+        new_qa_json = {}
+        new_qa_json["info"] = qa_json["info"]
+        new_qa_json["questions"] = []
+        for question in qa_json["questions"]:
+            tid = f"{question['template_filename'].split('.')[0]}_{question['question_family_index']}"
+            if tid in answers_needed[simulation_id]:
+                answers = list(answers_needed[simulation_id][tid].values())[0]
+                if str(question["answer"]) in answers.keys():
+                    if answers[str(question["answer"])] > 0:
+                        answers[str(question["answer"])] -= 1
+                        new_qa_json["questions"].append(question)
+                elif question["answer"] in acceptable_answers:
+                    new_qa_json["questions"].append(question)
+
+        return answers_needed
+
+    def get_last_video_index(self):
+        if self.max_video_index is None:
+            max_index = 0
+            for question in self.questions:
+                if max_index < question["video_index"]:
+                    max_index = question["video_index"]
+            self.max_video_index = max_index
+        return self.max_video_index
 
     @property
     def intermediates_folder_path(self):
-        return str(Path(self.dataset_folder_path).joinpath("intermediates"))
+        return str(Path(self.dataset_folder_path).joinpath("intermediates").as_posix())
 
     def generate_video_path(self, video_index: int):
         return self.intermediates_folder_path + f"/{video_index:06d}.mpg"

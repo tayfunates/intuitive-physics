@@ -42,6 +42,15 @@ class SVQADataset:
     def intermediates_folder_path(self):
         return str(Path(self.dataset_folder_path).joinpath("intermediates"))
 
+    def generate_video_path(self, video_index: int):
+        return self.intermediates_folder_path + f"/{video_index:06d}.mpg"
+
+    def generate_simulation_output_file_path(self, video_index: int):
+        return self.intermediates_folder_path + f"/{video_index:06d}.json"
+
+    def generate_questions_output_file_path(self, video_index: int):
+        return self.intermediates_folder_path + f"/{video_index:06d}.json"
+
     def video_path(self, video_index: int) -> str:
         files = glob.glob(self.intermediates_folder_path + f"*/{video_index:06d}.mpg", recursive=True)
         if len(files) == 0:

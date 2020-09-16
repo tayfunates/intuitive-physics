@@ -6,8 +6,8 @@ from autorun.dataset import SVQADataset, Funnel
 
 class DatasetStatistics:
 
-    def __init__(self, dataset_folder_path: str, metadata_file_path: str):
-        self.dataset = SVQADataset(dataset_folder_path, metadata_file_path)
+    def __init__(self, dataset: SVQADataset):
+        self.dataset = dataset
         self.answer_freq_per_tid_and_sid = None
         self.answer_freq_per_sid = None
         self.answer_freq_per_tid = None
@@ -107,7 +107,9 @@ class DatasetInspector:
         self.dataset = stats.dataset
 
     def inspect_tid_and_sid_versus_answer_balance(self):
-
+        unique_answers = self.dataset.get_unique_values("answer")
+        # TODO: Include 0 count answers in tidsid...
+        unique_answers = [answer for answer in unique_answers if answer not in [str(i) for i in range(3, 50)]]
         dict_of_needed_answers = {}
 
         for row in self.stats.answer_freq_per_tid_and_sid:
@@ -134,6 +136,12 @@ class DatasetInspector:
                 if answer_with_max_count["answer"] != answer:
                     dict_of_needed_answers[simulation_id][template_id][answer_type][answer] \
                         = answer_with_max_count["count"] - answer_obj["count"]
+
+            for answer in unique_answers:
+                if self.dataset.get_answer_type_for_answer(answer) == answer_type:
+                    if answer not in dict_of_needed_answers[simulation_id][template_id][answer_type].keys():
+                        dict_of_needed_answers[simulation_id][template_id][answer_type][answer] = answer_with_max_count["count"]
+
         return dict_of_needed_answers
 
 

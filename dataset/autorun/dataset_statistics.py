@@ -1,12 +1,13 @@
 from collections import defaultdict
+from typing import List
 
 from autorun.dataset import SVQADataset, Funnel
 
 
 class DatasetStatistics:
 
-    def __init__(self, dataset_file_path: str, metadata_file_path: str):
-        self.dataset = SVQADataset(dataset_file_path, metadata_file_path)
+    def __init__(self, dataset_folder_path: str, metadata_file_path: str):
+        self.dataset = SVQADataset(dataset_folder_path, metadata_file_path)
         self.answer_freq_per_tid_and_sid = None
         self.answer_freq_per_sid = None
         self.answer_freq_per_tid = None
@@ -22,10 +23,10 @@ class DatasetStatistics:
         return counts
 
     def generate_all_stats(self):
-        return self.generate_stat__answer_per_tid_and_sid()\
-                .generate_stat__answer_frequencies_per_sid()\
-                .generate_stat__answer_per_template()\
-                .generate_stat__answer_frequencies()
+        return self.generate_stat__answer_per_tid_and_sid() \
+            .generate_stat__answer_frequencies_per_sid() \
+            .generate_stat__answer_per_template() \
+            .generate_stat__answer_frequencies()
 
     def generate_stat__answer_per_template(self):
         answer_freq_v_template_id = []
@@ -97,6 +98,43 @@ class DatasetStatistics:
         answer_counts = DatasetStatistics.counts_from_question_list(self.dataset.questions, "answer")
         self.answer_freq_total = answer_counts
         return self
+
+
+class DatasetInspector:
+
+    def __init__(self, stats: DatasetStatistics):
+        self.stats = stats
+        self.dataset = stats.dataset
+
+    def inspect_tid_and_sid_versus_answer_balance(self):
+
+        dict_of_needed_answers = {}
+
+        for row in self.stats.answer_freq_per_tid_and_sid:
+            simulation_id = row["simulation_id"]
+            template_id = row["template_id"]
+            answer_type = row["answer_type"]
+            if simulation_id not in dict_of_needed_answers:
+                dict_of_needed_answers[simulation_id] = {}
+            if template_id not in dict_of_needed_answers[simulation_id]:
+                dict_of_needed_answers[simulation_id][template_id] = {}
+            if answer_type not in dict_of_needed_answers:
+                dict_of_needed_answers[simulation_id][template_id][answer_type] = {}
+
+            answers = Funnel(list(self.stats.answer_freq_per_tid_and_sid)) \
+                .filter(lambda x: x["template_id"] == template_id) \
+                .filter(lambda x: x["simulation_id"] == simulation_id) \
+                .filter(lambda x: x["answer_type"] == answer_type) \
+                .get_result()
+
+            answer_with_max_count = max(answers, key=lambda x: x["count"])
+
+            for answer_obj in answers:
+                answer = answer_obj["answer"]
+                if answer_with_max_count["answer"] != answer:
+                    dict_of_needed_answers[simulation_id][template_id][answer_type][answer] \
+                        = answer_with_max_count["count"] - answer_obj["count"]
+        return dict_of_needed_answers
 
 
 if __name__ == '__main__':

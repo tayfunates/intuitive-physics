@@ -9,6 +9,12 @@ from autorun.simulation_runner import SimulationRunner
 from deepdiff import DeepDiff
 
 
+"""
+TODO: Split
+"""
+
+
+
 class DatasetBalancer:
     """
     Balances the dataset by regenerating questions and videos.
@@ -54,3 +60,8 @@ class DatasetBalancer:
                 if number_of_video_tries >= video_generation_max_try:
                     break
 
+
+if __name__ == '__main__':
+    dataset = SVQADataset("out/Dataset_250_110820", "../svqa/metadata.json")
+    balancer = DatasetBalancer(dataset)
+    balancer.start_balancing()

@@ -5,6 +5,5 @@ controllers/
 .idea/
 venv/
 *cache*
-dataset*
-!dataset_utils.py
-!dataset_gen_config.json
+out/
+*.zip

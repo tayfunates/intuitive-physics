@@ -146,7 +146,12 @@ class DatasetInspector:
 
 
 if __name__ == '__main__':
-    dataset_stats = DatasetStatistics("out/Dataset_250_110820/dataset.json", "../svqa/metadata.json")
+    dataset = SVQADataset("out/Dataset_250_110820", "../svqa/metadata.json")
+    dataset_stats = DatasetStatistics(dataset)
 
     dataset_stats = dataset_stats.generate_all_stats()
+
+    inspector = DatasetInspector(dataset_stats)
+    d = inspector.inspect_tid_and_sid_versus_answer_balance()
+
     print("Done")

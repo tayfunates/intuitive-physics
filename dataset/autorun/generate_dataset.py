@@ -13,7 +13,7 @@ import logging
 
 import autorun.variation_run as variation_run
 import svqa.generate_questions as generate_questions
-from autorun.dataset import DatasetUtils
+#from autorun.dataset import DatasetUtils
 
 """
 Generates a dataset that contains simulation outputs with variations and their videos.
@@ -323,6 +323,49 @@ def dump_dataset(config: Config, splits=None):
         indent=2
     )
 
+
+"""
+class DatasetGenerator:
+    def __init__(self, config: Config):
+        self.config = config
+
+    def create_folders(self):
+        os.makedirs(self.config.output_folder_path, exist_ok=True)
+
+        dataset = json.loads("[]")
+
+        json.dump(
+            dataset,
+            open(f"{self.config.output_folder_path}/dataset.json", "w"),
+            indent=2
+        )
+
+        for sim in self.config.simulation_configs:
+            os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/debug", exist_ok=True)
+            os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/simulations", exist_ok=True)
+            os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/questions", exist_ok=True)
+            os.makedirs(f"{self.config.output_folder_path}/videos/sid_{sim['id']}", exist_ok=True)
+
+    def generate(self):
+        # To measure remaining time.
+        start_time = time.time()
+        times = np.array([])
+
+        state_file_path = f"{self.config.output_folder_path}/dataset_generation_state"
+        start = 0
+        if os.path.exists(state_file_path):
+            with open(state_file_path, "r") as state_file:
+                start = int(state_file.read())
+            logging.info(f"Dataset generation state file found at output folder path, continuing from {start}...")
+
+
+
+
+
+class DatasetSplitter:
+    def __init__(self, config: Config):
+        pass
+"""
 
 def main(args):
     logging.basicConfig(

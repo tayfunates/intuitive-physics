@@ -4,6 +4,7 @@ import logging
 import sys
 
 from autorun.dataset import SVQADataset, DatasetStatisticsExporter
+from autorun.dataset_statistics import DatasetStatistics
 
 
 def init_args():
@@ -35,11 +36,12 @@ if __name__ == '__main__':
     logging.info(f"Reading dataset from {args.dataset_file_path}")
     dataset_obj = SVQADataset(args.dataset_file_path, args.metadata_file_path)
 
-    stats = DatasetStatisticsExporter(dataset_obj, export_png=True)
+    stats = DatasetStatistics(dataset_obj).generate_all_stats()
+    exporter = DatasetStatisticsExporter(stats, export_png=True)
 
     logging.info(f"Generating statistics: Answer frequencies per template ID")
-    stats.generate_stat__answer_per_template()
+    exporter.generate_chart__answer_per_template()
     logging.info(f"Generating statistics: Template ID frequencies per simulation ID")
-    stats.generate_stat__template_per_sim_id()
+    exporter.generate_chart__template_per_sim_id()
     logging.info(f"Generating statistics: Answer frequencies in the dataset")
-    stats.generate_stat__answer_frequencies()
+    exporter.generate_chart__answer_frequencies()

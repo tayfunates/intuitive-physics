@@ -220,19 +220,21 @@ class SVQADataset:
         return json.dumps(dataset_obj.dataset_json)
 
     def generate_statistics(self, output_folder):
-        stats = DatasetStatisticsExporter(self, export_png=True, output_folder=output_folder)
+        stats = DatasetStatistics(self)
+        stats.generate_all_stats()
+        exporter = DatasetStatisticsExporter(stats, export_png=True, output_folder=output_folder)
 
         import logging
         logging.info(f"Generating statistics: Answer frequencies per template ID")
-        stats.generate_stat__answer_per_template()
+        exporter.generate_chart__answer_per_template()
         logging.info(f"Generating statistics: Template ID frequencies per simulation ID")
-        stats.generate_stat__template_per_sim_id()
+        exporter.generate_chart__template_per_sim_id()
         logging.info(f"Generating statistics: Answer frequencies in the dataset")
-        stats.generate_stat__answer_frequencies()
+        exporter.generate_chart__answer_frequencies()
         logging.info(f"Generating statistics: Answer frequencies per simulation ID")
-        stats.generate_stat__answer_frequencies_per_sim_id()
+        exporter.generate_chart__answer_frequencies_per_sim_id()
         logging.info(f"Generating statistics: Answer frequencies per TID and SID")
-        stats.generate_stat__answer_per_template_and_simulation()
+        exporter.generate_chart__answer_per_template_and_simulation()
 
 
 class DatasetStatisticsExporter:
@@ -310,25 +312,35 @@ class DatasetStatisticsExporter:
 
         self.generate_pie_chart(title, counts, labels=answers_sorted, colors=colors_rgb, explodes=explodes)
 
-    def generate_stat__answer_per_template(self):
+    def generate_chart__answer_per_template(self):
         df = pd.DataFrame(self.stats.answer_freq_per_tid)
         write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID.csv", df.to_csv())
+        for tid in self.stats.map_of_tid_to_answer_freqs:
+            self.generate_stat__answer_counts(self.stats.map_of_tid_to_answer_freqs[tid],  f'Template ID={tid}')
 
-    def generate_stat__answer_per_template_and_simulation(self):
+    def generate_chart__answer_per_template_and_simulation(self):
         df = pd.DataFrame(self.stats.answer_freq_per_tid_and_sid)
         write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID and sim ID.csv", df.to_csv())
+        for key in self.stats.map_of_sid_tid_pairs_to_answer_freqs:
+            tid = key[1]
+            sid = key[0]
+            self.generate_stat__answer_counts(self.stats.map_of_sid_tid_pairs_to_answer_freqs[key], f'SID={sid}-TID={tid}')
 
-    def generate_stat__answer_frequencies_per_sim_id(self):
+    def generate_chart__answer_frequencies_per_sim_id(self):
         df = pd.DataFrame(self.stats.answer_freq_per_sid)
         write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies for each simulation ID.csv",
                       df.to_csv())
+        for sid in self.stats.map_of_sid_to_answer_freqs:
+            self.generate_stat__answer_counts(self.stats.map_of_sid_to_answer_freqs[sid],  f'Answer frequencies for Simulation ID={sid}')
 
-    def generate_stat__template_per_sim_id(self):
+    def generate_chart__template_per_sim_id(self):
         df = pd.DataFrame(self.stats.generate_stat__template_per_sid())
         write_to_file(f"{self.output_folder}{os.path.sep}Template ID frequencies for each simulation type.csv",
                       df.to_csv())
+        for sid in self.stats.map_of_sid_to_tid_freqs:
+            self.generate_stat__answer_counts(self.stats.map_of_sid_to_tid_freqs[sid], f'Template ID frequencies for Simulation ID={sid}')
 
-    def generate_stat__answer_frequencies(self):
+    def generate_chart__answer_frequencies(self):
         answer_counts = self.stats.answer_freq_total
         self.generate_stat__answer_counts(answer_counts, f'Answer frequencies - Total={sum(answer_counts.values())}')
 

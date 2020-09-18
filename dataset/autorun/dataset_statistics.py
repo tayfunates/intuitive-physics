@@ -13,6 +13,10 @@ class DatasetStatistics:
         self.answer_freq_per_tid = None
         self.answer_freq_total = None
         self.template_id_freq_per_sid = None
+        self.map_of_sid_tid_pairs_to_answer_freqs = {}
+        self.map_of_sid_to_answer_freqs = {}
+        self.map_of_tid_to_answer_freqs = {}
+        self.map_of_sid_to_tid_freqs = {}
 
     @staticmethod
     def counts_from_question_list(question_list: list, column: str) -> dict:
@@ -39,6 +43,7 @@ class DatasetStatistics:
                 .get_result()
 
             answer_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
+            self.map_of_tid_to_answer_freqs[tid] = answer_counts
             for answer, count in answer_counts.items():
                 answer_freq_v_template_id.append({"template_id": tid,
                                                   "answer": answer,
@@ -58,6 +63,7 @@ class DatasetStatistics:
                     .get_result()
 
                 answer_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
+                self.map_of_sid_tid_pairs_to_answer_freqs[(sid, tid)] = answer_counts
                 for answer, count in answer_counts.items():
                     answer_freq_per_tid_and_sid.append({"template_id": tid,
                                                         "simulation_id": sid,
@@ -76,6 +82,7 @@ class DatasetStatistics:
                 .get_result()
 
             answer_id_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
+            self.map_of_tid_to_answer_freqs[sid] = answer_id_counts
             for answer, count in answer_id_counts.items():
                 sim_id_v_answer_freq.append({"simulation_id": sid,
                                              "answer": answer,
@@ -93,6 +100,7 @@ class DatasetStatistics:
                 .get_result()
 
             template_id_counts = DatasetStatistics.counts_from_question_list(questions, "template_id")
+            self.map_of_sid_to_tid_freqs[sid] = template_id_counts
             for tid, count in template_id_counts.items():
                 sim_id_v_template_freq.append({"simulation_id": sid, "template_id": tid, "count": count})
         self.template_id_freq_per_sid = sim_id_v_template_freq

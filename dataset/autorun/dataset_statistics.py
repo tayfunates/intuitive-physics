@@ -12,6 +12,7 @@ class DatasetStatistics:
         self.answer_freq_per_sid = None
         self.answer_freq_per_tid = None
         self.answer_freq_total = None
+        self.template_id_freq_per_sid = None
 
     @staticmethod
     def counts_from_question_list(question_list: list, column: str) -> dict:
@@ -26,7 +27,8 @@ class DatasetStatistics:
         return self.generate_stat__answer_per_tid_and_sid() \
             .generate_stat__answer_frequencies_per_sid() \
             .generate_stat__answer_per_template() \
-            .generate_stat__answer_frequencies()
+            .generate_stat__answer_frequencies() \
+            .generate_stat__template_per_sid()
 
     def generate_stat__answer_per_template(self):
         answer_freq_v_template_id = []
@@ -93,6 +95,8 @@ class DatasetStatistics:
             template_id_counts = DatasetStatistics.counts_from_question_list(questions, "template_id")
             for tid, count in template_id_counts.items():
                 sim_id_v_template_freq.append({"simulation_id": sid, "template_id": tid, "count": count})
+        self.template_id_freq_per_sid = sim_id_v_template_freq
+        return self
 
     def generate_stat__answer_frequencies(self):
         answer_counts = DatasetStatistics.counts_from_question_list(self.dataset.questions, "answer")

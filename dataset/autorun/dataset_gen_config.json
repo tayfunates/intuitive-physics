@@ -2,9 +2,11 @@
   "dataset_size": 3000,
   "executable_path": "../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
   "output_folder_path": "Dataset_3000_270820",
-  "train_set_ratio": 0.5,
-  "validation_set_ratio": 0.3,
-  "test_set_ratio": 0.2,
+  "split_ratios": {
+    "train": 0.5,
+    "validation": 0.3,
+    "test": 0.2
+  },
   "offline": true,
   "sim_ids_for_each_split": {
     "train": null,

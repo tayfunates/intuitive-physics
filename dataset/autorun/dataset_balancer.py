@@ -1,149 +1,63 @@
-import argparse
-import logging
-from autorun.dataset import SVQADataset, DatasetUtils, Funnel, DatasetStatistics
-import pandas as pd
+import copy
+
+from deepdiff import DeepDiff
+
+from autorun.dataset import SVQADataset
+from autorun.dataset_statistics import DatasetStatistics, DatasetInspector
+
+"""
+TODO: Split
+"""
 
 
 class DatasetBalancer:
-    def __init__(self, dataset: SVQADataset, output_file_path):
-        self.__dataset = SVQADataset(dataset.dataset_json_path, dataset.metadata_json_path)
-        self.questions = list(dataset.questions)
-        self.output_file_path = output_file_path
+    """
+    Balances the dataset by regenerating questions and videos.
+    """
 
-    def get_unique_values(self, column: str) -> set:
-        return set(pd.DataFrame(self.questions)[column].to_list())
+    def __init__(self, dataset: SVQADataset):
+        """
+        1. Generate statistics.
+        2. Determine the weak answers in a sid-tid pair.
+        3. Run simulation and its variations.
+        4. Generate questions until it favors the balance.
+        5. If not, regenerate video, and ask questions.
+        6. Return to 1 for this particular video.
+        """
+        self.dataset = dataset
+        self.stats = DatasetStatistics(dataset)
+        self.inspector = DatasetInspector(self.stats)
 
-    @staticmethod
-    def answer_discard_strategy(class_name: str, val):
-        if class_name == "answer":
-            return val in range(3, 11)
-        return False
+    def determine_answers_needed(self) -> dict:
+        self.inspector.stats.generate_stat__answer_per_tid_and_sid()
+        return self.inspector.inspect_tid_and_sid_versus_answer_balance()
 
+    def start_balancing(self,
+                        video_generation_max_try: int = 30):
+        answers_needed = self.determine_answers_needed()
+        prev_answers_needed = copy.deepcopy(answers_needed)
 
-    def balance_answers_within_answer_types(self):
-        questions = []
+        number_of_video_tries = 0
 
-        answer_types = self.get_unique_values("answer_type")
-        for answer_type in answer_types:
-            questions_with_this_answer_type = Funnel(self.questions) \
-                .filter(lambda x: x["answer_type"] == answer_type) \
-                .get_result()
-            questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_answer_type, "answer",
-                                                                        discard_strategy_fn=DatasetBalancer.answer_discard_strategy))
+        for sid in answers_needed:
+            while True:
+                new_answers_needed = self.dataset.generate_new_restricted_sample(sid,
+                                                                                 copy.deepcopy(prev_answers_needed))
 
-        self.questions = questions
-        return self
+                diff = DeepDiff(new_answers_needed, prev_answers_needed, ignore_order=True)
 
-    def balance_answers_within_each_simulation_id(self):
-        questions = []
-        answer_types = self.get_unique_values("answer_type")
-        sim_ids = self.get_unique_values("simulation_id")
-        for answer_type in answer_types:
-            questions_with_this_answer_type = Funnel(self.questions) \
-                .filter(lambda x: x["answer_type"] == answer_type) \
-                .get_result()
-            for sid in sim_ids:
-                questions_with_this_simulation_id = Funnel(questions_with_this_answer_type) \
-                    .filter(lambda x: x["simulation_id"] == sid) \
-                    .get_result()
-                questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_simulation_id, "answer",
-                                                                            discard_strategy_fn=DatasetBalancer.answer_discard_strategy))
-        self.questions = questions
-        return self
+                if prev_answers_needed == new_answers_needed:
+                    number_of_video_tries += 1
+                else:
+                    number_of_video_tries = 0
 
-    def balance_answers_within_each_template_and_simulation_ids(self):
-        questions = []
-        sim_ids = self.get_unique_values("simulation_id")
-        template_ids = self.get_unique_values("template_id")
-        for sid in sim_ids:
-            for template_id in template_ids:
-                questions_with_this_template_id = Funnel(self.questions) \
-                    .filter(lambda x: x["template_id"] == template_id and x["simulation_id"] == sid) \
-                    .get_result()
-                undersampled = DatasetUtils.imblearn_random_undersampling(questions_with_this_template_id, "answer",
-                                                                          discard_strategy_fn=DatasetBalancer.answer_discard_strategy)
-                questions.extend(undersampled)
+                prev_answers_needed = copy.deepcopy(new_answers_needed)
 
-        self.questions = questions
-        return self
-
-    def balance_answers_within_each_template_id(self):
-        questions = []
-
-        template_ids = self.get_unique_values("template_id")
-        for template_id in template_ids:
-            questions_with_this_template_id = Funnel(self.questions) \
-                .filter(lambda x: x["template_id"] == template_id) \
-                .get_result()
-            questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_template_id, "answer",
-                                                                        discard_strategy_fn=DatasetBalancer.answer_discard_strategy))
-
-        self.questions = questions
-        return self
-
-    def balance_template_ids_within_each_simulation_id(self):
-        questions = []
-
-        simulation_ids = self.get_unique_values("simulation_id")
-        for sid in simulation_ids:
-            questions_with_this_sid = Funnel(self.questions) \
-                .filter(lambda x: x["simulation_id"] == sid) \
-                .get_result()
-            questions.extend(DatasetUtils.imblearn_random_undersampling(questions_with_this_sid, "template_id"))
-
-        self.questions = questions
-        return self
-
-    def get_result(self) -> list:
-        return self.questions
-
-    def dump(self):
-        with open(self.output_file_path, "w") as out_file:
-            out_file.write(SVQADataset.convert_to_original_dataset_json(self.__dataset, self.questions))
-            out_file.close()
-        return
-
-
-def init_args():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('-o', '--output-dataset-file-path', action='store', dest='output_dataset_file_path',
-                        required=True,
-                        help="""
-                                    File path to balanced dataset JSON file.
-                               """)
-
-    parser.add_argument('-d', '--dataset-file-path', action='store', dest='dataset_file_path', required=True,
-                        help="""
-                                    File path to a dataset JSON file.
-                               """)
-
-    parser.add_argument('-m', '--metadata-file-path', action='store', dest='metadata_file_path', required=True,
-                        help="""
-                                    File path to metadata.json.
-                               """)
-
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
-
-    return parser.parse_args()
+                if number_of_video_tries >= video_generation_max_try:
+                    break
 
 
 if __name__ == '__main__':
-    args = init_args()
-
-    logging.basicConfig(
-        level=logging.INFO,
-        format='[%(levelname)s]\t%(asctime)s\t%(message)s')
-
-    logging.info(f"Reading dataset from {args.dataset_file_path}")
-    dataset_obj = SVQADataset(args.dataset_file_path, args.metadata_file_path)
-    dataset_obj.generate_statistics(output_folder="imbalanced")
-
-    logging.info(f"Performing various under-sampling operations on dataset...")
-    DatasetBalancer(dataset_obj, args.output_dataset_file_path)\
-        .balance_answers_within_each_template_and_simulation_ids()\
-        .dump()
-    balanced_dataset = SVQADataset(args.output_dataset_file_path, args.metadata_file_path)
-
-
-    balanced_dataset.generate_statistics(output_folder="balanced")
+    dataset = SVQADataset("out/Dataset_250_110820", "../svqa/metadata.json")
+    balancer = DatasetBalancer(dataset)
+    balancer.start_balancing()

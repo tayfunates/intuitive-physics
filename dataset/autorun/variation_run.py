@@ -1,14 +1,11 @@
-
 # Takes 1 input that is the output of the simulation.
 # Produces variations of it (number of object + 1)
 
-import sys
 import argparse
-import json
-import subprocess
-import os
-import glob
 import copy
+import json
+import os
+
 from autorun.generate_dataset import run_simulation
 from svqa.causal_graph import CausalGraph
 
@@ -24,9 +21,10 @@ def new_output_json(output: json, i: int):
 
 
 def create_variations(path: str, controller: json, output: json) -> list:
-    start_scene_state = output["scene_states"][0] #best to check step count
+    start_scene_state = output["scene_states"][0]  # best to check step count
     objects = start_scene_state["scene"]["objects"]
-    variations = [(objects[i]["uniqueID"], new_output_json(output, i)) for i in range(len(objects)) if objects[i]["bodyType"] != 0] #0 for static objects
+    variations = [(objects[i]["uniqueID"], new_output_json(output, i)) for i in range(len(objects)) if
+                  objects[i]["bodyType"] != 0]  # 0 for static objects
     controller_paths = []
     for i in range(len(variations)):
         output = variations[i]
@@ -61,7 +59,8 @@ def is_equal_without_step(event1, event2):
     return set(event1["objects"]) == set(event2["objects"]) and event1["type"] == event2["type"]
 
 
-def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare: CausalGraph, object_props: dict, discarded_object_id: int):
+def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare: CausalGraph, object_props: dict,
+                             discarded_object_id: int):
     src_events = causal_graph_src.events
     compare_events = causal_graph_compare.events
 
@@ -71,7 +70,7 @@ def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare
     res = []
     for src_event in src_events:
         objects_of_event = src_event['objects']
-        #discard events including object to be discarded
+        # discard events including object to be discarded
         if discarded_object_id in objects_of_event:
             continue
         found_discarded_shape = False
@@ -87,7 +86,7 @@ def get_different_event_list(causal_graph_src: CausalGraph, causal_graph_compare
             if is_equal_without_step(src_event, compare_event):
                 found_equal = True
                 break
-        if not found_equal :
+        if not found_equal:
             res.append(src_event["id"])
 
     return res
@@ -102,8 +101,12 @@ def write_enables_prevents(output_dict: dict):
     for removed_object_key in variation_outputs:
         removed_object_id = int(removed_object_key)
         variation_causal_graph = CausalGraph(variation_outputs[removed_object_key]["causal_graph"])
-        enables = get_different_event_list(original_causal_graph, variation_causal_graph, output_dict['original_video_output']['scene_states'][0]['scene']['objects'], removed_object_id)
-        prevents = get_different_event_list(variation_causal_graph, original_causal_graph, output_dict['original_video_output']['scene_states'][0]['scene']['objects'], removed_object_id)
+        enables = get_different_event_list(original_causal_graph, variation_causal_graph,
+                                           output_dict['original_video_output']['scene_states'][0]['scene']['objects'],
+                                           removed_object_id)
+        prevents = get_different_event_list(variation_causal_graph, original_causal_graph,
+                                            output_dict['original_video_output']['scene_states'][0]['scene']['objects'],
+                                            removed_object_id)
 
         output_dict_enables.extend([{removed_object_key: enabled_event_id} for enabled_event_id in enables])
         output_dict_prevents.extend([{removed_object_key: prevent_event_id} for prevent_event_id in prevents])
@@ -130,13 +133,13 @@ def run_variations(args):
 
 
 def init_args(arg_list=None):
-
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--path','--original-path', action='store', dest='path', required=True,
+    parser.add_argument('-p', '--path', '--original-path', action='store', dest='path', required=True,
                         help='Simulation\'s original output JSON path.')
     parser.add_argument('-c', '--controller-path', action='store', dest='controller_path', required=True,
                         help='Simulation\'s controller JSON path.')
-    parser.add_argument('-exec', '--executable-path', action='store', dest='exec_path', required=False, nargs='?', type=str,
+    parser.add_argument('-exec', '--executable-path', action='store', dest='exec_path', required=False, nargs='?',
+                        type=str,
                         default="\"../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed\"",
                         help='Testbed executable path.')
     parser.add_argument('-o', '--variations-output-path', action='store', dest='variations_output_path', required=True,
@@ -147,5 +150,6 @@ def init_args(arg_list=None):
 
 if __name__ == '__main__':
     args = init_args()
-    print(f"Executable path: '{args.exec_path}'\nController path: '{args.controller_path}'\nSimulation\'s output JSON path: '{args.path}'")
+    print(
+        f"Executable path: '{args.exec_path}'\nController path: '{args.controller_path}'\nSimulation\'s output JSON path: '{args.path}'")
     run_variations(args)

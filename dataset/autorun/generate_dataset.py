@@ -1,19 +1,20 @@
 import argparse
 import glob
 import json
+import logging
 import os
-import subprocess
 import pathlib
+import subprocess
 import sys
+import time
 import traceback
 
 import numpy as np
-import time
-import logging
 
 import autorun.variation_run as variation_run
 import svqa.generate_questions as generate_questions
-#from autorun.dataset import DatasetUtils
+
+# from autorun.dataset import DatasetUtils
 
 """
 Generates a dataset that contains simulation outputs with variations and their videos.
@@ -366,6 +367,7 @@ class DatasetSplitter:
     def __init__(self, config: Config):
         pass
 """
+
 
 def main(args):
     logging.basicConfig(

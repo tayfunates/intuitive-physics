@@ -1,9 +1,8 @@
-import sys
 import argparse
-import json
-import subprocess
-import os
 import glob
+import json
+import os
+import subprocess
 
 # This script runs a number of simulations, but it does not generate a dataset of videos-questions.
 # It may be used for debugging purposes.

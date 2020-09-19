@@ -1,13 +1,11 @@
 # Takes 1 input that is the output of the simulation.
 # Produces variations of it (number of object + 1)
 
-import sys
 import argparse
-import json
-import subprocess
-import os
-import glob
 import copy
+import json
+import os
+
 from autorun.generate_dataset import run_simulation
 from svqa.causal_graph import CausalGraph
 

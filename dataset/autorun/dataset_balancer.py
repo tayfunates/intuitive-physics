@@ -1,24 +1,20 @@
 import copy
-import os
-from abc import ABC, abstractmethod
-from typing import Tuple, List, Dict
+
+from deepdiff import DeepDiff
 
 from autorun.dataset import SVQADataset
 from autorun.dataset_statistics import DatasetStatistics, DatasetInspector
-from autorun.simulation_runner import SimulationRunner
-from deepdiff import DeepDiff
-
 
 """
 TODO: Split
 """
 
 
-
 class DatasetBalancer:
     """
     Balances the dataset by regenerating questions and videos.
     """
+
     def __init__(self, dataset: SVQADataset):
         """
         1. Generate statistics.
@@ -31,7 +27,6 @@ class DatasetBalancer:
         self.dataset = dataset
         self.stats = DatasetStatistics(dataset)
         self.inspector = DatasetInspector(self.stats)
-
 
     def determine_answers_needed(self) -> dict:
         self.inspector.stats.generate_stat__answer_per_tid_and_sid()
@@ -46,7 +41,8 @@ class DatasetBalancer:
 
         for sid in answers_needed:
             while True:
-                new_answers_needed = self.dataset.generate_new_restricted_sample(sid, copy.deepcopy(prev_answers_needed))
+                new_answers_needed = self.dataset.generate_new_restricted_sample(sid,
+                                                                                 copy.deepcopy(prev_answers_needed))
 
                 diff = DeepDiff(new_answers_needed, prev_answers_needed, ignore_order=True)
 

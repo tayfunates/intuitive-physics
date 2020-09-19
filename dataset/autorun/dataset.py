@@ -1,20 +1,18 @@
+import glob
 import json
 import os
-import glob
 import subprocess
-import sys
 import traceback
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
-import pandas as pd
-from colour import Color
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+from colour import Color
 
 from autorun import variation_run
 from autorun.dataset_statistics import DatasetStatistics
-from autorun.simulation_runner import SimulationRunner
 from svqa import generate_questions
 
 
@@ -26,6 +24,7 @@ def write_to_file(file_path, content):
 
 def run_simulation(exec_path: str, controller_json_path: str):
     subprocess.call(f"{exec_path} {controller_json_path}", shell=True, universal_newlines=True)
+
 
 class Funnel:
     def __init__(self, lst: list):
@@ -76,7 +75,8 @@ class SVQADataset:
                 indent=4
             )
 
-        executable_path = str(Path("../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").resolve().as_posix())
+        executable_path = str(
+            Path("../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").resolve().as_posix())
         run_simulation(executable_path, controller_json_path)
 
         # Run its variations.
@@ -102,9 +102,7 @@ class SVQADataset:
         except Exception as e:
             traceback.print_exception(type(e), e, e.__traceback__)
 
-
         acceptable_answers = list(range(3, 50))
-
 
         qa_json = json.load(open(questions_file_path))
         new_qa_json = {}
@@ -283,10 +281,14 @@ class DatasetStatisticsExporter:
 
         colors = []
         answers_sorted = []
-        counting_answers = [answer for answer in answers if self.stats.dataset.get_answer_type_for_answer(answer) == "Count"]
-        shape_answers = [answer for answer in answers if self.stats.dataset.get_answer_type_for_answer(answer) == "Shape"]
-        color_answers = [answer for answer in answers if self.stats.dataset.get_answer_type_for_answer(answer) == "Color"]
-        boolean_answers = [answer for answer in answers if self.stats.dataset.get_answer_type_for_answer(answer) == "Boolean"]
+        counting_answers = [answer for answer in answers if
+                            self.stats.dataset.get_answer_type_for_answer(answer) == "Count"]
+        shape_answers = [answer for answer in answers if
+                         self.stats.dataset.get_answer_type_for_answer(answer) == "Shape"]
+        color_answers = [answer for answer in answers if
+                         self.stats.dataset.get_answer_type_for_answer(answer) == "Color"]
+        boolean_answers = [answer for answer in answers if
+                           self.stats.dataset.get_answer_type_for_answer(answer) == "Boolean"]
 
         answers_sorted.extend(counting_answers)
         if len(counting_answers) > 0:
@@ -316,29 +318,33 @@ class DatasetStatisticsExporter:
         df = pd.DataFrame(self.stats.answer_freq_per_tid)
         write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID.csv", df.to_csv())
         for tid in self.stats.map_of_tid_to_answer_freqs:
-            self.generate_stat__answer_counts(self.stats.map_of_tid_to_answer_freqs[tid],  f'Template ID={tid}')
+            self.generate_stat__answer_counts(self.stats.map_of_tid_to_answer_freqs[tid], f'Template ID={tid}')
 
     def generate_chart__answer_per_template_and_simulation(self):
         df = pd.DataFrame(self.stats.answer_freq_per_tid_and_sid)
-        write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID and sim ID.csv", df.to_csv())
+        write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID and sim ID.csv",
+                      df.to_csv())
         for key in self.stats.map_of_sid_tid_pairs_to_answer_freqs:
             tid = key[1]
             sid = key[0]
-            self.generate_stat__answer_counts(self.stats.map_of_sid_tid_pairs_to_answer_freqs[key], f'SID={sid}-TID={tid}')
+            self.generate_stat__answer_counts(self.stats.map_of_sid_tid_pairs_to_answer_freqs[key],
+                                              f'SID={sid}-TID={tid}')
 
     def generate_chart__answer_frequencies_per_sim_id(self):
         df = pd.DataFrame(self.stats.answer_freq_per_sid)
         write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies for each simulation ID.csv",
                       df.to_csv())
         for sid in self.stats.map_of_sid_to_answer_freqs:
-            self.generate_stat__answer_counts(self.stats.map_of_sid_to_answer_freqs[sid],  f'Answer frequencies for Simulation ID={sid}')
+            self.generate_stat__answer_counts(self.stats.map_of_sid_to_answer_freqs[sid],
+                                              f'Answer frequencies for Simulation ID={sid}')
 
     def generate_chart__template_per_sim_id(self):
         df = pd.DataFrame(self.stats.generate_stat__template_per_sid())
         write_to_file(f"{self.output_folder}{os.path.sep}Template ID frequencies for each simulation type.csv",
                       df.to_csv())
         for sid in self.stats.map_of_sid_to_tid_freqs:
-            self.generate_stat__answer_counts(self.stats.map_of_sid_to_tid_freqs[sid], f'Template ID frequencies for Simulation ID={sid}')
+            self.generate_stat__answer_counts(self.stats.map_of_sid_to_tid_freqs[sid],
+                                              f'Template ID frequencies for Simulation ID={sid}')
 
     def generate_chart__answer_frequencies(self):
         answer_counts = self.stats.answer_freq_total
@@ -431,6 +437,5 @@ class DatasetUtils:
 
     @staticmethod
     def dataset_as_list(dataset_json_path, metadata_json_path) -> list:
-       dataset = SVQADataset(dataset_json_path, metadata_json_path)
-       return dataset.questions
-
+        dataset = SVQADataset(dataset_json_path, metadata_json_path)
+        return dataset.questions

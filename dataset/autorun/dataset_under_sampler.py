@@ -1,7 +1,9 @@
 import argparse
 import logging
-from autorun.dataset import SVQADataset, DatasetUtils, Funnel, DatasetStatisticsExporter
+
 import pandas as pd
+
+from autorun.dataset import SVQADataset, DatasetUtils, Funnel
 
 
 class DatasetUnderSampler:
@@ -133,8 +135,8 @@ def balance_dataset_by_undersampling(args):
     dataset_obj.generate_statistics(output_folder="imbalanced")
 
     logging.info(f"Performing various under-sampling operations on dataset...")
-    DatasetUnderSampler(dataset_obj, args.output_dataset_file_path)\
-        .balance_answers_within_each_template_and_simulation_ids()\
+    DatasetUnderSampler(dataset_obj, args.output_dataset_file_path) \
+        .balance_answers_within_each_template_and_simulation_ids() \
         .dump()
     balanced_dataset = SVQADataset(args.output_dataset_file_path, args.metadata_file_path)
 

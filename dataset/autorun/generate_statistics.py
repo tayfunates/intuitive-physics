@@ -1,8 +1,6 @@
 import argparse
 import logging
 
-import sys
-
 from autorun.dataset import SVQADataset, DatasetStatisticsExporter
 from autorun.dataset_statistics import DatasetStatistics
 
@@ -26,7 +24,6 @@ def init_args():
 
 
 if __name__ == '__main__':
-
     args = init_args()
 
     logging.basicConfig(

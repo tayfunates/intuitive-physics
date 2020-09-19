@@ -257,5 +257,49 @@ exec_path = "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Te
 
 #run_simulation(exec_path, controller_json_path: str):
 
-x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
-combine()
+#x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
+#combine()
+
+
+
+def create_different_static_object(count):
+    for i in range(count):
+        run_simulation(exec_path, "/Users/cagatayyigit/Projects/SVQA-Box2D/Testbed/controller.json")
+
+#create_different_static_object(100)
+
+def mapFromTo(x,a,b,c,d):
+
+    """
+    x:input value;
+    a,b:input range
+    c,d:output range
+    y:return value
+
+    """
+    y = (x - a) / (b - a) * (d - c) + c
+    return int(y)
+
+
+def combine_statics():
+    files = os.listdir("/Users/cagatayyigit/Desktop/static_ss/")
+    all_images = []
+    for i in files:
+        if i != ".DS_Store":
+            all_images.append(get_transparent_image("/Users/cagatayyigit/Desktop/static_ss/" + str(i)))
+
+    size = len(all_images)
+    alpha_diff = int(255 / (size))
+    m1 = all_images[0]
+    i = 1
+    for img in all_images:
+        alpha = mapFromTo(i,1,size,0,255)
+        img.putalpha(alpha)
+        img= make_transparent(img)
+        m1.paste(img, (0, 0), img)
+        i += 1
+
+    m1.show()
+    m1.save("/Users/cagatayyigit/Desktop/result.png")
+
+combine_statics()

@@ -130,16 +130,15 @@ class SVQADataset:
         stats.generate_all_stats()
         exporter = DatasetStatisticsExporter(stats, export_png=True, output_folder=output_folder)
 
-        import logging
-        logging.info(f"Generating statistics: Answer frequencies per template ID")
+        logger.info(f"Generating statistics: Answer frequencies per template ID")
         exporter.generate_chart__answer_per_template()
-        logging.info(f"Generating statistics: Template ID frequencies per simulation ID")
+        logger.info(f"Generating statistics: Template ID frequencies per simulation ID")
         exporter.generate_chart__template_per_sim_id()
-        logging.info(f"Generating statistics: Answer frequencies in the dataset")
+        logger.info(f"Generating statistics: Answer frequencies in the dataset")
         exporter.generate_chart__answer_frequencies()
-        logging.info(f"Generating statistics: Answer frequencies per simulation ID")
+        logger.info(f"Generating statistics: Answer frequencies per simulation ID")
         exporter.generate_chart__answer_frequencies_per_sim_id()
-        logging.info(f"Generating statistics: Answer frequencies per TID and SID")
+        logger.info(f"Generating statistics: Answer frequencies per TID and SID")
         exporter.generate_chart__answer_per_template_and_simulation()
 
 
@@ -483,11 +482,11 @@ class QuestionGenerator:
         QuestionGeneratorScript.main(self.__args)
 
 
-class Config:
+class DatasetGenerationConfig:
     def __init__(self, config_dict):
         self.dataset_size = config_dict['dataset_size']
-        self.executable_path = os.path.abspath(config_dict['executable_path']).replace("\\", "/")
-        self.output_folder_path = os.path.abspath(config_dict['output_folder_path']).replace("\\", "/")
+        self.executable_path = str(Path(config_dict['executable_path']).resolve().as_posix())
+        self.output_folder_path = str(Path(config_dict['output_folder_path']).resolve().as_posix())
         self.test_set_ratio = config_dict['split_ratios']['test']
         self.validation_set_ratio = config_dict['split_ratios']['validation']
         self.train_set_ratio = config_dict['split_ratios']['train']
@@ -525,7 +524,7 @@ class DatasetGenerator:
       - dataset.json            (This json file contains all the video paths, and questions generated from the outputs.)
     """
 
-    def __init__(self, config: Config):
+    def __init__(self, config: DatasetGenerationConfig):
         self.config = config
         self.__state_file_path = f"{config.output_folder_path}/dataset_generation_state"
         self.__runner = SimulationRunner(self.config.executable_path)
@@ -588,7 +587,6 @@ class DatasetGenerator:
 
         # To measure remaining time.
         self.__start_time = time.time()
-        times = np.array([])
 
         self.make_directories()
 

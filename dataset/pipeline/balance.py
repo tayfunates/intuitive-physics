@@ -111,7 +111,7 @@ class DatasetInspector:
         self.stats = stats
         self.dataset = stats.dataset
 
-    def inspect_tid_and_sid_versus_answer_balance(self):
+    def inspect_tid_and_sid_versus_answer_balance(self) -> dict:
         unique_answers = self.dataset.get_unique_values("answer")
         # TODO: Include answers with 0 frequency...
         unique_answers = [answer for answer in unique_answers if answer not in [str(i) for i in range(3, 50)]]

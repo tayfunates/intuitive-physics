@@ -1,4 +1,5 @@
-
+import glob
+import os
 
 
 class DictUtils:
@@ -32,6 +33,15 @@ class FileUtils:
         with open(file_path, "w") as f:
             f.write(content)
             f.close()
+
+    @staticmethod
+    def delete_files(folder_path, *wildcards):
+        files_to_be_removed = []
+        for w in wildcards:
+            files_to_be_removed.extend([os.path.abspath(c) for c in glob.glob(f"{folder_path}/{w}")])
+
+        for path in files_to_be_removed:
+            os.remove(path) if os.path.exists(path) else None
 
 
 class Funnel:

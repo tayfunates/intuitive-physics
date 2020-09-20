@@ -2,6 +2,7 @@ import json
 import glob
 import os
 import subprocess
+import time
 import traceback
 from collections import defaultdict
 from pathlib import Path
@@ -12,7 +13,9 @@ import pandas as pd
 from colour import Color
 from loguru import logger
 
+from pipeline.simulation import SimulationRunner, SimulationInstance
 from pipeline.utils import FileUtils, Funnel
+import svqa.generate_questions as QuestionGeneratorScript
 
 
 class SVQADataset:
@@ -456,3 +459,217 @@ class DatasetStatisticsExporter:
     def generate_chart__answer_frequencies(self):
         answer_counts = self.stats.answer_freq_total
         self.generate_stat__answer_counts(answer_counts, f'Answer frequencies - Total={sum(answer_counts.values())}')
+
+
+class QuestionGenerator:
+
+    def __init__(self,
+                 input_scene_file_path: str,
+                 output_file_path: str,
+                 simulation_config: dict,
+                 instances_per_template=5):
+        self.__args = QuestionGeneratorScript.parser.parse_args(['--input-scene-file', input_scene_file_path,
+                                                                 '--output-questions-file', output_file_path,
+                                                                 '--metadata-file', '../svqa/metadata.json',
+                                                                 '--synonyms-json', '../svqa/synonyms.json',
+                                                                 '--template-dir', '../svqa/SVQA_1.0_templates',
+                                                                 '--restrict-template-count-per-video', False,
+                                                                 '--print-stats', False,
+                                                                 '--instances-per-template', instances_per_template,
+                                                                 '--excluded-task-ids',
+                                                                 simulation_config["excluded_task_ids"]])
+
+    def execute(self):
+        QuestionGeneratorScript.main(self.__args)
+
+
+class Config:
+    def __init__(self, config_dict):
+        self.dataset_size = config_dict['dataset_size']
+        self.executable_path = os.path.abspath(config_dict['executable_path']).replace("\\", "/")
+        self.output_folder_path = os.path.abspath(config_dict['output_folder_path']).replace("\\", "/")
+        self.test_set_ratio = config_dict['split_ratios']['test']
+        self.validation_set_ratio = config_dict['split_ratios']['validation']
+        self.train_set_ratio = config_dict['split_ratios']['train']
+        self.sim_ids_for_each_split = config_dict['sim_ids_for_each_split']
+        self.simulation_configs = config_dict['simulation_configs']
+        self.offline = config_dict['offline']
+
+
+class DatasetGenerator:
+    """
+    Generates a dataset that contains simulation outputs with variations and their videos.
+
+    Single data in the dataset is generated as follows:
+    - Run a simulation
+    - Run its variations
+    - Unify them under a single output file
+    - Generate question-answer pairs according to the output
+    - Merge the questions into a single file along with video paths.
+
+    - Dataset folder
+      - /intermediates          (A folder for intermediate outputs, may be used for debugging purposes.)
+        - /sid_0
+          - XXXXXX.json         (One simulation output with variations.)
+          - XXXXXX.json
+            ...
+          - /debug              (A folder for intermediate variation outputs, cli outputs, and controller files.)
+        - /sid_1
+          ...
+        ...
+      - /videos
+        - /sid_0
+          - XXXXXX.mpg
+          - XXXXXX.mpg
+            ...
+      - dataset.json            (This json file contains all the video paths, and questions generated from the outputs.)
+    """
+
+    def __init__(self, config: Config):
+        self.config = config
+        self.__state_file_path = f"{config.output_folder_path}/dataset_generation_state"
+        self.__runner = SimulationRunner(self.config.executable_path)
+        # To measure remaining and elapsed_time.
+        self.__start_time = None
+        self.__times = np.array([])
+
+    def get_state(self) -> int:
+        last_state = None
+        if os.path.exists(self.__state_file_path):
+            with open(self.__state_file_path, "r") as state_file:
+                last_state = int(state_file.read())
+        return last_state
+
+    def __save_state(self, index: int):
+        with(open(self.__state_file_path, "w")) as state_file:
+            state_file.write(f"{index}")
+            state_file.close()
+
+    def get_simulation_instance(self, instance_id: int, controller_json_path: str):
+        return SimulationInstance(instance_id, self.__runner, controller_json_path)
+
+    def run_instance(self, sid: int, instance_id: int):
+        simulation = self.get_simulation_instance(instance_id, self.get_controller_path(sid, instance_id))
+        simulation.run_simulation(self.get_debug_output_path(sid, instance_id))
+
+    def run_variations(self, sid: int, instance_id: int):
+        simulation = self.get_simulation_instance(instance_id, self.get_controller_path(sid, instance_id))
+        simulation.run_variations(self.get_simulation_with_variations_output_path(sid, instance_id))
+
+    def dump_controller_file(self, instance_id: int, simulation_config: dict):
+        sid = simulation_config["sid"]
+
+        # Create controller file.
+        with open(self.get_controller_path(sid, instance_id), 'w') as controller_file:
+            json.dump(
+                json.loads(
+                    f"""{{
+                            "simulationID": {sid},
+                            "offline": {str(self.config.offline).lower()},
+                            "outputVideoPath": "{self.get_video_output_path(sid, instance_id)}",
+                            "outputJSONPath": "{self.get_bare_simulation_output_path(sid, instance_id)}",
+                            "width":  {simulation_config['width']},
+                            "height": {simulation_config['height']},
+                            "inputScenePath":  "",
+                            "stepCount": {simulation_config['step_count']}
+                        }}"""),
+                controller_file,
+                indent=2
+            )
+
+    def __update_clock(self, t1, total_runs: int, current: int):
+        diff = time.time() - t1
+        times = np.append(self.__times, diff)
+        logger.info(f"Approx. {round((np.mean(times) * (total_runs - current - 1)) / 60, 2)} "
+                    "minutes remaining...".ljust(75, " "))
+
+    def execute(self):
+        logger.info("Dataset generation process has started.")
+
+        # To measure remaining time.
+        self.__start_time = time.time()
+        times = np.array([])
+
+        self.make_directories()
+
+        configs_to_run = []
+        for simulation_config in self.config.simulation_configs:
+            configs_to_run.extend(
+                [simulation_config] * (self.config.dataset_size // len(self.config.simulation_configs)))
+
+        start = 0
+        if self.get_state() is not None:
+            start = self.get_state()
+            logger.info(f"Dataset generation state file found at output folder path, continuing from {start}...")
+
+        for instance_id in range(start, len(configs_to_run)):
+            t1 = time.time()  # To measure remaining time.
+
+            self.__save_state(instance_id)
+
+            simulation_config = configs_to_run[instance_id]
+            sid = simulation_config["id"]
+
+            logger.info(f"Running simulation with SID: {sid}, instance_id: {instance_id:06d}...")
+
+            # Create controller file for current simulation instance.
+            self.dump_controller_file(instance_id, simulation_config)
+
+            # Run simulation.
+            self.run_instance(sid, instance_id)
+
+            # Run its variations.
+            self.run_variations(sid, instance_id)
+
+            variations_output_path = self.get_simulation_with_variations_output_path(sid, instance_id)
+
+            questions_file_path = self.get_questions_output_path(sid, instance_id)
+
+            # Generate questions.
+            try:
+                question_generator = QuestionGenerator(variations_output_path, questions_file_path, simulation_config)
+                question_generator.execute()
+            except Exception as e:
+                traceback.print_exception(type(e), e, e.__traceback__)
+
+            self.__update_clock(t1, len(configs_to_run), instance_id)
+
+    def make_directories(self):
+        os.makedirs(self.config.output_folder_path, exist_ok=True)
+
+        dataset = json.loads("[]")
+
+        json.dump(
+            dataset,
+            open(f"{self.config.output_folder_path}/dataset.json", "w"),
+            indent=4
+        )
+
+        for sim in self.config.simulation_configs:
+            os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/debug", exist_ok=True)
+            os.makedirs(f"{self.config.output_folder_path}/videos/sid_{sim['id']}", exist_ok=True)
+
+    def get_controller_path(self, sid: int, instance_id: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/controller_{instance_id:06d}.json"
+
+    def get_questions_output_path(self, sid: int, instance_id: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/qa_{instance_id:06d}.json"
+
+    def get_simulation_with_variations_output_path(self, sid: int, instance_id: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/{instance_id:06d}.json"
+
+    def get_video_output_path(self, sid: int, instance_id: int):
+        return f"{self.config.output_folder_path}/videos/sid_{sid}/{instance_id:06d}.mpg"
+
+    def get_bare_simulation_output_path(self, sid: int, instance_id: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/{instance_id:06d}.json"
+
+    def get_debug_output_path(self, sid: int, instance_id: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/cl_debug_{instance_id:06d}.txt"
+
+
+class DatasetSplitter:
+
+    def __init__(self):
+        # TODO
+        pass

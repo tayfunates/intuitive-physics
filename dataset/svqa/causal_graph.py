@@ -23,7 +23,7 @@ class CausalGraph:
 
     @property
     def collision_events(self):
-        return [event for event in self.events() if event["type"] == "Collision"]
+        return [event for event in self.events if event["type"] == "Collision"]
 
     def events_after(self, step_count):
         return [event for event in self.events if event.step > step_count]

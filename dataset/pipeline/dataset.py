@@ -6,6 +6,7 @@ import time
 import traceback
 from collections import defaultdict
 from pathlib import Path
+from typing import List, Dict
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,21 +14,24 @@ import pandas as pd
 from colour import Color
 from loguru import logger
 
-from pipeline.simulation import SimulationRunner, SimulationInstance
-from pipeline.utils import FileUtils, Funnel
-import svqa.generate_questions as QuestionGeneratorScript
+from pipeline.simulation import SimulationRunner, SimulationInstance, QuestionGenerator
+from pipeline.utils import FileIO, Funnel
 
 
 class SVQADataset:
 
-    def __init__(self, dataset_folder_path, metadata_json_path):
+    def __init__(self, dataset_folder_path: str, metadata: dict):
         self.dataset_folder_path = dataset_folder_path
-        self.metadata_json_path = metadata_json_path
-        self.metadata = json.load(open(metadata_json_path))
-        self.dataset_json = json.load(open(f"{dataset_folder_path}/dataset.json"))
-        self.questions = self.get_all_questions_as_list()
+        self.metadata = metadata
+        self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset_as_list.json")
+        #self.questions = self.get_all_questions_as_list()
+        self.questions = self.dataset_json
         self.questions_dataframe = pd.DataFrame(self.questions)
         self.max_video_index = None
+
+    def add_new_item(self):
+        # TODO
+        pass
 
     def get_last_video_index(self):
         if self.max_video_index is None:
@@ -227,9 +231,41 @@ class DatasetUtils:
         return video_to_qa
 
     @staticmethod
-    def dataset_as_list(dataset_json_path, metadata_json_path) -> list:
-        dataset = SVQADataset(dataset_json_path, metadata_json_path)
-        return dataset.questions
+    def dataset_as_list(dataset_json, metadata_json_path) -> list:
+        with open(metadata_json_path, 'r') as f:
+            metadata = json.load(f)
+
+        questions = []
+        for qa_json in dataset_json:
+            question_list = qa_json["questions"]["questions"]
+            simulation_id = qa_json["simulation_id"]
+            for question_obj in question_list:
+                template_filename = question_obj["template_filename"]
+                answer = str(question_obj["answer"])
+                question = question_obj["question"]
+                video_file_path = question_obj["video_filename"]
+                video_index = question_obj["video_index"]
+                question_index = question_obj["question_index"]
+                question_family_index = question_obj["question_family_index"]
+
+                answer_type = ("Boolean" if answer in ["False", "True"]
+                               else "Shape" if answer in metadata["types"]["Shape"]
+                else "Color" if answer in metadata["types"]["Color"]
+                else "Size" if answer in metadata["types"]["Size"]
+                else "Count")
+
+                questions.append({"question": question,
+                                  "answer": answer,
+                                  "answer_type": answer_type,
+                                  "template_filename": template_filename,
+                                  "video_file_path": video_file_path,
+                                  "video_index": video_index,
+                                  "question_index": question_index,
+                                  "question_family_index": question_family_index,
+                                  "template_id": f"{os.path.splitext(template_filename)[0]}_{question_family_index}",
+                                  "simulation_id": simulation_id})
+
+        return questions
 
 
 class DatasetStatistics:
@@ -422,14 +458,14 @@ class DatasetStatisticsExporter:
 
     def generate_chart__answer_per_template(self):
         df = pd.DataFrame(self.stats.answer_freq_per_tid)
-        FileUtils.write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID.csv",
-                                df.to_csv())
+        FileIO.write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID.csv",
+                             df.to_csv())
         for tid in self.stats.map_of_tid_to_answer_freqs:
             self.generate_stat__answer_counts(self.stats.map_of_tid_to_answer_freqs[tid], f'Template ID={tid}')
 
     def generate_chart__answer_per_template_and_simulation(self):
         df = pd.DataFrame(self.stats.answer_freq_per_tid_and_sid)
-        FileUtils.write_to_file(
+        FileIO.write_to_file(
             f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID and sim ID.csv",
             df.to_csv())
         for key in self.stats.map_of_sid_tid_pairs_to_answer_freqs:
@@ -440,15 +476,15 @@ class DatasetStatisticsExporter:
 
     def generate_chart__answer_frequencies_per_sim_id(self):
         df = pd.DataFrame(self.stats.answer_freq_per_sid)
-        FileUtils.write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies for each simulation ID.csv",
-                                df.to_csv())
+        FileIO.write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies for each simulation ID.csv",
+                             df.to_csv())
         for sid in self.stats.map_of_sid_to_answer_freqs:
             self.generate_stat__answer_counts(self.stats.map_of_sid_to_answer_freqs[sid],
                                               f'Answer frequencies for Simulation ID={sid}')
 
     def generate_chart__template_per_sim_id(self):
         df = pd.DataFrame(self.stats.generate_stat__template_per_sid())
-        FileUtils.write_to_file(
+        FileIO.write_to_file(
             f"{self.output_folder}{os.path.sep}Template ID frequencies for each simulation type.csv",
             df.to_csv())
         for sid in self.stats.map_of_sid_to_tid_freqs:
@@ -458,28 +494,6 @@ class DatasetStatisticsExporter:
     def generate_chart__answer_frequencies(self):
         answer_counts = self.stats.answer_freq_total
         self.generate_stat__answer_counts(answer_counts, f'Answer frequencies - Total={sum(answer_counts.values())}')
-
-
-class QuestionGenerator:
-
-    def __init__(self,
-                 input_scene_file_path: str,
-                 output_file_path: str,
-                 simulation_config: dict,
-                 instances_per_template=5):
-        self.__args = QuestionGeneratorScript.parser.parse_args(['--input-scene-file', input_scene_file_path,
-                                                                 '--output-questions-file', output_file_path,
-                                                                 '--metadata-file', '../svqa/metadata.json',
-                                                                 '--synonyms-json', '../svqa/synonyms.json',
-                                                                 '--template-dir', '../svqa/SVQA_1.0_templates',
-                                                                 '--restrict-template-count-per-video', False,
-                                                                 '--print-stats', False,
-                                                                 '--instances-per-template', instances_per_template,
-                                                                 '--excluded-task-ids',
-                                                                 simulation_config["excluded_task_ids"]])
-
-    def execute(self):
-        QuestionGeneratorScript.main(self.__args)
 
 
 class DatasetGenerationConfig:
@@ -544,22 +558,15 @@ class DatasetGenerator:
             state_file.write(f"{index}")
             state_file.close()
 
-    def get_simulation_instance(self, instance_id: int, controller_json_path: str):
-        return SimulationInstance(instance_id, self.__runner, controller_json_path)
+    def __remove_state_file(self):
+        os.remove(self.__state_file_path)
 
-    def run_instance(self, sid: int, instance_id: int):
-        simulation = self.get_simulation_instance(instance_id, self.get_controller_path(sid, instance_id))
-        simulation.run_simulation(self.get_debug_output_path(sid, instance_id))
-
-    def run_variations(self, sid: int, instance_id: int):
-        simulation = self.get_simulation_instance(instance_id, self.get_controller_path(sid, instance_id))
-        simulation.run_variations(self.get_simulation_with_variations_output_path(sid, instance_id))
-
-    def dump_controller_file(self, instance_id: int, simulation_config: dict):
+    def dump_controller_file(self, instance_id: int, simulation_config: dict) -> str:
         sid = simulation_config["sid"]
 
-        # Create controller file.
-        with open(self.get_controller_path(sid, instance_id), 'w') as controller_file:
+        controller_file_path = self.get_controller_path(sid, instance_id)
+
+        with open(controller_file_path, 'w') as controller_file:
             json.dump(
                 json.loads(
                     f"""{{
@@ -576,11 +583,20 @@ class DatasetGenerator:
                 indent=2
             )
 
+        return controller_file_path
+
     def __update_clock(self, t1, total_runs: int, current: int):
         diff = time.time() - t1
         times = np.append(self.__times, diff)
         logger.info(f"Approx. {round((np.mean(times) * (total_runs - current - 1)) / 60, 2)} "
                     "minutes remaining...".ljust(75, " "))
+
+    def __generate_configs_to_run(self) -> List[Dict]:
+        configs_to_run = []
+        for simulation_config in self.config.simulation_configs:
+            configs_to_run.extend(
+                [simulation_config] * (self.config.dataset_size // len(self.config.simulation_configs)))
+        return configs_to_run
 
     def execute(self):
         logger.info("Dataset generation process has started.")
@@ -590,10 +606,7 @@ class DatasetGenerator:
 
         self.make_directories()
 
-        configs_to_run = []
-        for simulation_config in self.config.simulation_configs:
-            configs_to_run.extend(
-                [simulation_config] * (self.config.dataset_size // len(self.config.simulation_configs)))
+        configs_to_run = self.__generate_configs_to_run()
 
         start = 0
         if self.get_state() is not None:
@@ -611,37 +624,83 @@ class DatasetGenerator:
             logger.info(f"Running simulation with SID: {sid}, instance_id: {instance_id:06d}...")
 
             # Create controller file for current simulation instance.
-            self.dump_controller_file(instance_id, simulation_config)
-
-            # Run simulation.
-            self.run_instance(sid, instance_id)
-
-            # Run its variations.
-            self.run_variations(sid, instance_id)
+            controller_file_path = self.dump_controller_file(instance_id, simulation_config)
 
             variations_output_path = self.get_simulation_with_variations_output_path(sid, instance_id)
 
             questions_file_path = self.get_questions_output_path(sid, instance_id)
 
+            simulation = SimulationInstance(instance_id,
+                                            controller_file_path,
+                                            variations_output_path,
+                                            questions_file_path,
+                                            self.__runner)
+
+            # Run simulation.
+            simulation.run_simulation(self.get_debug_output_path(sid, instance_id))
+
+            # Run its variations.
+            simulation.run_variations()
+
             # Generate questions.
             try:
-                question_generator = QuestionGenerator(variations_output_path, questions_file_path, simulation_config)
-                question_generator.execute()
+                simulation.generate_questions(simulation_config)
             except Exception as e:
                 traceback.print_exception(type(e), e, e.__traceback__)
 
             self.__update_clock(t1, len(configs_to_run), instance_id)
+
+        logger.info(
+            f"Dataset generation is complete. Process took {round((time.time() - self.__start_time) / 60, 2)} minutes.")
+
+        self.__remove_state_file()
+
+        logger.info(f"Dumping dataset...")
+        self.__dump_dataset()
+
+    def __dump_dataset(self):
+        dataset = json.loads("[]")
+
+        configs_to_run = self.__generate_configs_to_run()
+
+        logger.info(f"Inflating dataset JSON object in memory...")
+        for instance_id in range(len(configs_to_run)):
+            simulation_config = configs_to_run[instance_id]
+            sid = simulation_config["id"]
+
+            questions_file_path = f"{self.config.output_folder_path}/intermediates/sid_{sid}/qa_{instance_id:06d}.json"
+
+            try:
+                # Add them into dataset.json
+                with open(questions_file_path, "r") as f:
+                    dataset.append(
+                        json.loads(f"""{{
+                                        "simulation_id": "{sid}",
+                                        "video_path": "{self.config.output_folder_path}/videos/sid_{sid}/{instance_id:06d}.mpg",
+                                        "questions": {json.dumps(json.load(f))}
+                                    }}""")
+                    )
+            except FileNotFoundError:
+                continue
+
+        logger.info(f"Converting absolute paths to relative paths based on current working directory...")
+        dataset = DatasetUtils.relativize_paths(dataset, self.config.output_folder_path)
+
+        logger.info(f"Dumping dataset, this may take a while...")
+        with open(f"{self.config.output_folder_path}/dataset.json", "w") as f:
+            json.dump(dataset, f)
+
+        logger.info(f"Dump minimal version of the dataset for easier debugging.")
+        with open(f"{self.config.output_folder_path}/dataset_minimal.json", "w") as f:
+            json.dump(DatasetUtils.dataset_as_list(dataset, "../svqa/metadata.json"), f, indent=2)
 
     def make_directories(self):
         os.makedirs(self.config.output_folder_path, exist_ok=True)
 
         dataset = json.loads("[]")
 
-        json.dump(
-            dataset,
-            open(f"{self.config.output_folder_path}/dataset.json", "w"),
-            indent=4
-        )
+        with open(f"{self.config.output_folder_path}/dataset.json", "w") as f:
+            json.dump(dataset, f, indent=4)
 
         for sim in self.config.simulation_configs:
             os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/debug", exist_ok=True)
@@ -668,6 +727,6 @@ class DatasetGenerator:
 
 class DatasetSplitter:
 
-    def __init__(self):
+    def __init__(self, config: DatasetGenerationConfig):
         # TODO
         pass

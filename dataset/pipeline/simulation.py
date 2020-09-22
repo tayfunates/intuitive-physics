@@ -4,7 +4,9 @@ import os
 import subprocess
 import sys
 
+from pipeline.utils import FileIO
 from svqa.causal_graph import CausalGraph
+import svqa.generate_questions as QuestionGeneratorScript
 
 
 class SimulationRunner(object):
@@ -25,16 +27,29 @@ class SimulationRunner(object):
 
 class SimulationInstance:
 
-    def __init__(self, instance_id: int, runner: SimulationRunner, controller_json_path: str):
+    def __init__(self, instance_id: int,
+                 controller_json_path: str,
+                 variations_output_path: str,
+                 questions_file_path: str,
+                 runner: SimulationRunner):
         self.__runner = runner
         self.__controller_json_path = controller_json_path
+        self.__variations_output_path = variations_output_path
+        self.__questions_file_path = questions_file_path
         self.instance_id = instance_id
 
     def run_simulation(self, debug_output_path=None):
         self.__runner.run_simulation(self.__controller_json_path, debug_output_path)
 
-    def run_variations(self, variations_output_path: str, debug_output_path=None):
-        self.__runner.run_variations(self.__controller_json_path, variations_output_path, debug_output_path)
+    def run_variations(self, debug_output_path=None):
+        self.__runner.run_variations(self.__controller_json_path, self.__variations_output_path, debug_output_path)
+
+    def generate_questions(self, simulation_config, output_file_path=None):
+        question_generator = QuestionGenerator(self.__variations_output_path,
+                                               self.__questions_file_path if output_file_path is None
+                                               else output_file_path,
+                                               simulation_config)
+        question_generator.execute()
 
 
 class VariationRunner(object):
@@ -60,7 +75,8 @@ class VariationRunner(object):
         for i in range(len(variations)):
             output = variations[i]
             name = f"{os.path.splitext(path)[0]}_var_{output[0]}"
-            json.dump(output[1], open(f"{name}.json", "w"))
+            with open(f"{name}.json", "w") as f:
+                json.dump(output[1], f)
             controller_paths.append((output[0], self.__create_controller_variations(controller, name)))
 
         return controller_paths
@@ -72,7 +88,8 @@ class VariationRunner(object):
         controller["inputScenePath"] = f"{name}.json"
 
         name = f"{name}_controller.json"
-        json.dump(controller, open(name, "w"))
+        with open(name, "w") as f:
+            json.dump(controller, f)
         return name
 
     def __get_variation_output(self, controller: str):
@@ -147,9 +164,9 @@ class VariationRunner(object):
     def run_variations(self, controller_json_path: str, variations_output_path: str, debug_output_path: str):
         final_output_json = {}
 
-        controller_json = json.load(open(controller_json_path, "r"))
+        controller_json = FileIO.read_json(controller_json_path)
         original_output_path: str = controller_json["outputJSONPath"]
-        original_output: dict = json.load(open(original_output_path, "r"))
+        original_output: dict = FileIO.read_json(original_output_path)
         final_output_json["original_video_output"] = original_output
         variation_outputs = {}
 

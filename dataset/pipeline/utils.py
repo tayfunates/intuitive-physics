@@ -1,5 +1,10 @@
 import glob
+import json
+
+import orjson
 import os
+
+import ujson
 
 
 class DictUtils:
@@ -26,12 +31,25 @@ class DictUtils:
             pass
 
 
-class FileUtils:
+class FileIO:
 
     @staticmethod
     def write_to_file(file_path, content):
         with open(file_path, "w") as f:
             f.write(content)
+            f.close()
+
+    @staticmethod
+    def read_json(file_path):
+        with open(file_path, "rb") as f:
+            json_obj = ujson.load(f)
+            f.close()
+        return json_obj
+
+    @staticmethod
+    def write_json(json_obj, file_path):
+        with open(file_path, "w") as f:
+            ujson.dump(json_obj, f)
             f.close()
 
     @staticmethod

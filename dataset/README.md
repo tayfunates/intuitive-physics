@@ -985,4 +985,6 @@ The answer to this question is true since big blue block is intended to enter th
 
 - We consider events of entering the basket, but our objects inside our simulations are not able get out of the basket. It would be interesting to create such scenes detecting the exit events.
 
+- There can be multiple patients in cause, enable, and prevent tasks, but there cannot be multiple affectors.
+
 

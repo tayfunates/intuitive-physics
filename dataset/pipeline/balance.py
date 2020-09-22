@@ -145,8 +145,9 @@ class DatasetInspector:
             for answer in unique_answers:
                 if self.dataset.get_answer_type_for_answer(answer) == answer_type:
                     if answer not in dict_of_needed_answers[simulation_id][template_id][answer_type].keys():
-                        dict_of_needed_answers[simulation_id][template_id][answer_type][answer] = answer_with_max_count[
-                            "count"]
+                        if answer != answer_with_max_count["answer"]:
+                            dict_of_needed_answers[simulation_id][template_id][answer_type][answer] = \
+                                answer_with_max_count["count"]
 
         return dict_of_needed_answers
 

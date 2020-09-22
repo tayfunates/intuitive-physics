@@ -163,4 +163,26 @@ class VariationRunner(object):
 
         self.__write_enables_prevents(final_output_json)
 
-        json.dump(final_output_json, open(variations_output_path, "w"))
+        with open(variations_output_path, "w") as f:
+            json.dump(final_output_json, f)
+
+
+class QuestionGenerator:
+
+    def __init__(self,
+                 input_scene_file_path: str,
+                 output_file_path: str,
+                 simulation_config: dict,
+                 instances_per_template=5):
+        self.__args = QuestionGeneratorScript.parser.parse_args(['--input-scene-file', input_scene_file_path,
+                                                                 '--output-questions-file', output_file_path,
+                                                                 '--metadata-file', '../svqa/metadata.json',
+                                                                 '--synonyms-json', '../svqa/synonyms.json',
+                                                                 '--template-dir', '../svqa/SVQA_1.0_templates',
+                                                                 '--restrict-template-count-per-video', False,
+                                                                 '--print-stats', False,
+                                                                 '--excluded-task-ids',
+                                                                 simulation_config["excluded_task_ids"]])
+
+    def execute(self):
+        QuestionGeneratorScript.main(self.__args)

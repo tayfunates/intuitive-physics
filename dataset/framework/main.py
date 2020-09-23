@@ -3,9 +3,9 @@ import time
 
 from loguru import logger
 
-from pipeline.balance import DatasetInspector, DatasetBalancer, DatasetUnderSampler
-from pipeline.utils import FileIO
-from pipeline.dataset import DatasetGenerationConfig, SVQADataset, DatasetStatistics, DatasetUtils
+from framework.balance import DatasetInspector, DatasetBalancer, DatasetUnderSampler
+from framework.utils import FileIO
+from framework.dataset import DatasetGenerationConfig, SVQADataset, DatasetStatistics, DatasetUtils
 
 if __name__ == '__main__':
 

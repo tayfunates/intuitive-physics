@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from pipeline.balance import DatasetInspector, DatasetBalancer
-from pipeline.dataset import DatasetGenerationConfig, DatasetGenerator, SVQADataset, DatasetStatistics
+from framework.balance import DatasetInspector, DatasetBalancer
+from framework.dataset import DatasetGenerationConfig, DatasetGenerator, SVQADataset, DatasetStatistics
 
 
 class Stage(ABC):

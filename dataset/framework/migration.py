@@ -5,7 +5,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from pipeline.utils import DictUtils
+from framework.utils import DictUtils
 
 
 class DatasetMigration:

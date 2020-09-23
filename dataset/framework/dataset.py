@@ -14,8 +14,8 @@ import pandas as pd
 from colour import Color
 from loguru import logger
 
-from pipeline.simulation import SimulationRunner, SimulationInstance, QuestionGenerator
-from pipeline.utils import FileIO, Funnel
+from framework.simulation import SimulationRunner, SimulationInstance, QuestionGenerator
+from framework.utils import FileIO, Funnel
 
 
 class SVQADataset:

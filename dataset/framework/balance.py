@@ -9,9 +9,9 @@ import numpy as np
 from deepdiff import DeepDiff
 from loguru import logger
 
-from pipeline.dataset import DatasetStatistics, SVQADataset, DatasetUtils, DatasetGenerationConfig
-from pipeline.simulation import SimulationInstance, SimulationRunner
-from pipeline.utils import Funnel, FileIO
+from framework.dataset import DatasetStatistics, SVQADataset, DatasetUtils, DatasetGenerationConfig
+from framework.simulation import SimulationInstance, SimulationRunner
+from framework.utils import Funnel, FileIO
 
 
 class DatasetUnderSampler:

@@ -4,7 +4,7 @@ import os
 import subprocess
 import sys
 
-from pipeline.utils import FileIO
+from framework.utils import FileIO
 from svqa.causal_graph import CausalGraph
 import svqa.generate_questions as QuestionGeneratorScript
 

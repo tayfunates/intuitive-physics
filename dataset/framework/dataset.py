@@ -23,9 +23,8 @@ class SVQADataset:
     def __init__(self, dataset_folder_path: str, metadata: dict):
         self.dataset_folder_path = dataset_folder_path
         self.metadata = metadata
-        self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset_as_list.json")
-        #self.questions = self.get_all_questions_as_list()
-        self.questions = self.dataset_json
+        self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset.json")
+        self.questions = self.get_all_questions_as_list()
         self.questions_dataframe = pd.DataFrame(self.questions)
         self.max_video_index = None
 
@@ -119,15 +118,15 @@ class SVQADataset:
         return questions
 
     @staticmethod
-    def convert_to_original_dataset_json(dataset_obj, questions: list) -> str:
+    def convert_to_original_dataset_json(dataset_json, questions: list) -> dict:
         video_index_question_indices = defaultdict(list)
         for question in questions:
             video_index_question_indices[question["video_index"]].append(question["question_index"])
 
         for video_index, question_indices in video_index_question_indices.items():
-            DatasetUtils.retain_questions(dataset_obj.dataset_json, video_index, question_indices)
+            DatasetUtils.retain_questions(dataset_json, video_index, question_indices)
 
-        return json.dumps(dataset_obj.dataset_json)
+        return dataset_json
 
     def generate_statistics(self, output_folder):
         stats = DatasetStatistics(self)
@@ -231,10 +230,7 @@ class DatasetUtils:
         return video_to_qa
 
     @staticmethod
-    def dataset_as_list(dataset_json, metadata_json_path) -> list:
-        with open(metadata_json_path, 'r') as f:
-            metadata = json.load(f)
-
+    def dataset_as_list(dataset_json, metadata) -> list:
         questions = []
         for qa_json in dataset_json:
             question_list = qa_json["questions"]["questions"]
@@ -346,7 +342,7 @@ class DatasetStatistics:
                 .get_result()
 
             answer_id_counts = DatasetStatistics.counts_from_question_list(questions, "answer")
-            self.map_of_tid_to_answer_freqs[sid] = answer_id_counts
+            self.map_of_sid_to_answer_freqs[sid] = answer_id_counts
             for answer, count in answer_id_counts.items():
                 sim_id_v_answer_freq.append({"simulation_id": sid,
                                              "answer": answer,
@@ -381,6 +377,7 @@ class DatasetStatisticsExporter:
         self.stats = stats
         self.export_png = export_png
         self.output_folder = output_folder
+        os.makedirs(output_folder, exist_ok=True)
 
     def generate_pie_chart(self, title, counts, labels, colors, explodes):
         fig1, ax1 = plt.subplots(figsize=(12, 12))
@@ -458,7 +455,7 @@ class DatasetStatisticsExporter:
 
     def generate_chart__answer_per_template(self):
         df = pd.DataFrame(self.stats.answer_freq_per_tid)
-        FileIO.write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID.csv",
+        FileIO.write_to_file(f"{self.output_folder}/Answer frequencies per each template ID.csv",
                              df.to_csv())
         for tid in self.stats.map_of_tid_to_answer_freqs:
             self.generate_stat__answer_counts(self.stats.map_of_tid_to_answer_freqs[tid], f'Template ID={tid}')
@@ -466,7 +463,7 @@ class DatasetStatisticsExporter:
     def generate_chart__answer_per_template_and_simulation(self):
         df = pd.DataFrame(self.stats.answer_freq_per_tid_and_sid)
         FileIO.write_to_file(
-            f"{self.output_folder}{os.path.sep}Answer frequencies per each template ID and sim ID.csv",
+            f"{self.output_folder}/Answer frequencies per each template ID and sim ID.csv",
             df.to_csv())
         for key in self.stats.map_of_sid_tid_pairs_to_answer_freqs:
             tid = key[1]
@@ -476,16 +473,16 @@ class DatasetStatisticsExporter:
 
     def generate_chart__answer_frequencies_per_sim_id(self):
         df = pd.DataFrame(self.stats.answer_freq_per_sid)
-        FileIO.write_to_file(f"{self.output_folder}{os.path.sep}Answer frequencies for each simulation ID.csv",
+        FileIO.write_to_file(f"{self.output_folder}/Answer frequencies for each simulation ID.csv",
                              df.to_csv())
         for sid in self.stats.map_of_sid_to_answer_freqs:
             self.generate_stat__answer_counts(self.stats.map_of_sid_to_answer_freqs[sid],
                                               f'Answer frequencies for Simulation ID={sid}')
 
     def generate_chart__template_per_sim_id(self):
-        df = pd.DataFrame(self.stats.generate_stat__template_per_sid())
+        df = pd.DataFrame(self.stats.generate_stat__template_per_sid().template_id_freq_per_sid)
         FileIO.write_to_file(
-            f"{self.output_folder}{os.path.sep}Template ID frequencies for each simulation type.csv",
+            f"{self.output_folder}/Template ID frequencies for each simulation type.csv",
             df.to_csv())
         for sid in self.stats.map_of_sid_to_tid_freqs:
             self.generate_stat__answer_counts(self.stats.map_of_sid_to_tid_freqs[sid],
@@ -493,7 +490,7 @@ class DatasetStatisticsExporter:
 
     def generate_chart__answer_frequencies(self):
         answer_counts = self.stats.answer_freq_total
-        self.generate_stat__answer_counts(answer_counts, f'Answer frequencies - Total={sum(answer_counts.values())}')
+        self.generate_stat__answer_counts(answer_counts, f'Answer frequencies')
 
 
 class DatasetGenerationConfig:
@@ -692,7 +689,7 @@ class DatasetGenerator:
 
         logger.info(f"Dump minimal version of the dataset for easier debugging.")
         with open(f"{self.config.output_folder_path}/dataset_minimal.json", "w") as f:
-            json.dump(DatasetUtils.dataset_as_list(dataset, "../svqa/metadata.json"), f, indent=2)
+            json.dump(DatasetUtils.dataset_as_list(dataset, FileIO.read_json("../svqa/metadata.json")), f, indent=2)
 
     def make_directories(self):
         os.makedirs(self.config.output_folder_path, exist_ok=True)

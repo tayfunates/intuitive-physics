@@ -108,7 +108,7 @@ class DatasetUnderSampler:
 
     def dump(self):
         with open(self.output_file_path, "w") as out_file:
-            out_file.write(SVQADataset.convert_to_original_dataset_json(self.__dataset_copy, self.questions))
+            out_file.write(json.dumps(SVQADataset.convert_to_original_dataset_json(self.__dataset_copy.dataset_json, self.questions)))
             out_file.close()
         return
 
@@ -372,6 +372,28 @@ class DatasetBalancer:
                 logger.info(f"Generating questions")
                 simulation.generate_questions(simulation_config)
 
+                # region All possible questions
+                # all_possible_questions = set()
+                # prev_all_possible_questions = None
+                # new_qa_json = {"info": None, "questions": None}
+                # while True:
+                #     simulation.generate_questions(simulation_config)
+                #     qa_json = json.load(open(questions_file_path))
+                #     for q in qa_json["questions"]:
+                #         all_possible_questions.add(json.dumps(q, sor))
+                #     if prev_all_possible_questions is None:
+                #         prev_all_possible_questions = set(qa_json["questions"])
+                #         new_qa_json["info"] = qa_json["info"]
+                #     else:
+                #         if prev_all_possible_questions == all_possible_questions:
+                #             logger.info(f"No more new questions can be generated.")
+                #             break
+                #         else:
+                #             prev_all_possible_questions = set(list(all_possible_questions))
+                # for q in all_possible_questions:
+                #     new_qa_json["questions"].append(q)
+                # json.dump(new_qa_json, open(questions_file_path, "w"))
+                # endregion
 
                 with open(questions_file_path) as qa_json_file:
                     qa_json = json.load(qa_json_file)

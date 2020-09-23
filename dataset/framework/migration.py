@@ -1,3 +1,4 @@
+
 import json
 import os
 from pathlib import Path
@@ -15,18 +16,22 @@ class DatasetMigration:
     def make_dataset_split_agnostic(self):
         for dir, subdirs, listfilename in os.walk(self.dataset_folder_path):
             for filename in listfilename:
+                if "dataset.json" != filename:
+                    continue
                 new_filename = filename.replace("train_", "").replace("test_", "").replace("validation_", "")
-                src = os.path.join(dir, filename)  # NOTE CHANGE HERE
-                dst = os.path.join(dir, new_filename)  # AND HERE
+                src = os.path.join(dir, filename)
+                dst = os.path.join(dir, new_filename)
                 os.rename(src, dst)
                 logger.info(f"{filename} -> {new_filename}")
 
                 if Path(new_filename).suffix == ".json":
                     logger.info(f"'{dst}' is a JSON file, Recursively removing split parameter...")
-                    json_obj = json.load(open(dst))
+                    with open(dst) as f:
+                        json_obj = json.load(f)
                     DictUtils.scrub(json_obj, "split")
                     logger.info(f"Dumping new JSON file to {dst}")
-                    json.dump(json_obj, open(dst, "w"))
+                    with open(dst, "w") as f:
+                        json.dump(json_obj, f)
 
     def rename_folders(self):
         for dir, subdirs, listfilename in os.walk(self.dataset_folder_path):
@@ -36,3 +41,12 @@ class DatasetMigration:
                 dst = os.path.join(dir, new_dir_name)
                 os.rename(src, dst)
                 logger.info(f"{subdir} -> {new_dir_name}")
+
+
+if __name__ == '__main__':
+
+    migration = DatasetMigration("../autorun/out/Dataset_3000_270820")
+    logger.info("Starting to migrate the dataset...")
+    migration.make_dataset_split_agnostic()
+    migration.rename_folders()
+    logger.info("Dataset migration complete.")

@@ -49,7 +49,7 @@ class FileIO:
     @staticmethod
     def write_json(json_obj, file_path):
         with open(file_path, "w") as f:
-            ujson.dump(json_obj, f)
+            ujson.dump(json_obj, f, escape_forward_slashes=False)
             f.close()
 
     @staticmethod

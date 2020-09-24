@@ -234,16 +234,18 @@ def get_all_image(base_path):
 def combine():
     m1 = get_transparent_image("/Users/cagatayyigit/Desktop/screenshots/idstatic.png")
     images, frame_per_object = get_all_image("/Users/cagatayyigit/Desktop/screenshots/")
-    i = int(255 / frame_per_object)
+    i = 0
     j = 1
+    total = len(images)
+    alpha = int(150 / (frame_per_object -1))
     for img in images:
-        img[0].putalpha(i * (j + 10))
+        img[0].putalpha( (i % frame_per_object ) * alpha + 105)
         img[0] = make_transparent(img[0])
         m1.paste(img[0], (0,0), img[0])
-        if j < frame_per_object:
-            j += 1
-        else:
-            j = 1
+        i += 1
+        j += 1
+        print(str(j) + "/" + str(total) + "->" +  str((i % frame_per_object ) * alpha + 105))
+
     m1.show()
     m1.save("/Users/cagatayyigit/Desktop/result.png")
 
@@ -255,12 +257,17 @@ new_snapshots_folder = "/Users/cagatayyigit/Desktop/new_snapshots"
 new_controllers_folder = "/Users/cagatayyigit/Desktop/new_controllers"
 exec_path = "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
 
-#run_simulation(exec_path, controller_json_path: str):
+
 
 #x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
 #combine()
 
 
+
+
+
+
+##################################################################################################################
 
 def create_different_static_object(count):
     for i in range(count):
@@ -281,19 +288,48 @@ def mapFromTo(x,a,b,c,d):
     return int(y)
 
 
+
+def get_controller_json_for_statics(min_mean_max_random: int, simulation_id: int):
+    return json.loads(
+        f"""{{
+                "simulationID": {simulation_id},
+                "offline": true,
+                "outputVideoPath": "output.mpg",
+                "outputJSONPath":  "output.json",
+                "width": 1024,
+                "height": 1024,
+                "inputScenePath":  "",
+                "includeDynamicObjects": false,
+                "min_mean_max_random": {min_mean_max_random},
+                "stepCount": 3
+            }}""")
+
+def create_all_jsons_for_statics():
+    res = []
+    for i in  range(1,11):
+        min_ = get_controller_json_for_statics(0, i)
+        mean_ = get_controller_json_for_statics(1, i)
+        max_ = get_controller_json_for_statics(2, i)
+        res.append(min_)
+        res.append(mean_)
+        res.append(max_)
+
+    return res
+
+
 def combine_statics():
     files = os.listdir("/Users/cagatayyigit/Desktop/static_ss/")
-    all_images = []
-    for i in files:
-        if i != ".DS_Store":
-            all_images.append(get_transparent_image("/Users/cagatayyigit/Desktop/static_ss/" + str(i)))
+    all_images = [get_transparent_image("/Users/cagatayyigit/Desktop/static_ss/1.png"),
+                  get_transparent_image("/Users/cagatayyigit/Desktop/static_ss/2.png"),
+                  get_transparent_image("/Users/cagatayyigit/Desktop/static_ss/3.png")]
+
 
     size = len(all_images)
     alpha_diff = int(255 / (size))
     m1 = all_images[0]
     i = 1
-    for img in all_images:
-        alpha = mapFromTo(i,1,size,0,255)
+    for img in all_images[1:]:
+        alpha = 120
         img.putalpha(alpha)
         img= make_transparent(img)
         m1.paste(img, (0, 0), img)
@@ -302,4 +338,4 @@ def combine_statics():
     m1.show()
     m1.save("/Users/cagatayyigit/Desktop/result.png")
 
-combine_statics()
+#combine_statics()

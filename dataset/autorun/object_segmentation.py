@@ -356,7 +356,7 @@ def generate_static_images(new_controller_folder: str , exec_path, pngs_folder):
 
     for i in range(0, len(png_names), 3):
         s = int(i / 3) + 1
-        combine_statics(png_names[i+1], png_names[i] , png_names[i+2], "/results/" + str(s) + "result")
+        combine_statics(png_names[i+1], png_names[i] , png_names[i+2], "results/" + str(s) + "result")
 
 
 generate_static_images("/Users/cagatayyigit/Desktop/static_controller",

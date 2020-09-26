@@ -289,7 +289,7 @@ def mapFromTo(x,a,b,c,d):
 
 
 
-def get_controller_json_for_statics(min_mean_max_random: int, simulation_id: int):
+def get_controller_json_for_statics(min_mean_max_random: str, simulation_id: int):
     return json.loads(
         f"""{{
                 "simulationID": {simulation_id},
@@ -300,32 +300,37 @@ def get_controller_json_for_statics(min_mean_max_random: int, simulation_id: int
                 "height": 1024,
                 "inputScenePath":  "",
                 "includeDynamicObjects": false,
-                "min_mean_max_random": {min_mean_max_random},
+                "min_mean_max_random": "{min_mean_max_random}",
                 "stepCount": 3
             }}""")
 
-def create_all_jsons_for_statics():
+def create_all_jsons_for_statics(output_folder,ss_output_folder):
     res = []
-    for i in  range(1,11):
-        min_ = get_controller_json_for_statics(0, i)
-        mean_ = get_controller_json_for_statics(1, i)
-        max_ = get_controller_json_for_statics(2, i)
-        res.append(min_)
-        res.append(mean_)
-        res.append(max_)
 
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    for i in  range(1,11):
+        min_ = get_controller_json_for_statics("min",i)
+        file = open(output_folder + "/sid_" + str(i) + "_min.json", "w")
+        file.write(json.dumps(min_, indent=4))
+        mean_ = get_controller_json_for_statics("mean",i)
+        file = open(output_folder + "/sid_" + str(i)+ "_mean.json", "w")
+        file.write(json.dumps(mean_, indent=4))
+        max_ = get_controller_json_for_statics("max",i)
+        file = open(output_folder + "/sid_" + str(i) + "_max.json", "w")
+        file.write(json.dumps(max_, indent=4))
+        res.append(ss_output_folder + "/sid" + str(i) + "_min")
+        res.append(ss_output_folder + "/sid" + str(i) + "_mean")
+        res.append(ss_output_folder + "/sid" + str(i) + "_max")
+    file.close()
     return res
 
-
-def combine_statics():
-    files = os.listdir("/Users/cagatayyigit/Desktop/static_ss/")
-    all_images = [get_transparent_image("/Users/cagatayyigit/Desktop/static_ss/1.png"),
-                  get_transparent_image("/Users/cagatayyigit/Desktop/static_ss/2.png"),
-                  get_transparent_image("/Users/cagatayyigit/Desktop/static_ss/3.png")]
-
+def combine_statics(path1, path2, path3, result_name):
+    all_images = [get_transparent_image(path1),
+                  get_transparent_image(path2),
+                  get_transparent_image(path3)]
 
     size = len(all_images)
-    alpha_diff = int(255 / (size))
     m1 = all_images[0]
     i = 1
     for img in all_images[1:]:
@@ -336,6 +341,24 @@ def combine_statics():
         i += 1
 
     m1.show()
-    m1.save("/Users/cagatayyigit/Desktop/result.png")
+    m1.save("/Users/cagatayyigit/Desktop/"+ result_name + ".png")
 
-#combine_statics()
+
+def generate_static_images(new_controller_folder: str , exec_path, pngs_folder):
+    controller_paths = create_all_jsons_for_statics(new_controller_folder, "/Users/cagatayyigit/Desktop/static_ss")
+
+    png_names  = []
+    for path in controller_paths:
+        run_simulation(exec_path, path)
+        png_names.append(path + ".png")
+
+
+    for i in range(0, len(png_names), 3):
+        s = int(i / 3) + 1
+        combine_statics(png_names[i+1], png_names[i] , png_names[i+2], "/results/" + str(s) + "result")
+
+
+generate_static_images("/Users/cagatayyigit/Desktop/static_controller",
+                       "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
+                       "/Users/cagatayyigit/Desktop/static_ss")
+

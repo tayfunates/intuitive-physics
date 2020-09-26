@@ -93,7 +93,7 @@ class InspectionStage(Stage):
 
     def process(self, stats: DatasetStatistics):
         self.__inspector = DatasetInspector(stats)
-        self.__needed_answers: dict = self.__inspector.inspect_tid_and_sid_versus_answer_balance()
+        self.__needed_answers: dict = self.__inspector.compute_answers_needed_for_tid_and_sid_versus_answer_balance()
 
     def cleanup(self):
         pass

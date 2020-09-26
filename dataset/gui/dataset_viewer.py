@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import json
-import logging
+from loguru import logger as logging
 import os
 import sys
 from glob import glob
@@ -106,10 +106,6 @@ class Ui(QtWidgets.QMainWindow):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(
-        level=logging.NOTSET,
-        format='[%(levelname)s]\t%(asctime)s\t%(message)s',
-        handlers=[logging.StreamHandler(sys.stdout)])
     app = QtWidgets.QApplication(sys.argv)  # Create an instance of QtWidgets.QApplication
     window = Ui()  # Create an instance of our class
     app.exec_()  # Start the application

@@ -304,7 +304,7 @@ def get_controller_json_for_statics(min_mean_max_random: str, simulation_id: int
                 "stepCount": 3
             }}""")
 
-def create_all_jsons_for_statics(output_folder,ss_output_folder):
+def create_all_jsons_for_statics(output_folder):
     res = []
 
     if not os.path.exists(output_folder):
@@ -319,9 +319,9 @@ def create_all_jsons_for_statics(output_folder,ss_output_folder):
         max_ = get_controller_json_for_statics("max",i)
         file = open(output_folder + "/sid_" + str(i) + "_max.json", "w")
         file.write(json.dumps(max_, indent=4))
-        res.append(ss_output_folder + "/sid" + str(i) + "_min")
-        res.append(ss_output_folder + "/sid" + str(i) + "_mean")
-        res.append(ss_output_folder + "/sid" + str(i) + "_max")
+        res.append(output_folder + "/sid_" + str(i) + "_min.json")
+        res.append(output_folder + "/sid_" + str(i) + "_mean.json")
+        res.append(output_folder + "/sid_" + str(i) + "_max.json")
     file.close()
     return res
 
@@ -345,12 +345,13 @@ def combine_statics(path1, path2, path3, result_name):
 
 
 def generate_static_images(new_controller_folder: str , exec_path, pngs_folder):
-    controller_paths = create_all_jsons_for_statics(new_controller_folder, "/Users/cagatayyigit/Desktop/static_ss")
+    controller_paths = create_all_jsons_for_statics(new_controller_folder)
 
     png_names  = []
     for path in controller_paths:
         run_simulation(exec_path, path)
-        png_names.append(path + ".png")
+        asd = path.split("/")[-1][:-5]
+        png_names.append(pngs_folder + "/" + asd + ".png")
 
 
     for i in range(0, len(png_names), 3):

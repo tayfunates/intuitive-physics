@@ -212,7 +212,7 @@ class DatasetUtils:
 
     @staticmethod
     def relativize_paths(dataset_json, dataset_folder_path) -> dict:
-        return json.loads(json.dumps(dataset_json).replace(dataset_folder_path, "./"))
+        return json.loads(json.dumps(dataset_json).replace(dataset_folder_path, "."))
 
     @staticmethod
     def minimized_dataset(dataset_json) -> dict:
@@ -604,6 +604,7 @@ class DatasetGenerator:
         logger.info(f"Running simulation with SID: {sid}, instance_id: {instance_id:06d}")
 
         # Create controller file for current simulation instance.
+        logger.info(f"{instance_id:06d}: Creating controller file")
         controller_file_path = self.dump_controller_file(instance_id, simulation_config)
 
         variations_output_path = self.get_simulation_with_variations_output_path(sid, instance_id)
@@ -617,16 +618,20 @@ class DatasetGenerator:
                                         self.__runner)
 
         # Run simulation.
+        logger.info(f"{instance_id:06d}: Running base simulation")
         simulation.run_simulation(self.get_debug_output_path(sid, instance_id))
 
         # Run its variations.
+        logger.info(f"{instance_id:06d}: Running variations of the base simulation")
         simulation.run_variations()
 
         # Generate questions.
         try:
+            logger.info(f"{instance_id:06d}: Generating questions and answers for the base simulation")
             simulation.generate_questions(simulation_config)
         except Exception as e:
             traceback.print_exception(type(e), e, e.__traceback__)
+            logger.error(f"{instance_id:06d}: Error while generating questions")
 
     def execute(self):
         logger.info("Dataset generation process has started.")
@@ -634,7 +639,7 @@ class DatasetGenerator:
         # To measure remaining time.
         self.__start_time = time.time()
 
-        concurrent_process_count = 8
+        concurrent_process_count = 16
         logger.info(f"Set concurrent process count to {concurrent_process_count}")
 
         self.make_directories()

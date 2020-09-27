@@ -588,8 +588,8 @@ class DatasetGenerator:
 
     def __update_clock(self, diff, total_runs: int, current: int):
         times = np.append(self.__times, diff)
-        logger.info(f"Approx. {round((np.mean(times) * (total_runs - current - 1)) / 60, 2)} "
-                    "minutes remaining...".ljust(75, " "))
+        logger.info(f"Approximately {round((np.mean(times) * (total_runs - current - 1)) / 60, 2)} "
+                    "minutes remaining".ljust(75, " "))
 
     def __generate_configs_to_run(self) -> List[Dict]:
         configs_to_run = []

@@ -15,7 +15,7 @@ from colour import Color
 from loguru import logger
 
 from framework.simulation import SimulationRunner, SimulationInstance, QuestionGenerator
-from framework.utils import FileIO, Funnel
+from framework.utils import FileIO, Funnel, ParallelProcessor
 
 
 class SVQADataset:
@@ -543,6 +543,10 @@ class DatasetGenerator:
         self.__start_time = None
         self.__times = np.array([])
 
+    @staticmethod
+    def generate_video_and_questions_in_parallel(obj, instance_id: int, simulation_config: dict):
+        obj.generate_video_and_questions(instance_id, simulation_config)
+
     def get_state(self) -> int:
         last_state = None
         if os.path.exists(self.__state_file_path):
@@ -559,7 +563,7 @@ class DatasetGenerator:
         os.remove(self.__state_file_path)
 
     def dump_controller_file(self, instance_id: int, simulation_config: dict) -> str:
-        sid = simulation_config["sid"]
+        sid = simulation_config["id"]
 
         controller_file_path = self.get_controller_path(sid, instance_id)
 
@@ -582,8 +586,7 @@ class DatasetGenerator:
 
         return controller_file_path
 
-    def __update_clock(self, t1, total_runs: int, current: int):
-        diff = time.time() - t1
+    def __update_clock(self, diff, total_runs: int, current: int):
         times = np.append(self.__times, diff)
         logger.info(f"Approx. {round((np.mean(times) * (total_runs - current - 1)) / 60, 2)} "
                     "minutes remaining...".ljust(75, " "))
@@ -595,11 +598,44 @@ class DatasetGenerator:
                 [simulation_config] * (self.config.dataset_size // len(self.config.simulation_configs)))
         return configs_to_run
 
+    def generate_video_and_questions(self, instance_id: int, simulation_config: dict):
+        sid = simulation_config["id"]
+
+        logger.info(f"Running simulation with SID: {sid}, instance_id: {instance_id:06d}")
+
+        # Create controller file for current simulation instance.
+        controller_file_path = self.dump_controller_file(instance_id, simulation_config)
+
+        variations_output_path = self.get_simulation_with_variations_output_path(sid, instance_id)
+
+        questions_file_path = self.get_questions_output_path(sid, instance_id)
+
+        simulation = SimulationInstance(instance_id,
+                                        controller_file_path,
+                                        variations_output_path,
+                                        questions_file_path,
+                                        self.__runner)
+
+        # Run simulation.
+        simulation.run_simulation(self.get_debug_output_path(sid, instance_id))
+
+        # Run its variations.
+        simulation.run_variations()
+
+        # Generate questions.
+        try:
+            simulation.generate_questions(simulation_config)
+        except Exception as e:
+            traceback.print_exception(type(e), e, e.__traceback__)
+
     def execute(self):
         logger.info("Dataset generation process has started.")
 
         # To measure remaining time.
         self.__start_time = time.time()
+
+        concurrent_process_count = 8
+        logger.info(f"Set concurrent process count to {concurrent_process_count}")
 
         self.make_directories()
 
@@ -610,42 +646,29 @@ class DatasetGenerator:
             start = self.get_state()
             logger.info(f"Dataset generation state file found at output folder path, continuing from {start}...")
 
-        for instance_id in range(start, len(configs_to_run)):
+        for i in range(start, len(configs_to_run), concurrent_process_count):
             t1 = time.time()  # To measure remaining time.
 
-            self.__save_state(instance_id)
+            self.__save_state(i)
 
-            simulation_config = configs_to_run[instance_id]
-            sid = simulation_config["id"]
+            jobs = []
+            args = []
+            for instance_id in range(i, i + concurrent_process_count):
+                if len(configs_to_run) > instance_id:
+                    simulation_config = configs_to_run[instance_id]
+                    jobs.append(DatasetGenerator.generate_video_and_questions_in_parallel)
+                    args.append([self, instance_id, simulation_config])
 
-            logger.info(f"Running simulation with SID: {sid}, instance_id: {instance_id:06d}...")
+            parallel_processes = ParallelProcessor(jobs, args)
+            logger.info(f"Forking simulation processes into parallel")
+            parallel_processes.fork_processes()
+            logger.info(f"Starting parallel processes for simulations from {i} to {i + concurrent_process_count}")
+            parallel_processes.start_all()
+            logger.info(f"Waiting for parallel processes to finish")
+            parallel_processes.join_all()
+            logger.info(f"Joined all parallel processes into main thread")
 
-            # Create controller file for current simulation instance.
-            controller_file_path = self.dump_controller_file(instance_id, simulation_config)
-
-            variations_output_path = self.get_simulation_with_variations_output_path(sid, instance_id)
-
-            questions_file_path = self.get_questions_output_path(sid, instance_id)
-
-            simulation = SimulationInstance(instance_id,
-                                            controller_file_path,
-                                            variations_output_path,
-                                            questions_file_path,
-                                            self.__runner)
-
-            # Run simulation.
-            simulation.run_simulation(self.get_debug_output_path(sid, instance_id))
-
-            # Run its variations.
-            simulation.run_variations()
-
-            # Generate questions.
-            try:
-                simulation.generate_questions(simulation_config)
-            except Exception as e:
-                traceback.print_exception(type(e), e, e.__traceback__)
-
-            self.__update_clock(t1, len(configs_to_run), instance_id)
+            self.__update_clock((time.time() - t1) / concurrent_process_count, len(configs_to_run), i + concurrent_process_count)
 
         logger.info(
             f"Dataset generation is complete. Process took {round((time.time() - self.__start_time) / 60, 2)} minutes.")

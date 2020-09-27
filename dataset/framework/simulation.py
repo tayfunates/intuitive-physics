@@ -18,7 +18,7 @@ class SimulationRunner(object):
         subprocess.call(f"{self.exec_path} {controller_json_path}",
                         shell=True,
                         universal_newlines=True,
-                        stdout=sys.stdout if debug_output_path is None else open(debug_output_path, "w"))
+                        stdout=open(os.devnull, 'wb') if debug_output_path is None else open(debug_output_path, "w"))
 
     def run_variations(self, controller_json_path: str, variations_output_path: str, debug_output_path=None):
         variation_runner = VariationRunner(self)

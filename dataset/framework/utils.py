@@ -1,10 +1,13 @@
 import glob
 import json
+from typing import List
 
 import orjson
 import os
 
 import ujson
+
+from multiprocessing import Process
 
 
 class DictUtils:
@@ -72,3 +75,41 @@ class Funnel:
     def filter(self, predicate):
         self.__list = list(filter(predicate, self.__list))
         return self
+
+
+class ParallelProcessor(object):
+    """
+    To process the functions in parallel
+    """
+
+    def __init__(self, jobs: list, args: list):
+        """
+        """
+        self.jobs = jobs
+        self.args = args
+        self.processes: List[Process] = []
+
+    def fork_processes(self):
+        """
+        Creates the process objects for given function delegates
+        """
+        for i in range(len(self.jobs)):
+            job = self.jobs[i]
+            job_args = self.args[i]
+            proc = Process(target=job, args=job_args)
+            self.processes.append(proc)
+
+    def start_all(self):
+        """
+        Starts the functions process all together.
+        """
+        for proc in self.processes:
+            proc.start()
+
+    def join_all(self):
+        """
+        Waits untill all the functions executed.
+        """
+        for proc in self.processes:
+            proc.join()
+

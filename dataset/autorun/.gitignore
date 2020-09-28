@@ -1,9 +1,0 @@
-*.json
-*.mpg
-outputs/
-controllers/
-.idea/
-venv/
-*cache*
-out/
-*.zip

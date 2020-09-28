@@ -10,13 +10,14 @@ STEPS
 4- run all controllers
 """
 
+
 ## STEP 1
 def read_old_snapshots(folder_path: str):
     all_snapshots = list()
-    for file_name in os.listdir(folder_path):     # filename: 5_375.json
+    for file_name in os.listdir(folder_path):  # filename: 5_375.json
         full_path = folder_path + "/" + file_name
-        sim_id = (file_name[:-5]).split("_")[0]       # simulation_id = 5
-        frame = (file_name[:-5]).split("_")[1]        # current_frame = 375
+        sim_id = (file_name[:-5]).split("_")[0]  # simulation_id = 5
+        frame = (file_name[:-5]).split("_")[1]  # current_frame = 375
 
         if file_name == ".DS_Store":
             continue
@@ -35,6 +36,8 @@ def read_old_snapshots(folder_path: str):
 "direction :
 "objects": []
 """
+
+
 def create_all_combinations_from_one_snapshot(snapshot: dict) -> list:
     shape_list = ["cube", "circle", "triangle"]
     result = []
@@ -48,10 +51,10 @@ def create_all_combinations_from_one_snapshot(snapshot: dict) -> list:
     return result
 
 
-def get_static_objects(old_json_folder_path,new_json_folder_path):
+def get_static_objects(old_json_folder_path, new_json_folder_path):
     p = old_json_folder_path + "/" + os.listdir(old_json_folder_path)[0]
 
-    file = open(p , "r")
+    file = open(p, "r")
     snapshot = json.loads(file.read())
     file.close()
 
@@ -64,12 +67,10 @@ def get_static_objects(old_json_folder_path,new_json_folder_path):
         if obj["shape"] not in shape_list:
             temp["objects"].append(obj)
 
-
-    f = open(new_json_folder_path + "/idstatic.json" , "w")
+    f = open(new_json_folder_path + "/idstatic.json", "w")
     f.write(json.dumps(temp, indent=4))
     f.close()
     return temp
-
 
 
 def create_all_combinations(all_old_snapshots_dict: list):
@@ -88,6 +89,7 @@ def create_all_combinations(all_old_snapshots_dict: list):
 
     return result
 
+
 def write_new_snapshots_to_file(old_snapshots_folder_path: str, new_snapshots_folder_path: str):
     all_old_snapshots = read_old_snapshots(old_snapshots_folder_path)
 
@@ -100,14 +102,13 @@ def write_new_snapshots_to_file(old_snapshots_folder_path: str, new_snapshots_fo
         shape = snapshot["snapshot"]["objects"][0]["shape"]
         size = snapshot["snapshot"]["objects"][0]["size"]
         color = snapshot["snapshot"]["objects"][0]["color"]
-        name = "id" + snapshot["simulation_id"] + "_" + "frame" + snapshot["frame"] + "_" + size + "_" +color + "_" + shape
+        name = "id" + snapshot["simulation_id"] + "_" + "frame" + snapshot[
+            "frame"] + "_" + size + "_" + color + "_" + shape
         f = open(new_snapshots_folder_path + "/" + name + ".json", "w")
-        f.write(json.dumps(snapshot["snapshot"],indent=4))
+        f.write(json.dumps(snapshot["snapshot"], indent=4))
         f.close()
 
     get_static_objects(old_snapshots_folder_path, new_snapshots_folder_path)
-
-
 
 
 def get_controller_json(base_path: str, controller_name: str, simulation_id: int):
@@ -134,12 +135,12 @@ def write_new_controller_to_file(new_snapshots: str, output_folder: str):
         if f == ".DS_Store":
             continue
         if f == "static.json":
-            j = get_controller_json(new_snapshots, "id_"+ f, sim_id)
+            j = get_controller_json(new_snapshots, "id_" + f, sim_id)
             file = open(output_folder + "/" + f, "w")
             file.write(json.dumps(j, indent=4))
             file.close()
-        j = get_controller_json(new_snapshots, f, sim_id )
-        file = open(output_folder + "/" + f , "w")
+        j = get_controller_json(new_snapshots, f, sim_id)
+        file = open(output_folder + "/" + f, "w")
         file.write(json.dumps(j, indent=4))
         file.close()
 
@@ -152,19 +153,15 @@ def run(controller_base_path: str, exe_path: str):
     files = os.listdir(controller_base_path)
 
     for f in files:
-        full_controller_path = controller_base_path + "/" +f
-        #print("RUNNING SIMULATION::" + full_controller_path)
+        full_controller_path = controller_base_path + "/" + f
+        # print("RUNNING SIMULATION::" + full_controller_path)
         run_simulation(exe_path, full_controller_path)
-
 
 
 def x(old_snapshots_folder: str, new_snapshots_folder: str, new_controllers_folder: str, exec_path: str):
     write_new_snapshots_to_file(old_snapshots_folder, new_snapshots_folder)
     write_new_controller_to_file(new_snapshots_folder, new_controllers_folder)
     run(new_controllers_folder, exec_path)
-
-
-
 
 
 from PIL import Image
@@ -182,12 +179,12 @@ def make_transparent(img):
     img.putdata(newData)
     return img
 
+
 def get_transparent_image(image_path):
     return make_transparent(Image.open(image_path).convert("RGBA"))
 
 
-
-img_base_path  = "/Users/cagatayyigit/Desktop/screenshots/"
+img_base_path = "/Users/cagatayyigit/Desktop/screenshots/"
 
 
 def get_all_image(base_path):
@@ -223,13 +220,14 @@ def get_all_image(base_path):
     count = 1
     total = len(shape_arr) * len(frame_arr)
     for shape in shape_arr:
-        for frame in frame_arr: # id5_frame10_large_cyan_circle.png"
+        for frame in frame_arr:  # id5_frame10_large_cyan_circle.png"
             full_path = base_path + str(sim_id) + "_frame" + str(frame) + "_" + str(shape) + ".png"
-            print("Loaded:"+str(count) + "/" + str(total) + "  -->>" + full_path)
+            print("Loaded:" + str(count) + "/" + str(total) + "  -->>" + full_path)
             count += 1
             result.append([get_transparent_image(full_path), frame])
 
-    return [result,len(frame_arr)]
+    return [result, len(frame_arr)]
+
 
 def combine():
     m1 = get_transparent_image("/Users/cagatayyigit/Desktop/screenshots/idstatic.png")
@@ -239,7 +237,7 @@ def combine():
     for img in images:
         img[0].putalpha(i * (j + 10))
         img[0] = make_transparent(img[0])
-        m1.paste(img[0], (0,0), img[0])
+        m1.paste(img[0], (0, 0), img[0])
         if j < frame_per_object:
             j += 1
         else:
@@ -248,14 +246,12 @@ def combine():
     m1.save("/Users/cagatayyigit/Desktop/result.png")
 
 
-
-
 old_snapshots_folder = "/Users/cagatayyigit/Desktop/snapshots"
 new_snapshots_folder = "/Users/cagatayyigit/Desktop/new_snapshots"
 new_controllers_folder = "/Users/cagatayyigit/Desktop/new_controllers"
 exec_path = "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
 
-#run_simulation(exec_path, controller_json_path: str):
+# run_simulation(exec_path, controller_json_path: str):
 
-x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
+x(old_snapshots_folder, new_snapshots_folder, new_controllers_folder, exec_path)
 combine()

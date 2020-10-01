@@ -987,4 +987,6 @@ The answer to this question is true since big blue block is intended to enter th
 
 - There can be multiple patients in cause, enable, and prevent tasks, but there cannot be multiple affectors.
 
+- Properties such as object mass can be integrated using material textures.
+
 

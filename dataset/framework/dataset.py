@@ -1,20 +1,20 @@
-import json
 import glob
+import json
 import os
-import subprocess
 import time
 import traceback
 from collections import defaultdict
 from pathlib import Path
 from typing import List, Dict
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
 from colour import Color
+from imblearn.under_sampling import RandomUnderSampler
 from loguru import logger
 
-from framework.simulation import SimulationRunner, SimulationInstance, QuestionGenerator
+from framework.simulation import SimulationRunner, SimulationInstance
 from framework.utils import FileIO, Funnel, ParallelProcessor
 
 
@@ -193,7 +193,6 @@ class DatasetUtils:
 
         reshaped = data.reshape((-1, 1))
 
-        from imblearn.under_sampling import RandomUnderSampler
         rus = RandomUnderSampler()
         X_rus, y_rus = rus.fit_resample(reshaped, labels)
 
@@ -380,6 +379,35 @@ class DatasetStatisticsExporter:
         os.makedirs(output_folder, exist_ok=True)
 
     def generate_pie_chart(self, title, counts, labels, colors, explodes):
+        fig = go.Figure(data=[go.Pie(labels=labels, values=counts, textinfo='label+percent+value',
+                                     texttemplate="%{label}: %{percent} (%{value})",
+                                     insidetextorientation='radial',
+                                     titleposition="top center",
+                                     title=title,
+                                     sort=False,
+                                     marker=dict(colors=[str(color.hex) for color in colors])
+                                     )])
+
+        fig.update_layout(
+            autosize=False,
+            width=640,
+            height=640,
+            # legend=dict(
+            #     y=1.3,
+            #     x=-0.30,
+            #     bgcolor="rgba(0,0,0,0)",
+            # ),
+            legend_title_text='Answers'
+        )
+
+        if self.export_png:
+            if not os.path.exists(self.output_folder):
+                os.makedirs(self.output_folder)
+            fig.write_image(self.output_folder + os.path.sep + title + ".png")
+        else:
+            fig.show()
+
+        """
         fig1, ax1 = plt.subplots(figsize=(12, 12))
         ax1.pie(counts,
                 labels=labels,
@@ -389,9 +417,9 @@ class DatasetStatisticsExporter:
                 radius=4,
                 explode=explodes)
 
-        """ax1.legend(wedges, answers_sorted,
+        '''ax1.legend(wedges, answers_sorted,
                   title="Answers",
-                  loc="best")"""
+                  loc="best")'''
 
         ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         ax1.set_title(title)
@@ -403,6 +431,7 @@ class DatasetStatisticsExporter:
             plt.savefig(self.output_folder + os.path.sep + title + ".png")
         else:
             plt.show()
+        """
 
     @staticmethod
     def answer_counts_from_question_list(question_list: list) -> dict:
@@ -420,38 +449,36 @@ class DatasetStatisticsExporter:
 
         colors = []
         answers_sorted = []
-        counting_answers = [answer for answer in answers if
-                            self.stats.dataset.get_answer_type_for_answer(answer) == "Count"]
-        shape_answers = [answer for answer in answers if
-                         self.stats.dataset.get_answer_type_for_answer(answer) == "Shape"]
-        color_answers = [answer for answer in answers if
-                         self.stats.dataset.get_answer_type_for_answer(answer) == "Color"]
-        boolean_answers = [answer for answer in answers if
-                           self.stats.dataset.get_answer_type_for_answer(answer) == "Boolean"]
+        counting_answers = sorted([answer for answer in answers if
+                            self.stats.dataset.get_answer_type_for_answer(answer) == "Count"], reverse=True, key=lambda x: answer_counts[x])
+        shape_answers = sorted([answer for answer in answers if
+                         self.stats.dataset.get_answer_type_for_answer(answer) == "Shape"], reverse=True, key=lambda x: answer_counts[x])
+        color_answers = sorted([answer for answer in answers if
+                         self.stats.dataset.get_answer_type_for_answer(answer) == "Color"], reverse=True, key=lambda x: answer_counts[x])
+        boolean_answers = sorted([answer for answer in answers if
+                           self.stats.dataset.get_answer_type_for_answer(answer) == "Boolean"], reverse=True, key=lambda x: answer_counts[x])
 
         answers_sorted.extend(counting_answers)
         if len(counting_answers) > 0:
-            colors.extend(Color("red").range_to(Color("#ffaaaa"), len(counting_answers)))
+            colors.extend(Color("#8a3059").range_to(Color("#f4a3a8"), len(counting_answers)))
         answers_sorted.extend(shape_answers)
         if len(shape_answers) > 0:
-            colors.extend(Color("green").range_to(Color("#aaffaa"), len(shape_answers)))
+            colors.extend(Color("#266a6e").range_to(Color("#96d2a4"), len(shape_answers)))
         answers_sorted.extend(color_answers)
         if len(color_answers) > 0:
-            colors.extend(Color("blue").range_to(Color("#aaaaff"), len(color_answers)))
+            colors.extend(Color("#3b738f").range_to(Color("#a8dbd9"), len(color_answers)))
         answers_sorted.extend(boolean_answers)
         if len(boolean_answers) > 0:
             colors.extend(Color("#555555").range_to(Color("#aaaaaa"), len(boolean_answers)))
 
         counts = [answer_counts[answer] for answer in answers_sorted]
 
-        answers_sorted = [f"{answer} ({answer_counts[answer]})" for answer in answers_sorted]
+        # answers_sorted = [f"{answer} ({answer_counts[answer]})" for answer in answers_sorted]
         # explodes_s = [0.1] * len(answers_sorted)
         proportions = {c: c / sum(counts) for c in counts}
         explodes = [pow(1 - proportions[c] / max(proportions.values()), 2) for c in counts]
 
-        colors_rgb = [color.rgb for color in colors]
-
-        self.generate_pie_chart(title, counts, labels=answers_sorted, colors=colors_rgb, explodes=explodes)
+        self.generate_pie_chart(title, counts, labels=answers_sorted, colors=list(colors), explodes=explodes)
 
     def generate_chart__answer_per_template(self):
         df = pd.DataFrame(self.stats.answer_freq_per_tid)
@@ -673,7 +700,8 @@ class DatasetGenerator:
             parallel_processes.join_all()
             logger.info(f"Joined all parallel processes into main thread")
 
-            self.__update_clock((time.time() - t1) / concurrent_process_count, len(configs_to_run), i + concurrent_process_count)
+            self.__update_clock((time.time() - t1) / concurrent_process_count, len(configs_to_run),
+                                i + concurrent_process_count)
 
         logger.info(
             f"Dataset generation is complete. Process took {round((time.time() - self.__start_time) / 60, 2)} minutes.")

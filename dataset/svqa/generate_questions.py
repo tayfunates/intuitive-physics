@@ -87,7 +87,7 @@ parser.add_argument('--restrict-template-count-per-video', default=False, type=b
 parser.add_argument('--templates-per-video', default=10, type=int,
                     help="The number of different templates that should be instantiated " +
                          "on each video")
-parser.add_argument('--instances-per-template', default=5, type=int,
+parser.add_argument('--instances-per-template', default=1, type=int,
                     help="The number of times each template should be instantiated on a video")
 
 # Misc

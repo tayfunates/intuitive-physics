@@ -397,6 +397,9 @@ class DatasetStatisticsExporter:
             #     x=-0.30,
             #     bgcolor="rgba(0,0,0,0)",
             # ),
+            font=dict(
+                size=16,
+            ),
             legend_title_text='Answers'
         )
 

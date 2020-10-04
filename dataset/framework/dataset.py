@@ -532,6 +532,16 @@ class DatasetGenerationConfig:
         self.simulation_configs = config_dict['simulation_configs']
         self.offline = config_dict['offline']
 
+        self.concurrent_process_count = 16
+        if 'concurrent_process_count' in config_dict:
+            # Override default value
+            self.concurrent_process_count = config_dict['concurrent_process_count']
+
+        self.should_generate_questions: bool = True
+        if 'do_not_generate_questions' in config_dict:
+            # Override default value
+            self.should_generate_questions = not config_dict['do_not_generate_questions']
+
 
 class DatasetGenerator:
     """
@@ -653,12 +663,15 @@ class DatasetGenerator:
         simulation.run_variations()
 
         # Generate questions.
-        try:
-            logger.info(f"{instance_id:06d}: Generating questions and answers for the base simulation")
-            simulation.generate_questions(simulation_config)
-        except Exception as e:
-            traceback.print_exception(type(e), e, e.__traceback__)
-            logger.error(f"{instance_id:06d}: Error while generating questions")
+        if self.config.should_generate_questions:
+            try:
+                logger.info(f"{instance_id:06d}: Generating questions and answers for the base simulation")
+                simulation.generate_questions(simulation_config)
+            except Exception as e:
+                traceback.print_exception(type(e), e, e.__traceback__)
+                logger.error(f"{instance_id:06d}: Error while generating questions")
+        else:
+            logger.info(f"{instance_id:06d}: Bypassing question generation")
 
     def execute(self):
         logger.info("Dataset generation process has started.")
@@ -666,7 +679,7 @@ class DatasetGenerator:
         # To measure remaining time.
         self.__start_time = time.time()
 
-        concurrent_process_count = 16
+        concurrent_process_count = self.config.concurrent_process_count
         logger.info(f"Set concurrent process count to {concurrent_process_count}")
 
         self.make_directories()
@@ -708,8 +721,13 @@ class DatasetGenerator:
 
         self.__remove_state_file()
 
-        logger.info(f"Dumping dataset...")
-        self.__dump_dataset()
+        if self.config.should_generate_questions:
+            logger.info(f"Dumping dataset...")
+            self.__dump_dataset()
+        else:
+            logger.info(f"Not dumping the dataset, since 'do_not_generate_questions' flag is set to true")
+
+        # TODO: Verify the integrity of dataset
 
     def __dump_dataset(self):
         dataset = json.loads("[]")
@@ -734,6 +752,7 @@ class DatasetGenerator:
                                     }}""")
                     )
             except FileNotFoundError:
+                logger.warning(f"{instance_id:06d}: Questions file cannot be found")
                 continue
 
         logger.info(f"Converting absolute paths to relative paths based on current working directory...")

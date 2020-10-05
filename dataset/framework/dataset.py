@@ -10,6 +10,7 @@ from typing import List, Dict
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 from colour import Color
 from imblearn.under_sampling import RandomUnderSampler
 from loguru import logger
@@ -130,19 +131,25 @@ class SVQADataset:
 
     def generate_statistics(self, output_folder):
         stats = DatasetStatistics(self)
+        logger.info(f"Generating all statistics of the dataset")
         stats.generate_all_stats()
         exporter = DatasetStatisticsExporter(stats, export_png=True, output_folder=output_folder)
 
-        logger.info(f"Generating statistics: Answer frequencies per template ID")
+        logger.info(f"Generating charts: Answer frequencies per template ID")
         exporter.generate_chart__answer_per_template()
-        logger.info(f"Generating statistics: Template ID frequencies per simulation ID")
+        logger.info(f"Generating charts: Template ID frequencies per simulation ID")
         exporter.generate_chart__template_per_sim_id()
-        logger.info(f"Generating statistics: Answer frequencies in the dataset")
+        logger.info(f"Generating charts: Answer frequencies in the dataset")
         exporter.generate_chart__answer_frequencies()
-        logger.info(f"Generating statistics: Answer frequencies per simulation ID")
+        logger.info(f"Generating charts: Answer frequencies per simulation ID")
         exporter.generate_chart__answer_frequencies_per_sim_id()
-        logger.info(f"Generating statistics: Answer frequencies per TID and SID")
+        logger.info(f"Generating charts: Answer frequencies per TID and SID")
         exporter.generate_chart__answer_per_template_and_simulation()
+        logger.info(f"Generating charts: Sunburst charts for each SID")
+        exporter.generate_sunburst_charts_for_each_scene_type()
+        logger.info(f"Generating charts: Sunburst chart for the dataset")
+        exporter.generate_sunburst_chart_question_type_to_answer_type_to_answer_for_whole_dataset()
+
 
 
 class DatasetUtils:
@@ -377,6 +384,81 @@ class DatasetStatisticsExporter:
         self.export_png = export_png
         self.output_folder = output_folder
         os.makedirs(output_folder, exist_ok=True)
+
+    def generate_sunburst_charts_for_each_scene_type(self):
+        unique_sids = self.stats.dataset.get_unique_values("simulation_id")
+        for sid in unique_sids:
+            self.generate_sunburst_chart_question_type_to_answer_type_to_answer_in_a_scene_type(
+                f"Answer distribution of each question type for SID={sid}", sid, self.stats.dataset.questions
+            )
+
+
+
+    def generate_sunburst_chart_question_type_to_answer_type_to_answer_in_a_scene_type(self, title, sid: str, questions):
+        filtered = Funnel(questions).filter(lambda question: question["simulation_id"] == sid).get_result()
+
+        for i in range(len(filtered)):
+            filtered[i].update({"question_type": filtered[i]["template_id"].split("_")[0].capitalize(),
+                                "answer": filtered[i]["answer"].capitalize()})
+
+        df = pd.DataFrame(filtered)
+        fig = px.sunburst(df, path=['question_type', 'answer_type', 'answer'],
+                              color='answer_type',
+                              color_discrete_map={'Boolean': '#8dd3c7', 'Count': '#ffffb3', 'Color': '#bebada', 'Shape': '#fb8072', 'Size':'#80b1d3'}
+                          )
+
+        fig.update_traces(marker=dict( line=dict(color='#000000', width=0.5)))
+        fig.update_layout(
+            autosize=False,
+            width=640,
+            height=640,
+            font=dict(
+                size=16,
+                family="Times New Roman",
+            ),
+        )
+
+        if self.export_png:
+            if not os.path.exists(self.output_folder):
+                os.makedirs(self.output_folder)
+            fig.write_image(self.output_folder + os.path.sep + title + ".png")
+            fig.write_image(self.output_folder + os.path.sep + title + ".pdf")
+        else:
+            fig.show()
+
+    def generate_sunburst_chart_question_type_to_answer_type_to_answer_for_whole_dataset(self):
+        title = "Answer distribution of the dataset "
+
+        filtered = list(self.stats.dataset.questions)
+
+        for i in range(len(filtered)):
+            filtered[i].update({"question_type": filtered[i]["template_id"].split("_")[0].capitalize(),
+                                "answer": filtered[i]["answer"].capitalize()})
+
+        df = pd.DataFrame(filtered)
+        fig = px.sunburst(df, path=['question_type', 'answer_type', 'answer'],
+                              color='answer_type',
+                              color_discrete_map={'Boolean': '#8dd3c7', 'Count': '#ffffb3', 'Color': '#bebada', 'Shape': '#fb8072', 'Size': '#80b1d3'}
+                          )
+
+        fig.update_traces(marker=dict( line=dict(color='#000000', width=0.5)))
+        fig.update_layout(
+            autosize=False,
+            width=640,
+            height=640,
+            font=dict(
+                size=16,
+                family="Times New Roman",
+            ),
+        )
+
+        if self.export_png:
+            if not os.path.exists(self.output_folder):
+                os.makedirs(self.output_folder)
+            fig.write_image(self.output_folder + os.path.sep + title + ".png")
+            fig.write_image(self.output_folder + os.path.sep + title + ".pdf")
+        else:
+            fig.show()
 
     def generate_pie_chart(self, title, counts, labels, colors, explodes):
         fig = go.Figure(data=[go.Pie(labels=labels, values=counts, textinfo='label+percent+value',

@@ -30,6 +30,7 @@ class Ui(QtWidgets.QMainWindow):
         self.lw_questions = self.findChild(QFrame, "questionsListWidget")
 
         self.video_index_str = None
+        self.le_dataset_folder.setText(self.get_last_dataset_folder())
 
         self.vlc_instance = vlc.Instance()
         self.vlc_media_player = self.vlc_instance.media_player_new()
@@ -39,7 +40,6 @@ class Ui(QtWidgets.QMainWindow):
         elif sys.platform == "win32":  # for Windows
             self.vlc_media_player.set_hwnd(self.f_video.winId())
         elif sys.platform == "darwin":  # for MacOS
-            #self.vlc_media_player.set_xwindow(self.f_video.winId())
             self.vlc_media_player.set_nsobject(int(self.f_video.winId()))
 
         self.initialize_listeners()
@@ -51,7 +51,7 @@ class Ui(QtWidgets.QMainWindow):
 
     def video_item_clicked(self, item):
         logger.debug("Item clicked: " + item.text())
-        self.video_index_str = item.text()
+        self.video_index_str = str(item.text()).split(" - ")[0]
 
         files = []
         start_dir = Path(f"{self.path}").joinpath("videos")
@@ -77,12 +77,24 @@ class Ui(QtWidgets.QMainWindow):
 
     def populate_lists(self):
         self.lw_videos.clear()
-        self.lw_videos.addItems([f"{key:06d}" for key in g_dataset.video_index_to_question_object_map.keys()])
+        self.lw_videos.addItems([f"{key:06d} - SID: {g_dataset.video_index_to_question_object_map[key][0]['simulation_id']}" for key in g_dataset.video_index_to_question_object_map.keys()])
         self.lw_videos.itemClicked.connect(self.video_item_clicked)
+
+
+    def get_last_dataset_folder(self):
+        last_folder = ""
+        if os.path.exists(".state"):
+            with open(".state", "r") as state_file:
+                last_folder = state_file.read()
+        return last_folder
 
     def load_dataset(self):
         logger.info("Loading dataset...")
         self.path = self.le_dataset_folder.text()
+
+        with open(".state", "w") as state_file:
+            state_file.write(self.path)
+
         global g_dataset
         g_dataset = SVQADataset(self.path, FileIO.read_json("../svqa/metadata.json"))
         logger.info(f"Dataset at {self.path} loaded...")

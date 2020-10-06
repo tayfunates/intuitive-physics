@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1051</width>
-    <height>638</height>
+    <height>613</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,7 +66,7 @@
       <x>210</x>
       <y>40</y>
       <width>571</width>
-      <height>551</height>
+      <height>511</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -101,6 +101,32 @@
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="replayButton">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>560</y>
+      <width>71</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Replay</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="videoPathLabel">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>560</y>
+      <width>491</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Video Path</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -108,7 +134,7 @@
      <x>0</x>
      <y>0</y>
      <width>1051</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

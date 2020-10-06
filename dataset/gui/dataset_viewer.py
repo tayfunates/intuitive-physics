@@ -10,7 +10,7 @@ from pathlib import Path
 from framework.dataset import SVQADataset
 import vlc
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtWidgets import QFrame, QListWidget, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QFrame, QListWidget, QLineEdit, QPushButton, QLabel
 
 from framework.utils import FileIO
 
@@ -28,6 +28,8 @@ class Ui(QtWidgets.QMainWindow):
         self.lw_videos = self.findChild(QListWidget, "videosListWidget")
         self.f_video = self.findChild(QFrame, "videoFrame")
         self.lw_questions = self.findChild(QFrame, "questionsListWidget")
+        self.btn_replay = self.findChild(QPushButton, "replayButton")
+        self.l_video_path = self.findChild(QLabel, "videoPathLabel")
 
         self.video_index_str = None
         self.le_dataset_folder.setText(self.get_last_dataset_folder())
@@ -48,10 +50,11 @@ class Ui(QtWidgets.QMainWindow):
 
     def initialize_listeners(self):
         self.btn_load.clicked.connect(self.load_dataset)
+        self.btn_replay.clicked.connect(self.play_video)
 
-    def video_item_clicked(self, item):
-        logger.debug("Item clicked: " + item.text())
-        self.video_index_str = str(item.text()).split(" - ")[0]
+    def play_video(self):
+        if self.video_index_str is None:
+            return
 
         files = []
         start_dir = Path(f"{self.path}").joinpath("videos")
@@ -67,13 +70,21 @@ class Ui(QtWidgets.QMainWindow):
 
         logger.debug(f"Full video path: {full_path}")
 
+        self.l_video_path.setText(full_path)
+
         media = self.vlc_instance.media_new(full_path)
         self.vlc_media_player.set_media(media)
-        self.vlc_media_player.play() 
+        self.vlc_media_player.play()
 
         self.lw_questions.clear()
         self.lw_questions.addItems([f"Q: {qa['question']}\nA: {qa['answer']}\nT: {qa['template_id']}\n"
                                     for qa in g_dataset.get_questions_for_video(int(self.video_index_str))])
+
+    def video_item_clicked(self, item):
+        logger.debug("Item clicked: " + item.text())
+        self.video_index_str = str(item.text()).split(" - ")[0]
+        self.play_video()
+
 
     def populate_lists(self):
         self.lw_videos.clear()

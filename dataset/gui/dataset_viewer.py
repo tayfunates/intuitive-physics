@@ -40,7 +40,7 @@ class Ui(QtWidgets.QMainWindow):
             self.vlc_media_player.set_hwnd(self.f_video.winId())
         elif sys.platform == "darwin":  # for MacOS
             #self.vlc_media_player.set_xwindow(self.f_video.winId())
-            self.vlc_media_player.set_nsobject(self.f_video.winId())
+            self.vlc_media_player.set_nsobject(int(self.f_video.winId()))
 
         self.initialize_listeners()
 
@@ -73,7 +73,7 @@ class Ui(QtWidgets.QMainWindow):
 
         self.lw_questions.clear()
         self.lw_questions.addItems([f"Q: {qa['question']}\nA: {qa['answer']}\nT: {qa['template_id']}\n"
-                                    for qa in g_dataset.get_questions_for_video(int(video_index_str))])
+                                    for qa in g_dataset.get_questions_for_video(int(self.video_index_str))])
 
     def populate_lists(self):
         self.lw_videos.clear()

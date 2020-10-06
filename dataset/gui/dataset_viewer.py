@@ -1,39 +1,22 @@
 #!/usr/bin/python3
 
 import json
-from loguru import logger as logging
+from loguru import logger
 import os
 import sys
 from glob import glob
 from pathlib import Path
 
+from framework.dataset import SVQADataset
 import vlc
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QFrame, QListWidget, QLineEdit, QPushButton
 
-
-def minimized_dataset(dataset_json) -> dict:
-    video_to_qa = {}
-    for qa_json in dataset_json:
-        video_to_qa[Path(qa_json["questions"]["info"]["video_filename"]).name] = \
-            [
-                {
-                    "question": question_obj["question"],
-                    "answer": question_obj["answer"],
-                    "template_filename": question_obj["template_filename"]
-                }
-                for question_obj in qa_json["questions"]["questions"]
-            ]
-    return video_to_qa
-
-
-class Dataset:
-
-    def __init__(self, dataset_json):
-        self.video_to_qa = minimized_dataset(dataset_json)
+from framework.utils import FileIO
 
 
 class Ui(QtWidgets.QMainWindow):
+
     def __init__(self):
         super(Ui, self).__init__()  # Call the inherited classes __init__ method
         uic.loadUi('dataset_viewer.ui', self)  # Load the .ui file
@@ -45,6 +28,8 @@ class Ui(QtWidgets.QMainWindow):
         self.lw_videos = self.findChild(QListWidget, "videosListWidget")
         self.f_video = self.findChild(QFrame, "videoFrame")
         self.lw_questions = self.findChild(QFrame, "questionsListWidget")
+
+        self.video_index_str = None
 
         self.vlc_instance = vlc.Instance()
         self.vlc_media_player = self.vlc_instance.media_player_new()
@@ -65,8 +50,8 @@ class Ui(QtWidgets.QMainWindow):
         self.btn_load.clicked.connect(self.load_dataset)
 
     def video_item_clicked(self, item):
-        logging.debug("Item clicked: " + item.text())
-        filename = item.text()
+        logger.debug("Item clicked: " + item.text())
+        self.video_index_str = item.text()
 
         files = []
         start_dir = Path(f"{self.path}").joinpath("videos")
@@ -77,31 +62,30 @@ class Ui(QtWidgets.QMainWindow):
 
         full_path = ""
         for path in files:
-            if Path(path).name == filename:
+            if Path(path).stem == self.video_index_str:
                 full_path = path
 
-        logging.debug("Full video path: %s", full_path)
+        logger.debug(f"Full video path: {full_path}")
 
         media = self.vlc_instance.media_new(full_path)
         self.vlc_media_player.set_media(media)
-        self.vlc_media_player.play()
+        self.vlc_media_player.play() 
 
         self.lw_questions.clear()
-        self.lw_questions.addItems([f"Q: {qa['question']}\nA: {qa['answer']}\nT: {qa['template_filename']}\n"
-                                    for qa in g_dataset.video_to_qa[filename]])
+        self.lw_questions.addItems([f"Q: {qa['question']}\nA: {qa['answer']}\nT: {qa['template_id']}\n"
+                                    for qa in g_dataset.get_questions_for_video(int(video_index_str))])
 
     def populate_lists(self):
         self.lw_videos.clear()
-        self.lw_videos.addItems(g_dataset.video_to_qa.keys())
+        self.lw_videos.addItems([f"{key:06d}" for key in g_dataset.video_index_to_question_object_map.keys()])
         self.lw_videos.itemClicked.connect(self.video_item_clicked)
 
     def load_dataset(self):
-        logging.info("Loading dataset...")
+        logger.info("Loading dataset...")
         self.path = self.le_dataset_folder.text()
-        with open(Path(f"{self.path}").joinpath("dataset.json"), "r") as json_file:
-            global g_dataset
-            g_dataset = Dataset(json.load(json_file))
-        logging.info(f"Dataset at {self.path} loaded...")
+        global g_dataset
+        g_dataset = SVQADataset(self.path, FileIO.read_json("../svqa/metadata.json"))
+        logger.info(f"Dataset at {self.path} loaded...")
         self.populate_lists()
 
 

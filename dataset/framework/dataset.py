@@ -28,10 +28,16 @@ class SVQADataset:
         self.questions = self.get_all_questions_as_list()
         self.questions_dataframe = pd.DataFrame(self.questions)
         self.max_video_index = None
+        self.video_index_to_question_object_map = defaultdict(list)
+        for question in self.questions:
+            self.video_index_to_question_object_map[question["video_index"]].append(question)
 
     def add_new_item(self):
         # TODO
         pass
+
+    def get_questions_for_video(self, video_index: int) -> List[Dict]:
+        return self.video_index_to_question_object_map[video_index]
 
     def get_last_video_index(self):
         if self.max_video_index is None:

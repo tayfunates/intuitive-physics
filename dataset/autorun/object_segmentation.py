@@ -120,6 +120,8 @@ def get_controller_json(base_path: str, controller_name: str, simulation_id: int
                 "width": 1024,
                 "height": 1024,
                 "inputScenePath":  "{base_path}/{controller_name}",
+                "includeDynamicObjects": true,
+                "min_mean_max_random": "random",   
                 "stepCount": 3
             }}""")
 
@@ -231,7 +233,7 @@ def get_all_image(base_path):
 
     return [result,len(frame_arr)]
 
-def combine():
+def combine_summary(output_name):
     m1 = get_transparent_image("/Users/cagatayyigit/Desktop/screenshots/idstatic.png")
     images, frame_per_object = get_all_image("/Users/cagatayyigit/Desktop/screenshots/")
     i = 0
@@ -244,24 +246,80 @@ def combine():
         m1.paste(img[0], (0,0), img[0])
         i += 1
         j += 1
-        print(str(j) + "/" + str(total) + "->" +  str((i % frame_per_object ) * alpha + 105))
+        print(str(j-1) + "/" + str(total) + "->" +  str((i % frame_per_object ) * alpha + 105))
 
     m1.show()
-    m1.save("/Users/cagatayyigit/Desktop/result.png")
+    #m1.save("/Users/cagatayyigit/Desktop/result.png")
+    m1.save("/Users/cagatayyigit/Desktop/"+ output_name +".png")
 
 
+def combine_individual():
 
 
-old_snapshots_folder = "/Users/cagatayyigit/Desktop/snapshots"
+    images, frame_per_object = get_all_image("/Users/cagatayyigit/Desktop/screenshots/")
+
+    all_images = []
+    k = 0
+    for i in range(int(len(images) / int(frame_per_object))):
+        a = images[k:k+frame_per_object]
+        k+=frame_per_object
+        all_images.append(a)
+
+    asd = 1
+    for object in all_images:
+
+        m1 = get_transparent_image("/Users/cagatayyigit/Desktop/screenshots/idstatic.png")
+
+        frame_count = len(object)
+        img_arr = []
+        for img_ in object:
+            img = img_[0]
+            frame = img_[1]
+            img_arr.append(img)
+
+        i = 0
+        j = 1
+        total = len(images)
+        alpha = int(150 / (frame_per_object - 1))
+        for img in img_arr:
+            img.putalpha((i % frame_per_object) * alpha + 105)
+            img = make_transparent(img)
+            m1.paste(img, (0, 0), img)
+            i += 1
+            j += 1
+            print(str(j - 1) + "/" + str(total) + "->" + str((i % frame_per_object) * alpha + 105))
+        #m1.show()
+
+        m1.save("/Users/cagatayyigit/Desktop/" + str(asd) + ".png")
+        asd += 1
+
+old_snapshots_folder = "/Users/cagatayyigit/Projects/SVQA-Box2D/Testbed/snapshots"
 new_snapshots_folder = "/Users/cagatayyigit/Desktop/new_snapshots"
 new_controllers_folder = "/Users/cagatayyigit/Desktop/new_controllers"
 exec_path = "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
 
+b = "/Users/cagatayyigit/Projects/SVQA-Box2D/Testbed/screenshots/dynamic_ss"
 
+def remove():
+    import os
+    import glob
 
-#x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
-#combine()
+    files = glob.glob(new_controllers_folder)
+    for f in files:
+        os.remove(f)
 
+    files = glob.glob(new_snapshots_folder)
+    for f in files:
+        os.remove(f)
+
+    files = glob.glob("/Users/cagatayyigit/Desktop/screenshots")
+    for f in files:
+        os.remove(f)
+
+#remove()
+x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
+combine_summary("result")
+combine_individual()
 
 
 
@@ -359,7 +417,10 @@ def generate_static_images(new_controller_folder: str , exec_path, pngs_folder):
         combine_statics(png_names[i+1], png_names[i] , png_names[i+2], "results/" + str(s) + "result")
 
 
+"""
+
 generate_static_images("/Users/cagatayyigit/Desktop/static_controller",
                        "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
                        "/Users/cagatayyigit/Desktop/static_ss")
 
+"""

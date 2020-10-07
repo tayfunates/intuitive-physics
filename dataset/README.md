@@ -991,4 +991,6 @@ The answer to this question is true since big blue block is intended to enter th
 
 - Human performance evaluation.
 
+- Other answer types for counterfactual, cause, enable and prevent questions.
+
 

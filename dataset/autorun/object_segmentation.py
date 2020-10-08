@@ -48,7 +48,7 @@ def create_all_combinations_from_one_snapshot(snapshot: dict) -> list:
     return result
 
 
-def get_static_objects(old_json_folder_path,new_json_folder_path):
+def get_static_objects(old_json_folder_path, new_json_folder_path):
     p = old_json_folder_path + "/" + os.listdir(old_json_folder_path)[0]
 
     file = open(p , "r")
@@ -69,6 +69,10 @@ def get_static_objects(old_json_folder_path,new_json_folder_path):
     f.write(json.dumps(temp, indent=4))
     f.close()
     return temp
+
+
+
+
 
 
 
@@ -316,11 +320,30 @@ def remove():
     for f in files:
         os.remove(f)
 
-#remove()
-x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
-combine_summary("result")
-combine_individual()
 
+def get_original_json(path: str, new_json_path: str):
+
+    old_json = json.loads(open(path, "r").read())
+
+
+
+    new_name = "id" + path.split("/")[-1]
+
+    f = open(new_json_path + new_name, "w")
+    f.write(json.dumps(old_json["original_video_output"], indent=4))
+    f.close()
+
+
+
+def app_():
+    x(old_snapshots_folder, new_snapshots_folder,new_controllers_folder, exec_path)
+    combine_summary("result")
+    combine_individual()
+
+
+#get_original_json("/Users/cagatayyigit/Desktop/samples/textonly_true_frames_false/002799.json", "/Users/cagatayyigit/Desktop/")
+
+app_()
 
 
 

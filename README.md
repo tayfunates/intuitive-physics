@@ -268,6 +268,9 @@ Understanding how people perceive events or statements requiring causal reasonin
 
 Given an initial state of the scene, physical reasoning tasks mostly require forward prediction. In this work, authors try to evaluate the performance of forward prediction models on pyhsical reasoning tasks, specifically on the PHYRE benchmark. They observed that although incorporating forward prediction models improves performance of physical reasoning tasks, this does not always mean that better forward prediction models are more successful at understanding the physical dynamics of the scene. Furthermore, they also observed that object based forward predictors outperforms pixels based forward predictor while using pixel based predictors are more helpful in physical reasoning. When using different set of test and train templates of PHYRE, authors' experiments with forward predictors also state that their effects are limited. This suggests that forward predictors brings negligible improvements for cross-template settings. Within the templates, they also experimented to see which tasks benefit more from using forward predictors. Although their success metric for the tasks (AUCCESS) decreases, the improvements when using forward predictors becomes much more visible when the number objects is increased.
 
+### Model Implementations
+
+- [Object level Visual Reasoning in Videos](https://github.com/fabienbaradel/object_level_visual_reasoning) (Object masks are required.)
 
 ### Read Queue
 

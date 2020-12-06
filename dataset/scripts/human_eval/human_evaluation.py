@@ -32,9 +32,15 @@ class Question:
         self.actual_answer = ""
         self.question_type = ""
         self.info = None
+        self.finished = []
+        self.unique_ids = []
+        self.ips = []
 
     def set_info(self, info):
         self.info = info
+
+    def set_finished(self, lst):
+        self.finished = lst
 
     def set_user_answers(self, u_answer):
         self.u_answers = u_answer
@@ -69,6 +75,18 @@ def extract_user_responses(csv_path):
                 processed = "true"
             ans_temp.append(processed)
         question.set_user_answers(ans_temp)
+
+        finished_list = []
+        for f in data["Finished"][2:]:
+            finished_list.append(f)
+
+        for id in data["ResponseId"][2:]:
+            question.unique_ids.append(id)
+
+        for ip in data["IPAddress"][2:]:
+            question.ips.append(ip)
+
+        question.set_finished(finished_list)
 
     for q in user_datas:
         q_number = int((q.q_number[1:]).split(".")[0])
@@ -124,7 +142,7 @@ def evaluate():
     }
 
     flattened = []
-    for i in range(0, len(all_questions) - 1, 2):
+    for i in range(0, len(all_questions), 2):
         d = all_questions[i]
         if d.info is None:
             continue

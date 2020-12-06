@@ -73,3 +73,5 @@ fabric.properties
 venv
 *cache*
 graph.json
+
+**/rerun

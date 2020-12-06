@@ -223,7 +223,6 @@ def get_similarity(words):
 
     token1, token2 = tokens[0], tokens[1]
     similarity = token1.similarity(token2)
-    print(f"'{token1.text}'-'{token2.text}', similarity: {similarity}")
 
     return similarity
 

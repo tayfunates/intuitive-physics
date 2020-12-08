@@ -1,6 +1,11 @@
 import json
 import os
 import subprocess
+from pathlib import Path
+
+from loguru import logger
+
+from framework.utils import FileIO, ParallelProcessor
 
 """
 STEPS
@@ -111,7 +116,8 @@ def write_new_snapshots_to_file(old_snapshots_folder_path: str, new_snapshots_fo
     get_static_objects(old_snapshots_folder_path, new_snapshots_folder_path)
 
 
-def get_controller_json(base_path: str, controller_name: str, simulation_id: int):
+def get_controller_json(base_path: str, controller_name: str, simulation_id: int,
+                        screenshot_output_folder="", snapshot_output_folder=""):
     return json.loads(
         f"""{{
                 "simulationID": {simulation_id},
@@ -121,11 +127,13 @@ def get_controller_json(base_path: str, controller_name: str, simulation_id: int
                 "width": 1024,
                 "height": 1024,
                 "inputScenePath":  "{base_path}/{controller_name}",
+                "screenshotOutputFolder": "{screenshot_output_folder}",
+                "snapshotOutputFolder": "{snapshot_output_folder}",
                 "stepCount": 3
             }}""")
 
 
-def write_new_controller_to_file(new_snapshots: str, output_folder: str):
+def write_new_controller_to_file(new_snapshots: str, output_folder: str, screenshots_folder):
     new_controllers = os.listdir(new_snapshots)
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -139,7 +147,7 @@ def write_new_controller_to_file(new_snapshots: str, output_folder: str):
             file = open(output_folder + "/" + f, "w")
             file.write(json.dumps(j, indent=4))
             file.close()
-        j = get_controller_json(new_snapshots, f, sim_id)
+        j = get_controller_json(new_snapshots, f, sim_id, screenshot_output_folder=screenshots_folder + "/dynamics_ss/")
         file = open(output_folder + "/" + f, "w")
         file.write(json.dumps(j, indent=4))
         file.close()
@@ -158,9 +166,13 @@ def run(controller_base_path: str, exe_path: str):
         run_simulation(exe_path, full_controller_path)
 
 
-def x(old_snapshots_folder: str, new_snapshots_folder: str, new_controllers_folder: str, exec_path: str):
+def produce_snapshots_and_controllers(old_snapshots_folder: str, new_snapshots_folder: str, new_controllers_folder: str,
+                                      exec_path: str, screenshots_folder):
+    logger.info("Creating snapshots")
     write_new_snapshots_to_file(old_snapshots_folder, new_snapshots_folder)
-    write_new_controller_to_file(new_snapshots_folder, new_controllers_folder)
+    logger.info("Fragmenting controllers")
+    write_new_controller_to_file(new_snapshots_folder, new_controllers_folder, screenshots_folder)
+    logger.info("Running simulations")
     run(new_controllers_folder, exec_path)
 
 
@@ -182,9 +194,6 @@ def make_transparent(img):
 
 def get_transparent_image(image_path):
     return make_transparent(Image.open(image_path).convert("RGBA"))
-
-
-img_base_path = "/Users/cagatayyigit/Desktop/screenshots/"
 
 
 def get_all_image(base_path):
@@ -229,9 +238,9 @@ def get_all_image(base_path):
     return [result, len(frame_arr)]
 
 
-def combine():
-    m1 = get_transparent_image("/Users/cagatayyigit/Desktop/screenshots/idstatic.png")
-    images, frame_per_object = get_all_image("/Users/cagatayyigit/Desktop/screenshots/")
+def combine(screenshots_folder):
+    m1 = get_transparent_image(f"{screenshots_folder}/dynamics_ss/idstatic.png")
+    images, frame_per_object = get_all_image(f"{screenshots_folder}/dynamics_ss/")
     i = int(255 / frame_per_object)
     j = 1
     for img in images:
@@ -243,15 +252,71 @@ def combine():
         else:
             j = 1
     m1.show()
-    m1.save("/Users/cagatayyigit/Desktop/result.png")
+    m1.save(f"{screenshots_folder}/result.png")
 
 
-old_snapshots_folder = "/Users/cagatayyigit/Desktop/snapshots"
-new_snapshots_folder = "/Users/cagatayyigit/Desktop/new_snapshots"
-new_controllers_folder = "/Users/cagatayyigit/Desktop/new_controllers"
-exec_path = "/Users/cagatayyigit/Projects/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
+def object_segmentation(video_index: int):
+    old_snapshots_folder = str(Path(f"./{video_index}_snapshots/").absolute().as_posix())
+    new_snapshots_folder = str(Path(f"./{video_index}_new_snapshots/").absolute().as_posix())
+    new_controllers_folder = str(Path(f"./{video_index}_new_controllers/").absolute().as_posix())
+    new_screenshots_folder = str(Path(f"./{video_index}_screenshots/").absolute().as_posix())
+    new_screenshots_folder_dynamic = str(Path(f"./{video_index}_screenshots/dynamics_ss").absolute().as_posix())
 
-# run_simulation(exec_path, controller_json_path: str):
+    os.makedirs(old_snapshots_folder, exist_ok=True)
+    os.makedirs(new_snapshots_folder, exist_ok=True)
+    os.makedirs(new_controllers_folder, exist_ok=True)
+    os.makedirs(new_screenshots_folder, exist_ok=True)
+    os.makedirs(new_screenshots_folder_dynamic, exist_ok=True)
 
-x(old_snapshots_folder, new_snapshots_folder, new_controllers_folder, exec_path)
-combine()
+    input_scene_path = str(Path(f"./run/{video_index:06}.json").absolute().as_posix())
+    exec_path = "/Users/msa/Repos/intuitive-physics/simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
+
+    simulation_id = int(str(video_index)[3]) + 1
+    cj = json.loads(
+        f"""{{
+                    "simulationID": {simulation_id},
+                    "offline": false,
+                    "outputVideoPath": "output.mpg",
+                    "outputJSONPath":  "output.json",
+                    "width": 256,
+                    "height": 256,
+                    "inputScenePath":  "{input_scene_path}",
+                    "snapshotOutputFolder": "{old_snapshots_folder}/",
+                    "stepCount": 600
+                }}""")
+
+    os.makedirs("./run/controllers/", exist_ok=True)
+    controller_path = f"./run/controllers/{video_index}_controller.json"
+    FileIO.write_json(cj, controller_path)
+    run_simulation(exec_path, controller_path)
+    produce_snapshots_and_controllers(old_snapshots_folder, new_snapshots_folder, new_controllers_folder, exec_path,
+                                      new_screenshots_folder)
+    combine(new_screenshots_folder)
+
+
+if __name__ == '__main__':
+    # Create a directory named "run" on cwd, and add inside the scene output jsons that
+    # will be used for object segmentation.
+    files = os.listdir("./run")
+
+    jobs = []
+    args = []
+
+    for fn in files:
+        if ("controllers" not in fn) and ("DS_Store" not in fn):
+            jobs.append(object_segmentation)
+            args.append([int(fn.split(".")[0][2:])])
+
+    parallel_processor = ParallelProcessor(jobs, args)
+
+    logger.info("Forking processes into parallel")
+
+    parallel_processor.fork_processes()
+    logger.info("Starting all parallel processes")
+
+    parallel_processor.start_all()
+    logger.info("Waiting for parallel processes to finish")
+
+    parallel_processor.join_all()
+
+    logger.info("Finished.")

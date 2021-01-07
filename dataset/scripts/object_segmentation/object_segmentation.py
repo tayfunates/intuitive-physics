@@ -252,7 +252,7 @@ def combine(screenshots_folder):
         else:
             j = 1
     m1.show()
-    m1.save(f"{screenshots_folder}/result.png")
+    m1.save(f"./{screenshots_folder}_combined.png")
 
 
 def object_segmentation(video_index: int):

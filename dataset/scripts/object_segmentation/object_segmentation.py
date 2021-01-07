@@ -297,6 +297,7 @@ def object_segmentation(video_index: int):
 if __name__ == '__main__':
     # Create a directory named "run" on cwd, and add inside the scene output jsons that
     # will be used for object segmentation.
+    # Make sure exec_path in object_segmentation function is true
     files = os.listdir("./run")
 
     jobs = []

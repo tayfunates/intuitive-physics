@@ -11,9 +11,9 @@ from framework.utils import FileIO
 sample_config_file_json = """
 {
   "dataset_size": 100,
-  "executable_path": "../../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
-  "metadata_file_path": "../../svqa/metadata.json",
-  "output_folder_path": "out/Dataset_100_Test",
+  "executable_path": "../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
+  "metadata_file_path": "../svqa/metadata.json",
+  "output_folder_path": "samples/out/Dataset_100_Test",
   "split_ratios": {
     "train": 0.5,
     "validation": 0.3,
@@ -102,6 +102,8 @@ sample_config_file_json = """
 
 
 if __name__ == '__main__':
+    # CAUTION: Current working directory must be one level from the root directory, preferably "framework".
+
     # Enqueue is because of multiprocessing.
     logger.add("out/dataset_generation.log", enqueue=True)
 

@@ -108,7 +108,8 @@ class DatasetUnderSampler:
 
     def dump(self):
         with open(self.output_file_path, "w") as out_file:
-            out_file.write(json.dumps(SVQADataset.convert_to_original_dataset_json(self.__dataset_copy.dataset_json, self.questions)))
+            out_file.write(json.dumps(
+                SVQADataset.convert_to_original_dataset_json(self.__dataset_copy.dataset_json, self.questions)))
             out_file.close()
         return
 
@@ -117,7 +118,11 @@ class DatasetUnderSampler:
         return
 
 
+
 class DatasetInspector:
+    """
+    Deprecated
+    """
 
     def __init__(self, stats: DatasetStatistics):
         self.stats = stats
@@ -167,6 +172,7 @@ class DatasetInspector:
 class DatasetBalancer:
     """
     Balances the dataset by generating additional videos and questions.
+    Deprecated
     """
 
     def __init__(self, config: DatasetGenerationConfig, answers_needed: dict, video_index: int):

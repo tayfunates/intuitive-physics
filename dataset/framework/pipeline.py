@@ -114,6 +114,32 @@ class PreBalancingPostProcessStage(Stage):
         self.__dataset_obj = None
 
     def process(self, dataset_obj: SVQADataset):
+        logger.info("Initiating post process stage before balancing...")
+
+        self.__dataset_obj = dataset_obj
+
+        # Preprocess Before Balancing 1: Do not ask shape if only one shape is present in the scene.
+        for simulation_instance in dataset_obj.dataset_json:
+            annotations = simulation_instance["annotations"]
+            objects_in_scene = annotations["original_video_output"]["scene_states"][0]["scene"]["objects"]
+            dynamic_objects = [object for object in objects_in_scene if object["bodyType"] == 2]
+
+            question_list = simulation_instance["questions"]["questions"]
+            new_questions_list = []
+            for question in question_list:
+                answer_type = dataset_obj.get_answer_type_for_answer(question["answer"])
+                if answer_type == "Shape":
+                    if len(set([f"{object['shape']}" for object in dynamic_objects])) <= 1:
+                        # Remove the question that asks shape
+                        logger.info(f"Question asks shape even though there's only 1 "
+                                    f"shape present in the scene. Removing...")
+                        logger.info(f"Removed question: {str(question)}")
+                        continue
+                new_questions_list.append(question)
+
+            simulation_instance["questions"]["questions"][:] = new_questions_list
+
+        # Continue preprocessing before balancing here
 
     def cleanup(self):
         self.__dataset_obj.prepare_auxiliaries()

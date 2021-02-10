@@ -22,10 +22,15 @@ from framework.utils import FileIO, Funnel, ParallelProcessor
 class SVQADataset:
 
     def __init__(self, dataset_folder_path: str, metadata: dict):
-        self.dataset_folder_path = dataset_folder_path if os.path.isdir(dataset_folder_path) else Path(dataset_folder_path).parent.as_posix()
+        self.dataset_folder_path = dataset_folder_path \
+            if os.path.isdir(dataset_folder_path) \
+            else Path(dataset_folder_path).parent.as_posix()
+
         self.metadata = metadata
 
-        self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset.json" if os.path.isdir(dataset_folder_path) else dataset_folder_path)
+        self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset.json"
+                                             if os.path.isdir(dataset_folder_path)
+                                             else dataset_folder_path)
 
         self.questions = None
         self.questions_dataframe = None

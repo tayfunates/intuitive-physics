@@ -22,9 +22,18 @@ from framework.utils import FileIO, Funnel, ParallelProcessor
 class SVQADataset:
 
     def __init__(self, dataset_folder_path: str, metadata: dict):
-        self.dataset_folder_path = dataset_folder_path
+        self.dataset_folder_path = dataset_folder_path if os.path.isdir(dataset_folder_path) else Path(dataset_folder_path).parent.as_posix()
         self.metadata = metadata
-        self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset.json")
+
+        self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset.json" if os.path.isdir(dataset_folder_path) else dataset_folder_path)
+
+        self.questions = None
+        self.questions_dataframe = None
+        self.max_video_index = None
+        self.video_index_to_question_object_map = None
+        self.prepare_auxiliaries()
+
+    def prepare_auxiliaries(self):
         self.questions = self.get_all_questions_as_list()
         self.questions_dataframe = pd.DataFrame(self.questions)
         self.max_video_index = None
@@ -97,6 +106,7 @@ class SVQADataset:
         video_index = question_obj["video_index"]
         question_index = question_obj["question_index"]
         question_family_index = question_obj["question_family_index"]
+        split = question_obj["split"]
 
         return {"question": question,
                 "answer": answer,
@@ -107,7 +117,8 @@ class SVQADataset:
                 "question_index": question_index,
                 "question_family_index": question_family_index,
                 "template_id": f"{os.path.splitext(template_filename)[0]}_{question_family_index}",
-                "simulation_id": simulation_id}
+                "simulation_id": simulation_id,
+                "split": split}
 
     def get_question_list_from_qa_json(self, qa_json):
         questions = []
@@ -139,6 +150,9 @@ class SVQADataset:
         stats = DatasetStatistics(self)
         logger.info(f"Generating all statistics of the dataset")
         stats.generate_all_stats()
+
+        os.makedirs(output_folder, exist_ok=True)
+
         exporter = DatasetStatisticsExporter(stats, export_png=True, output_folder=output_folder)
 
         logger.info(f"Generating charts: Answer frequencies per template ID")
@@ -155,7 +169,7 @@ class SVQADataset:
         exporter.generate_sunburst_charts_for_each_scene_type()
         logger.info(f"Generating charts: Sunburst chart for the dataset")
         exporter.generate_sunburst_chart_question_type_to_answer_type_to_answer_for_whole_dataset()
-
+        logger.info(f"Statistics folder: {output_folder}")
 
 
 class DatasetUtils:
@@ -398,9 +412,8 @@ class DatasetStatisticsExporter:
                 f"Answer distribution of each question type for SID={sid}", sid, self.stats.dataset.questions
             )
 
-
-
-    def generate_sunburst_chart_question_type_to_answer_type_to_answer_in_a_scene_type(self, title, sid: str, questions):
+    def generate_sunburst_chart_question_type_to_answer_type_to_answer_in_a_scene_type(self, title, sid: str,
+                                                                                       questions):
         filtered = Funnel(questions).filter(lambda question: question["simulation_id"] == sid).get_result()
 
         for i in range(len(filtered)):
@@ -409,11 +422,12 @@ class DatasetStatisticsExporter:
 
         df = pd.DataFrame(filtered)
         fig = px.sunburst(df, path=['question_type', 'answer_type', 'answer'],
-                              color='answer_type',
-                              color_discrete_map={'Boolean': '#8dd3c7', 'Count': '#ffffb3', 'Color': '#bebada', 'Shape': '#fb8072', 'Size':'#80b1d3'}
+                          color='answer_type',
+                          color_discrete_map={'Boolean': '#8dd3c7', 'Count': '#ffffb3', 'Color': '#bebada',
+                                              'Shape': '#fb8072', 'Size': '#80b1d3'}
                           )
 
-        fig.update_traces(marker=dict( line=dict(color='#000000', width=0.5)))
+        fig.update_traces(marker=dict(line=dict(color='#000000', width=0.5)))
         fig.update_layout(
             autosize=False,
             width=640,
@@ -443,11 +457,12 @@ class DatasetStatisticsExporter:
 
         df = pd.DataFrame(filtered)
         fig = px.sunburst(df, path=['question_type', 'answer_type', 'answer'],
-                              color='answer_type',
-                              color_discrete_map={'Boolean': '#8dd3c7', 'Count': '#ffffb3', 'Color': '#bebada', 'Shape': '#fb8072', 'Size': '#80b1d3'}
+                          color='answer_type',
+                          color_discrete_map={'Boolean': '#8dd3c7', 'Count': '#ffffb3', 'Color': '#bebada',
+                                              'Shape': '#fb8072', 'Size': '#80b1d3'}
                           )
 
-        fig.update_traces(marker=dict( line=dict(color='#000000', width=0.5)))
+        fig.update_traces(marker=dict(line=dict(color='#000000', width=0.5)))
         fig.update_layout(
             autosize=False,
             width=640,
@@ -541,13 +556,17 @@ class DatasetStatisticsExporter:
         colors = []
         answers_sorted = []
         counting_answers = sorted([answer for answer in answers if
-                            self.stats.dataset.get_answer_type_for_answer(answer) == "Count"], reverse=True, key=lambda x: answer_counts[x])
+                                   self.stats.dataset.get_answer_type_for_answer(answer) == "Count"], reverse=True,
+                                  key=lambda x: answer_counts[x])
         shape_answers = sorted([answer for answer in answers if
-                         self.stats.dataset.get_answer_type_for_answer(answer) == "Shape"], reverse=True, key=lambda x: answer_counts[x])
+                                self.stats.dataset.get_answer_type_for_answer(answer) == "Shape"], reverse=True,
+                               key=lambda x: answer_counts[x])
         color_answers = sorted([answer for answer in answers if
-                         self.stats.dataset.get_answer_type_for_answer(answer) == "Color"], reverse=True, key=lambda x: answer_counts[x])
+                                self.stats.dataset.get_answer_type_for_answer(answer) == "Color"], reverse=True,
+                               key=lambda x: answer_counts[x])
         boolean_answers = sorted([answer for answer in answers if
-                           self.stats.dataset.get_answer_type_for_answer(answer) == "Boolean"], reverse=True, key=lambda x: answer_counts[x])
+                                  self.stats.dataset.get_answer_type_for_answer(answer) == "Boolean"], reverse=True,
+                                 key=lambda x: answer_counts[x])
 
         answers_sorted.extend(counting_answers)
         if len(counting_answers) > 0:

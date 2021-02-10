@@ -1,6 +1,5 @@
 import glob
 import json
-from typing import List
 
 import orjson
 import os
@@ -8,6 +7,7 @@ import os
 import ujson
 
 from multiprocessing import Process
+from typing import List
 
 
 class DictUtils:
@@ -108,7 +108,7 @@ class ParallelProcessor(object):
 
     def join_all(self):
         """
-        Waits untill all the functions executed.
+        Waits until all the functions executed.
         """
         for proc in self.processes:
             proc.join()

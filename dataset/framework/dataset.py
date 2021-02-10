@@ -633,13 +633,31 @@ class DatasetStatisticsExporter:
 class DatasetGenerationConfig:
     def __init__(self, config_dict):
         self.dataset_size = config_dict['dataset_size']
+        self.dataset_metadata_file_path = config_dict['metadata_file_path']
         self.executable_path = str(Path(config_dict['executable_path']).resolve().as_posix())
         self.output_folder_path = str(Path(config_dict['output_folder_path']).resolve().as_posix())
-        self.test_set_ratio = config_dict['split_ratios']['test']
-        self.validation_set_ratio = config_dict['split_ratios']['validation']
-        self.train_set_ratio = config_dict['split_ratios']['train']
-        self.sim_ids_for_each_split = config_dict['sim_ids_for_each_split']
+
+        self.split_ratios = config_dict['split_ratios']
+        self.split_dataset = self.split_ratios is not None
+        if self.split_dataset:
+            self.test_set_ratio = self.split_ratios['test']
+            self.validation_set_ratio = self.split_ratios['validation']
+            self.train_set_ratio = self.split_ratios['train']
+
         self.simulation_configs = config_dict['simulation_configs']
+        if self.split_dataset:
+            self.sim_ids_for_each_split = config_dict['sim_ids_for_each_split']
+            self.train_set_scene_ids = self.sim_ids_for_each_split["train"] if self.sim_ids_for_each_split[
+                                                                                   "train"] is not None else [
+                config["id"] for config in self.simulation_configs]
+            self.validation_set_scene_ids = self.sim_ids_for_each_split["validation"] if self.sim_ids_for_each_split[
+                                                                                             "validation"] is not None else [
+                config["id"] for config in self.simulation_configs]
+            self.test_set_scene_ids = self.sim_ids_for_each_split["test"] if self.sim_ids_for_each_split[
+                                                                                 "test"] is not None else [config["id"]
+                                                                                                           for config in
+                                                                                                           self.simulation_configs]
+
         self.offline = config_dict['offline']
 
         self.concurrent_process_count = 16
@@ -740,9 +758,35 @@ class DatasetGenerator:
 
     def __generate_configs_to_run(self) -> List[Dict]:
         configs_to_run = []
-        for simulation_config in self.config.simulation_configs:
-            configs_to_run.extend(
-                [simulation_config] * (self.config.dataset_size // len(self.config.simulation_configs)))
+        if self.config.split_dataset:
+            # Train
+            for id in self.config.train_set_scene_ids:
+                config_for_id = next(config for config in self.config.simulation_configs if config["id"] == id)
+                train_configs = [config_for_id] * (int(self.config.dataset_size * self.config.train_set_ratio)
+                                                   // len(self.config.train_set_scene_ids))
+                for conf in train_configs:
+                    conf["split"] = "train"
+                configs_to_run.extend(train_configs)
+            # Validation
+            for id in self.config.validation_set_scene_ids:
+                config_for_id = next(config for config in self.config.simulation_configs if config["id"] == id)
+                validation_configs = [config_for_id] * (int(self.config.dataset_size * self.config.validation_set_ratio)
+                                                        // len(self.config.validation_set_scene_ids))
+                for conf in validation_configs:
+                    conf["split"] = "validation"
+                configs_to_run.extend(validation_configs)
+            # Test
+            for id in self.config.test_set_scene_ids:
+                config_for_id = next(config for config in self.config.simulation_configs if config["id"] == id)
+                test_configs = [config_for_id] * (int(self.config.dataset_size * self.config.test_set_ratio)
+                                                  // len(self.config.test_set_scene_ids))
+                for conf in test_configs:
+                    conf["split"] = "test"
+                configs_to_run.extend(test_configs)
+        else:
+            for simulation_config in self.config.simulation_configs:
+                configs_to_run.extend(
+                    [simulation_config] * (self.config.dataset_size // len(self.config.simulation_configs)))
         return configs_to_run
 
     def generate_video_and_questions(self, instance_id: int, simulation_config: dict):
@@ -850,17 +894,24 @@ class DatasetGenerator:
             sid = simulation_config["id"]
 
             questions_file_path = f"{self.config.output_folder_path}/intermediates/sid_{sid}/qa_{instance_id:06d}.json"
+            annotations_file_path = f"{self.config.output_folder_path}/intermediates/sid_{sid}/{instance_id:06d}.json"
 
             try:
                 # Add them into dataset.json
-                with open(questions_file_path, "r") as f:
-                    dataset.append(
-                        json.loads(f"""{{
-                                        "simulation_id": "{sid}",
-                                        "video_path": "{self.config.output_folder_path}/videos/sid_{sid}/{instance_id:06d}.mpg",
-                                        "questions": {json.dumps(json.load(f))}
-                                    }}""")
-                    )
+                with open(questions_file_path, "r") as questions_file:
+                    with open(annotations_file_path, "r") as annotations_file:
+                        simulation_instance = json.loads(f"""{{
+                            "simulation_id": "{sid}",
+                            "video_path": "{self.config.output_folder_path}/videos/sid_{sid}/{instance_id:06d}.mpg",
+                            "questions": {json.dumps(json.load(questions_file))},
+                            "annotations": {json.dumps(json.load(annotations_file))}
+                         }}""")
+                        if self.config.split_dataset:
+                            simulation_instance["split"] = simulation_config["split"]
+                            simulation_instance["questions"]["info"]["split"] = simulation_config["split"]
+                            for question_obj in simulation_instance["questions"]["questions"]:
+                                question_obj["split"] = simulation_config["split"]
+                        dataset.append(simulation_instance)
             except FileNotFoundError:
                 logger.warning(f"{instance_id:06d}: Questions file cannot be found")
                 continue
@@ -869,12 +920,15 @@ class DatasetGenerator:
         dataset = DatasetUtils.relativize_paths(dataset, self.config.output_folder_path)
 
         logger.info(f"Dumping dataset, this may take a while...")
-        with open(f"{self.config.output_folder_path}/dataset.json", "w") as f:
-            json.dump(dataset, f)
+        with open(f"{self.config.output_folder_path}/dataset.json", "w") as dataset_file:
+            json.dump(dataset, dataset_file)
 
-        logger.info(f"Dump minimal version of the dataset for easier debugging.")
-        with open(f"{self.config.output_folder_path}/dataset_minimal.json", "w") as f:
-            json.dump(DatasetUtils.dataset_as_list(dataset, FileIO.read_json("../svqa/metadata.json")), f, indent=2)
+        logger.info(f"Successfully written to: {self.config.output_folder_path}")
+
+        logger.info(f"Dumping minimal version of the dataset for easier debugging.")
+        with open(f"{self.config.output_folder_path}/dataset_minimal.json", "w") as minimal_dataset_file:
+            json.dump(DatasetUtils.dataset_as_list(dataset, FileIO.read_json(self.config.dataset_metadata_file_path)),
+                      minimal_dataset_file, indent=2)
 
     def make_directories(self):
         os.makedirs(self.config.output_folder_path, exist_ok=True)

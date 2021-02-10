@@ -11,8 +11,8 @@ from framework.utils import FileIO
 sample_config_file_json = """
 {
   "dataset_size": 100,
-  "executable_path": "../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
-  "metadata_file_path": "../svqa/metadata.json",
+  "executable_path": "../../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed",
+  "metadata_file_path": "../../svqa/metadata.json",
   "output_folder_path": "out/Dataset_100_Test",
   "split_ratios": {
     "train": 0.5,

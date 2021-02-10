@@ -447,7 +447,7 @@ class DatasetStatisticsExporter:
             fig.show()
 
     def generate_sunburst_chart_question_type_to_answer_type_to_answer_for_whole_dataset(self):
-        title = "Answer distribution of the dataset "
+        title = "Answer distribution of the dataset"
 
         filtered = list(self.stats.dataset.questions)
 

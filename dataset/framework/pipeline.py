@@ -51,7 +51,7 @@ class Pipeline:
             next_input = stage.get_output()
 
             logger.info(f"{stage.name if stage.name is not None else f'Pipeline Stage {stage_index}'} "
-                        f"took {round(time.time() - start_time, 2)} seconds")
+                        f"took {round((time.time() - start_time) / 60, 2)} minutes")
             stage_index += 1
 
     def feed_first_stage(self, initial_data: object):

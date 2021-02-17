@@ -153,17 +153,17 @@ def write_new_controller_to_file(new_snapshots: str, output_folder: str, screens
         file.close()
 
 
-def run_simulation(exec_path: str, controller_json_path: str):
-    subprocess.call(f"{exec_path} {controller_json_path}", shell=True, universal_newlines=True)
+def run_simulation(exec_path: str, controller_json_path: str, working_dir=None):
+    subprocess.call(f"{exec_path} {controller_json_path}", shell=True, cwd=working_dir, universal_newlines=True)
 
 
-def run(controller_base_path: str, exe_path: str):
+def run(controller_base_path: str, exe_path: str, working_dir=None):
     files = os.listdir(controller_base_path)
 
     for f in files:
         full_controller_path = controller_base_path + "/" + f
         # print("RUNNING SIMULATION::" + full_controller_path)
-        run_simulation(exe_path, full_controller_path)
+        run_simulation(exe_path, full_controller_path, working_dir=working_dir )
 
 
 def produce_snapshots_and_controllers(old_snapshots_folder: str, new_snapshots_folder: str, new_controllers_folder: str,
@@ -269,7 +269,8 @@ def object_segmentation(video_index: int):
     os.makedirs(new_screenshots_folder_dynamic, exist_ok=True)
 
     input_scene_path = str(Path(f"./run/{video_index:06}.json").absolute().as_posix())
-    exec_path = "/Users/msa/Repos/intuitive-physics/simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed"
+    exec_path = Path("../../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").absolute().as_posix()
+    working_directory = Path("../../../simulation/2d/SVQA-Box2D/Testbed").absolute().as_posix()
 
     simulation_id = int(str(video_index)[3]) + 1
     cj = json.loads(
@@ -285,10 +286,10 @@ def object_segmentation(video_index: int):
                     "stepCount": 600
                 }}""")
 
-    os.makedirs("./run/controllers/", exist_ok=True)
-    controller_path = f"./run/controllers/{video_index}_controller.json"
+    os.makedirs(Path("./run/controllers/").absolute().as_posix(), exist_ok=True)
+    controller_path = Path(f"./run/controllers/{video_index}_controller.json").absolute().as_posix()
     FileIO.write_json(cj, controller_path)
-    run_simulation(exec_path, controller_path)
+    run_simulation(exec_path, controller_path, working_dir=working_directory)
     produce_snapshots_and_controllers(old_snapshots_folder, new_snapshots_folder, new_controllers_folder, exec_path,
                                       new_screenshots_folder)
     combine(new_screenshots_folder)
@@ -297,7 +298,7 @@ def object_segmentation(video_index: int):
 if __name__ == '__main__':
     # Create a directory named "run" on cwd, and add inside the scene output jsons that
     # will be used for object segmentation.
-    # Make sure exec_path in object_segmentation function is true
+    # Make sure exec_path in object_segmentation function is correct
     files = os.listdir("./run")
 
     jobs = []

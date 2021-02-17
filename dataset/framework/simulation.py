@@ -3,6 +3,7 @@ import json
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 from framework.utils import FileIO
 from svqa.causal_graph import CausalGraph
@@ -11,13 +12,16 @@ import svqa.generate_questions as QuestionGeneratorScript
 
 class SimulationRunner(object):
 
-    def __init__(self, exec_path: str):
+    def __init__(self, exec_path: str, working_directory: str=None):
         self.exec_path = exec_path
+        self.working_directory = working_directory if working_directory is not None \
+            else Path(exec_path).parents[4].joinpath("Testbed").absolute().as_posix()
 
     def run_simulation(self, controller_json_path: str, debug_output_path=None):
         subprocess.call(f"{self.exec_path} {controller_json_path}",
                         shell=True,
                         universal_newlines=True,
+                        cwd=self.working_directory,
                         stdout=open(os.devnull, 'wb') if debug_output_path is None else open(debug_output_path, "w"))
 
     def run_variations(self, controller_json_path: str, variations_output_path: str, debug_output_path=None):

@@ -32,8 +32,9 @@ def run_simulation_instance(scene_id: int, id: int):
 
     # Executable of the submodule at the commit id 25783439f9 must be built before running.
     exec_path = Path("../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").absolute().as_posix()
+    working_dir = Path("../../simulation/2d/SVQA-Box2D/Testbed").absolute().as_posix()
 
-    runner = SimulationRunner(exec_path)
+    runner = SimulationRunner(exec_path, working_directory=working_dir)
 
     instance = SimulationInstance(id, controller_file_path, variations_file_path, questions_file_path, runner)
 

@@ -190,16 +190,20 @@ class QuestionGenerator:
                  input_scene_file_path: str,
                  output_file_path: str,
                  simulation_config: dict,
+                 metadata_file_path: str='../svqa/metadata.json',
+                 synonyms_file_path: str='../svqa/synonyms.json',
+                 templates_dir: str='../svqa/SVQA_1.0_templates',
                  instances_per_template=5):
         self.__args = QuestionGeneratorScript.parser.parse_args(['--input-scene-file', input_scene_file_path,
                                                                  '--output-questions-file', output_file_path,
-                                                                 '--metadata-file', '../svqa/metadata.json',
-                                                                 '--synonyms-json', '../svqa/synonyms.json',
-                                                                 '--template-dir', '../svqa/SVQA_1.0_templates',
+                                                                 '--metadata-file', metadata_file_path,
+                                                                 '--synonyms-json', synonyms_file_path,
+                                                                 '--template-dir',  templates_dir,
                                                                  '--restrict-template-count-per-video', False,
                                                                  '--print-stats', False,
                                                                  '--excluded-task-ids',
-                                                                 simulation_config["excluded_task_ids"]])
+                                                                 simulation_config["excluded_task_ids"] if simulation_config is not None
+                                                                 else []])
 
     def execute(self):
         QuestionGeneratorScript.main(self.__args)

@@ -49,11 +49,23 @@
         "type": "counterfact_events"
       },
       {
+        "inputs": [
+          4
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          0, 6
+        ],
+        "type": "difference"
+      },
+      {
         "side_inputs": [
           "<Z2>"
         ],
         "inputs": [
-          0
+          7
         ],
         "type": "filter_size"
       },
@@ -62,7 +74,7 @@
           "<C2>"
         ],
         "inputs": [
-          6
+          8
         ],
         "type": "filter_color"
       },
@@ -71,19 +83,19 @@
           "<S2>"
         ],
         "inputs": [
-          7
+          9
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          8
+          10
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          9
+          11
         ],
         "type": "as_list"
       },
@@ -95,19 +107,19 @@
       },
       {
         "inputs": [
-          11
+          13
         ],
         "type": "filter_objects_from_events"
       },
       {
         "inputs": [
-          10, 12
+          12, 14
         ],
         "type": "intersect"
       },
       {
         "inputs": [
-          13
+          15
         ],
         "type": "exist"
       }
@@ -189,12 +201,24 @@
         ],
         "type": "counterfact_events"
       },
-            {
+      {
+        "inputs": [
+          4
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          0, 6
+        ],
+        "type": "difference"
+      },
+      {
         "side_inputs": [
           "<Z2>"
         ],
         "inputs": [
-          0
+          7
         ],
         "type": "filter_size"
       },
@@ -203,7 +227,7 @@
           "<C2>"
         ],
         "inputs": [
-          6
+          8
         ],
         "type": "filter_color"
       },
@@ -212,19 +236,19 @@
           "<S2>"
         ],
         "inputs": [
-          7
+          9
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          8
+          10
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          9
+          11
         ],
         "type": "as_list"
       },
@@ -236,19 +260,19 @@
       },
       {
         "inputs": [
-          11
+          13
         ],
         "type": "filter_objects_from_events"
       },
       {
         "inputs": [
-          10, 12
+          12, 14
         ],
         "type": "intersect"
       },
       {
         "inputs": [
-          13
+          15
         ],
         "type": "exist"
       }
@@ -330,12 +354,24 @@
         ],
         "type": "counterfact_events"
       },
-            {
+      {
+        "inputs": [
+          4
+        ],
+        "type": "as_list"
+      },
+      {
+        "inputs": [
+          0, 6
+        ],
+        "type": "difference"
+      },
+      {
         "side_inputs": [
           "<Z2>"
         ],
         "inputs": [
-          0
+          7
         ],
         "type": "filter_size"
       },
@@ -344,7 +380,7 @@
           "<C2>"
         ],
         "inputs": [
-          6
+          8
         ],
         "type": "filter_color"
       },
@@ -353,19 +389,19 @@
           "<S2>"
         ],
         "inputs": [
-          7
+          9
         ],
         "type": "filter_shape"
       },
       {
         "inputs": [
-          8
+          10
         ],
         "type": "unique"
       },
       {
         "inputs": [
-          9
+          11
         ],
         "type": "as_list"
       },
@@ -377,19 +413,19 @@
       },
       {
         "inputs": [
-          11
+          13
         ],
         "type": "filter_objects_from_events"
       },
       {
         "inputs": [
-          10, 12
+          12, 14
         ],
         "type": "intersect"
       },
       {
         "inputs": [
-          13
+          15
         ],
         "type": "exist"
       }

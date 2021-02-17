@@ -48,7 +48,7 @@
         ],
         "type": "counterfact_events"
       },
-            {
+      {
         "side_inputs": [
           "<Z2>"
         ],

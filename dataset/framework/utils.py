@@ -1,13 +1,16 @@
 import glob
 import json
+import time
 
 import orjson
 import os
-
+import numpy as np
 import ujson
 
 from multiprocessing import Process
 from typing import List
+
+from loguru import logger
 
 
 class DictUtils:
@@ -113,3 +116,60 @@ class ParallelProcessor(object):
         for proc in self.processes:
             proc.join()
 
+
+class ParallelWorker(object):
+
+    def __init__(self, jobs: list, args: list, concurrent_process_count: int):
+        self.jobs = jobs
+        self.args = args
+        self.concurrent_process_count = concurrent_process_count
+        self.__times = np.array([])
+
+    def execute_all(self):
+        job_count = len(self.jobs)
+        full_iterations = job_count // self.concurrent_process_count
+
+        for i in range(full_iterations + 1):
+            if i >= job_count: continue
+
+            t1 = time.time()
+
+            start_index = i * self.concurrent_process_count
+            end_index = min(start_index + self.concurrent_process_count, job_count)
+
+            parallel_processor = ParallelProcessor(self.jobs[start_index:end_index],
+                                                   self.args[start_index:end_index])
+
+            logger.info(f"Forking processes [{start_index}-{end_index - 1}] into parallel")
+            parallel_processor.fork_processes()
+
+            logger.info(f"Executing processes in parallel")
+            parallel_processor.start_all()
+
+            logger.info(f"Waiting for all concurrent processes to finish")
+            parallel_processor.join_all()
+
+            self.__update_clock((time.time() - t1) / self.concurrent_process_count,
+                                job_count,
+                                i + self.concurrent_process_count)
+
+    def __update_clock(self, diff, total_runs: int, current: int):
+        times = np.append(self.__times, diff)
+        logger.info(f"Approximately {round((np.mean(times) * (total_runs - current - 1)) / 60, 2)} minutes remaining")
+
+
+def job(index):
+    print(index)
+
+
+if __name__ == '__main__':
+    jobs = []
+    args = []
+
+    for i in range(100):
+        jobs.append(job)
+        args.append([i + 1])
+
+    parallel_worker = ParallelWorker(jobs, args, 16)
+
+    parallel_worker.execute_all()

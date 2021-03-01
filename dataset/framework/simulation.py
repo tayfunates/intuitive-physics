@@ -58,10 +58,10 @@ class SimulationInstance:
         question_generator = QuestionGenerator(self.__variations_output_path,
                                                self.__questions_file_path if output_file_path is None else output_file_path,
                                                simulation_config,
-                                               instances_per_template=instances_per_template,
                                                metadata_file_path=metadata_file_path,
                                                synonyms_file_path=synonyms_file_path,
-                                               templates_dir=templates_dir)
+                                               templates_dir=templates_dir,
+                                               instances_per_template=instances_per_template)
         question_generator.execute()
 
 
@@ -213,6 +213,7 @@ class QuestionGenerator:
                                                                  '--metadata-file', metadata_file_path,
                                                                  '--synonyms-json', synonyms_file_path,
                                                                  '--template-dir', templates_dir,
+                                                                 '--instances-per-template', str(instances_per_template),
                                                                  '--restrict-template-count-per-video', False,
                                                                  '--print-stats', False,
                                                                  '--excluded-task-ids',

@@ -12,7 +12,7 @@ import svqa.generate_questions as QuestionGeneratorScript
 
 class SimulationRunner(object):
 
-    def __init__(self, exec_path: str, working_directory: str=None):
+    def __init__(self, exec_path: str, working_directory: str = None):
         self.exec_path = exec_path
         self.working_directory = working_directory if working_directory is not None \
             else Path(exec_path).parents[4].joinpath("Testbed").absolute().as_posix()
@@ -48,11 +48,20 @@ class SimulationInstance:
     def run_variations(self, debug_output_path=None):
         self.__runner.run_variations(self.__controller_json_path, self.__variations_output_path, debug_output_path)
 
-    def generate_questions(self, simulation_config, output_file_path=None):
+    def generate_questions(self,
+                           simulation_config,
+                           output_file_path=None,
+                           instances_per_template=1,
+                           metadata_file_path: str = '../svqa/metadata.json',
+                           synonyms_file_path: str = '../svqa/synonyms.json',
+                           templates_dir: str = '../svqa/SVQA_1.0_templates'):
         question_generator = QuestionGenerator(self.__variations_output_path,
-                                               self.__questions_file_path if output_file_path is None
-                                               else output_file_path,
-                                               simulation_config)
+                                               self.__questions_file_path if output_file_path is None else output_file_path,
+                                               simulation_config,
+                                               instances_per_template=instances_per_template,
+                                               metadata_file_path=metadata_file_path,
+                                               synonyms_file_path=synonyms_file_path,
+                                               templates_dir=templates_dir)
         question_generator.execute()
 
 
@@ -90,6 +99,7 @@ class VariationRunner(object):
         controller["outputVideoPath"] = f"{name}_out.mpg"
         controller["outputJSONPath"] = f"{name}_out.json"
         controller["inputScenePath"] = f"{name}.json"
+        controller["noiseAmount"] = 0.0
 
         name = f"{name}_controller.json"
         with open(name, "w") as f:
@@ -194,20 +204,19 @@ class QuestionGenerator:
                  input_scene_file_path: str,
                  output_file_path: str,
                  simulation_config: dict,
-                 metadata_file_path: str='../svqa/metadata.json',
-                 synonyms_file_path: str='../svqa/synonyms.json',
-                 templates_dir: str='../svqa/SVQA_1.0_templates',
-                 instances_per_template=5):
+                 metadata_file_path: str = '../svqa/metadata.json',
+                 synonyms_file_path: str = '../svqa/synonyms.json',
+                 templates_dir: str = '../svqa/SVQA_1.0_templates',
+                 instances_per_template=1):
         self.__args = QuestionGeneratorScript.parser.parse_args(['--input-scene-file', input_scene_file_path,
                                                                  '--output-questions-file', output_file_path,
                                                                  '--metadata-file', metadata_file_path,
                                                                  '--synonyms-json', synonyms_file_path,
-                                                                 '--template-dir',  templates_dir,
+                                                                 '--template-dir', templates_dir,
                                                                  '--restrict-template-count-per-video', False,
                                                                  '--print-stats', False,
                                                                  '--excluded-task-ids',
-                                                                 simulation_config["excluded_task_ids"] if simulation_config is not None
-                                                                 else []])
+                                                                 simulation_config["excluded_task_ids"] if simulation_config is not None else []])
 
     def execute(self):
         QuestionGeneratorScript.main(self.__args)

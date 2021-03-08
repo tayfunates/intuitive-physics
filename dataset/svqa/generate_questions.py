@@ -294,6 +294,188 @@ def addSynonmysForStaticWords(text, synonyms):
     return text
 
 
+def answer_question_offline(variations_outputs, scene_structs, causal_graph, program, metadata, verbose=False):
+
+    initial_state = {
+        'nodes': [node_shallow_copy(program[0])],
+        'vals': {},
+        'input_map': {0: 0},
+        'next_template_node': 1,
+    }
+    states = [initial_state]
+    final_states = []
+    while states:
+        state = states.pop()
+
+        # Check to make sure the current state is valid
+        q = {'nodes': state['nodes']}
+        outputs = qeng.answer_question(q, metadata, variations_outputs, scene_structs, causal_graph, all_outputs=True)
+        answer = outputs[-1]
+        if answer == '__INVALID__': continue
+
+        # We have already checked to make sure the answer is valid, so if we have
+        # processed all the nodes in the template then the current state is a valid
+        # question, so add it if it passes our rejection sampling tests.
+        if state['next_template_node'] == len(program):
+
+            # If the template contains a raw relate node then we need to check for
+            # degeneracy at the end
+            has_relate = any(n['type'] == 'relate' for n in program)
+            if has_relate:
+                degen = qeng.is_degenerate(q, metadata, scene_structs, causal_graph, answer=answer,
+                                           verbose=verbose)
+                if degen:
+                    continue
+
+            state['answer'] = answer
+            final_states.append(state)
+            continue
+
+        # Otherwise fetch the next node from the template
+        # Make a shallow copy so cached _outputs don't leak ... this is very nasty
+        next_node = program[state['next_template_node']]
+        next_node = node_shallow_copy(next_node)
+
+        special_nodes = {
+            'filter_unique', 'filter_count', 'filter_exist', 'filter',
+            'relate_filter', 'relate_filter_unique', 'relate_filter_count',
+            'relate_filter_exist'
+        }
+        if next_node['type'] in special_nodes:
+            if next_node['type'].startswith('relate_filter'):
+                unique = (next_node['type'] == 'relate_filter_unique')
+                include_zero = (next_node['type'] == 'relate_filter_count'
+                                or next_node['type'] == 'relate_filter_exist')
+                filter_options = find_relate_filter_options(answer, scene_structs, metadata,
+                                                            unique=unique, include_zero=include_zero)
+            else:
+                filter_options = find_filter_options(answer, scene_structs[0], metadata)
+                if next_node['type'] == 'filter':
+                    # Remove null filter
+                    filter_options.pop((None, None, None, None), None)
+                if next_node['type'] == 'filter_unique':
+                    # Get rid of all filter options that don't result in a single object
+                    filter_options = {k: v for k, v in filter_options.items()
+                                      if len(v) == 1}
+                else:
+                    # Add some filter options that do NOT correspond to the scene
+                    if next_node['type'] == 'filter_exist':
+                        # For filter_exist we want an equal number that do and don't
+                        num_to_add = len(filter_options)
+                    elif next_node['type'] == 'filter_count' or next_node['type'] == 'filter':
+                        # For filter_count add nulls equal to the number of singletons
+                        num_to_add = sum(1 for k, v in filter_options.items() if len(v) == 1)
+                    add_empty_filter_options(filter_options, metadata, num_to_add)
+
+            filter_option_keys = list(filter_options.keys())
+            random.shuffle(filter_option_keys)
+            for k in filter_option_keys:
+                new_nodes = []
+                cur_next_vals = {k: v for k, v in state['vals'].items()}
+                next_input = state['input_map'][next_node['inputs'][0]]
+                filter_side_inputs = next_node['side_inputs']
+                if next_node['type'].startswith('relate'):
+                    param_name = next_node['side_inputs'][0]  # First one should be relate
+                    filter_side_inputs = next_node['side_inputs'][1:]
+                    param_type = param_name_to_type[param_name]
+                    assert param_type == 'Relation'
+                    param_val = k[0]
+                    k = k[1]
+                    new_nodes.append({
+                        'type': 'relate',
+                        'inputs': [next_input],
+                        'side_inputs': [param_val],
+                    })
+                    cur_next_vals[param_name] = param_val
+                    next_input = len(state['nodes']) + len(new_nodes) - 1
+                for param_name, param_val in zip(filter_side_inputs, k):
+                    param_type = param_name_to_type[param_name]
+                    filter_type = 'filter_%s' % param_type.lower()
+                    if param_val is not None:
+                        new_nodes.append({
+                            'type': filter_type,
+                            'inputs': [next_input],
+                            'side_inputs': [param_val],
+                        })
+                        cur_next_vals[param_name] = param_val
+                        next_input = len(state['nodes']) + len(new_nodes) - 1
+                    elif param_val is None:
+                        if metadata['dataset'] == 'SVQA-v1.0' and param_type == 'Shape':
+                            param_val = 'thing'
+                        else:
+                            param_val = ''
+                        cur_next_vals[param_name] = param_val
+                input_map = {k: v for k, v in state['input_map'].items()}
+                extra_type = None
+                if next_node['type'].endswith('unique'):
+                    extra_type = 'unique'
+                if next_node['type'].endswith('count'):
+                    extra_type = 'count'
+                if next_node['type'].endswith('exist'):
+                    extra_type = 'exist'
+                if extra_type is not None:
+                    new_nodes.append({
+                        'type': extra_type,
+                        'inputs': [input_map[next_node['inputs'][0]] + len(new_nodes)],
+                    })
+                input_map[state['next_template_node']] = len(state['nodes']) + len(new_nodes) - 1
+                states.append({
+                    'nodes': state['nodes'] + new_nodes,
+                    'vals': cur_next_vals,
+                    'input_map': input_map,
+                    'next_template_node': state['next_template_node'] + 1,
+                })
+
+        elif 'side_inputs' in next_node:
+            # If the next node has template parameters, expand them out
+            # TODO: Generalize this to work for nodes with more than one side input
+            assert len(next_node['side_inputs']) == 1, 'NOT IMPLEMENTED'
+
+            # Use metadata to figure out domain of valid values for this parameter.
+            # Iterate over the values in a random order; then it is safe to bail
+            # from the DFS as soon as we find the desired number of valid template
+            # instantiations.
+            param_name = next_node['side_inputs'][0]
+            param_vals = [param_name]
+            for val in param_vals:
+                input_map = {k: v for k, v in state['input_map'].items()}
+                input_map[state['next_template_node']] = len(state['nodes'])
+                cur_next_node = {
+                    'type': next_node['type'],
+                    'inputs': [input_map[idx] for idx in next_node['inputs']],
+                    'side_inputs': [val],
+                }
+                cur_next_vals = {k: v for k, v in state['vals'].items()}
+                cur_next_vals[param_name] = val
+
+                states.append({
+                    'nodes': state['nodes'] + [cur_next_node],
+                    'vals': cur_next_vals,
+                    'input_map': input_map,
+                    'next_template_node': state['next_template_node'] + 1,
+                })
+        else:
+            input_map = {k: v for k, v in state['input_map'].items()}
+            input_map[state['next_template_node']] = len(state['nodes'])
+            next_node = {
+                'type': next_node['type'],
+                'inputs': [input_map[idx] for idx in next_node['inputs']],
+            }
+            states.append({
+                'nodes': state['nodes'] + [next_node],
+                'vals': state['vals'],
+                'input_map': input_map,
+                'next_template_node': state['next_template_node'] + 1,
+            })
+
+    # Actually instantiate the template with the solutions we've found
+    answer = None
+    for state in final_states:
+        answer = state['answer']
+
+    return answer
+
+
 def instantiate_templates_dfs(variations_outputs, scene_structs, causal_graph, template, metadata, answer_counts,
                               synonyms, max_instances=None, verbose=False):
     param_name_to_type = {p['name']: p['type'] for p in template['params']}

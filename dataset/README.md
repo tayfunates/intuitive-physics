@@ -177,7 +177,7 @@ Other clevrer filters that are needed to be discussed.
 
 | Task  |  Category |
 |---|---|
-| 1. "What color is the object that the **Z** **C** **S** first collides with?", "What color is the first object to collide with the **Z>** **C** **S**?", "What is the color of object that the **Z** **C** **S** first collides with?", "What is the color of first object to collide with the **Z** **C** **S**?" | Descriptive |
+| 1. "What color is the object that the **Z** **C** **S** first collides with?", "What color is the first object to collide with the **Z** **C** **S**?", "What is the color of object that the **Z** **C** **S** first collides with?", "What is the color of first object to collide with the **Z** **C** **S**?" | Descriptive |
 | 2. "What shape is the object that the **Z** **C** **S** first collides with?", "What shape is the first object to collide with the **Z** **C** **S**?", "What is the shape of object that the **Z** **C** **S** first collides with?", "What is the shape of first object to collide with the **Z** **C** **S**?" | Descriptive |
 | 3. "What color is the object that the **Z** **C** **S** last collides with?", "What color is the last object to collide with the **Z>** **C** **S**?", "What is the color of object that the **Z** **C** **S** last collides with?", "What is the color of last object to collide with the **Z** **C** **S**?" | Descriptive |
 | 4. "What shape is the object that the **Z** **C** **S** last collides with?", "What shape is the last object to collide with the **Z** **C** **S**?", "What is the shape of object that the **Z** **C** **S** last collides with?", "What is the shape of last object to collide with the **Z** **C** **S**?" | Descriptive |

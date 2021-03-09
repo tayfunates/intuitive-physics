@@ -1,3 +1,4 @@
+import copy
 import json
 import os
 from datetime import datetime
@@ -9,7 +10,9 @@ from framework.dataset import SVQADataset
 from framework.simulation import SimulationRunner, SimulationInstance
 from framework.utils import FileIO, Funnel, ParallelWorker
 
-NOISE_AMOUNT = 0.02
+from svqa import generate_questions as QuestionGeneratorScript
+
+NOISE_AMOUNT = 0.00
 
 
 def run_simulation_instance(output_json_path, controller_file_path, scene_id: int, id: int):
@@ -66,7 +69,8 @@ def measure_similarity(questions_original, questions_perturbed):
     for original in questions_original:
         perturbed = None
         for question in questions_perturbed:
-            if (original["question"] == question["question"]) and (original["video_index"] == question["video_index"]):
+            if (original["question"] == question["question"]) and (
+                    str(original["video_index"]) == str(question["video_index"])):
                 perturbed = question
 
         if perturbed is None:
@@ -83,14 +87,55 @@ def measure_similarity(questions_original, questions_perturbed):
     data = {"correct": correct_answers, "wrong": wrong_answers, "not_found_in_perturbed_questions": not_found}
     return data, len(questions_original), found_count, correct / found_count if found_count != 0 else 0
 
-
-def regenerate_questions(output_file_path, qa_file_path, simulation_id, video_index):
+# Obsolete
+def regenerate_questions(new_variations_output_file_path, new_perturbed_qa_file_path, simulation_id, video_index):
     logger.info(f"Regenerating questions for {video_index:06d}")
-    instance = SimulationInstance(video_index, None, output_file_path, qa_file_path, None)
+    instance = SimulationInstance(video_index, None, new_variations_output_file_path, new_perturbed_qa_file_path, None)
     instance.generate_questions(None, output_file_path=None, instances_per_template=100,
                                 metadata_file_path="../../svqa/metadata.json",
                                 synonyms_file_path="../../svqa/synonyms.json",
                                 templates_dir="../../svqa/SVQA_1.0_templates")
+
+
+def regenerate_answers(original_variations_output_file_path,
+                       perturbed_variations_output_path,
+                       original_questions_path,
+                       new_perturbed_qa_file_path,
+                       simulation_id,
+                       video_index):
+    logger.info(f"Regenerating answers for {video_index:06d}")
+    variations_output = FileIO.read_json(perturbed_variations_output_path)
+    metadata = FileIO.read_json("../../svqa/metadata.json")
+
+    original_questions = FileIO.read_json(original_questions_path)
+
+    original_variations_output = FileIO.read_json(original_variations_output_file_path)
+
+    new_answers = {"questions": []}
+
+    for qa in original_questions["questions"]:
+        program = qa["program"]
+
+        scene_structs = original_variations_output["original_video_output"]["scene_states"]
+        causal_graph = original_variations_output["original_video_output"]["causal_graph"]
+
+        answer = None
+        try:
+            answer = QuestionGeneratorScript.answer_question_offline(variations_output,
+                                                                     scene_structs,
+                                                                     causal_graph,
+                                                                     program, metadata)
+        except Exception as e:
+            logger.error(f"Answer could not be generated: {str(e)}")
+
+        new_qa = copy.deepcopy(qa)
+
+        new_qa["answer"] = answer
+
+        new_answers["questions"].append(new_qa)
+
+    # Because of parallelization, we need to write to file, to not make things more complex with process-safety
+    FileIO.write_json(new_answers, new_perturbed_qa_file_path)
 
 
 def start_experiment(dataset: SVQADataset):
@@ -111,17 +156,19 @@ def start_experiment(dataset: SVQADataset):
     video_sid_set = list(video_sid_set)
     video_sid_set.sort(key=lambda x: x[0])
 
+    # Perturbation of videos
     original_questions = []
     outputs = []
-    for video_sid in video_sid_set[:10]:
+    for video_sid in video_sid_set[:10]:  # Test with only 10 videos for now
         video_index = video_sid[0]
         simulation_id = video_sid[1]
-        output_file_path = f"{dataset.intermediates_folder_path}/sid_{simulation_id}/{video_index:06d}.json"
+        original_variations_output_file_path = f"{dataset.intermediates_folder_path}/sid_{simulation_id}/{video_index:06d}.json"
+        original_questions_file_path = f"{dataset.intermediates_folder_path}/sid_{simulation_id}/qa_{video_index:06d}.json"
         old_controller_file_path = f"{dataset.intermediates_folder_path}/sid_{simulation_id}/debug/controller_{video_index:06d}.json"
         simulation_jobs.append(run_simulation_instance)
-        simulation_args.append([output_file_path, old_controller_file_path, simulation_id, video_index])
+        simulation_args.append([original_variations_output_file_path, old_controller_file_path, simulation_id, video_index])
         new_variations_output_file_path = f"./perturbed_outputs/variations_{simulation_id}_{video_index:06d}.json"
-        outputs.append((video_index, simulation_id, new_variations_output_file_path))
+        outputs.append((video_index, simulation_id, new_variations_output_file_path, original_questions_file_path, original_variations_output_file_path))
         original_questions.extend(dataset.get_questions_for_video(video_index))
 
     logger.info(f"{len(simulation_jobs)} simulations will be perturbed")
@@ -131,15 +178,19 @@ def start_experiment(dataset: SVQADataset):
     question_gen_jobs = []
     question_gen_args = []
 
+    # Regenerate answers for perturbed simulations
     qa_outputs = []
     for output in outputs:
         video_index = output[0]
         simulation_id = output[1]
-        output_file_path = output[2]
-        qa_file_path = f"./perturbed_outputs/qa_{video_index:06d}.json"
-        question_gen_jobs.append(regenerate_questions)
-        question_gen_args.append([output_file_path, qa_file_path, simulation_id, video_index])
-        qa_outputs.append((video_index, simulation_id, qa_file_path))
+        new_variations_output_file_path = output[2]
+        original_questions_file_path = output[3]
+        original_variations_output_file_path = output[4]
+        new_perturbed_qa_file_path = f"./perturbed_outputs/qa_{video_index:06d}.json"
+        question_gen_jobs.append(regenerate_answers)
+        question_gen_args.append(
+            [original_variations_output_file_path, new_variations_output_file_path, original_questions_file_path, new_perturbed_qa_file_path, simulation_id, video_index])
+        qa_outputs.append((video_index, simulation_id, new_perturbed_qa_file_path))
 
     logger.info(f"Generating questions for perturbed simulations")
     parallel_worker = ParallelWorker(question_gen_jobs, question_gen_args, 8)

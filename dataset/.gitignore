@@ -76,3 +76,14 @@ graph.json
 
 **/rerun
 **/intermediates
+
+**/*.log
+
+**/*_new_controllers/
+**/*_new_snapshots/
+**/*_snapshots/
+**/*_screenshots/
+
+**/perturbed_*
+
+.DS_Store

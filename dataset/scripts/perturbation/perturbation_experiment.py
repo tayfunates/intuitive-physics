@@ -9,6 +9,7 @@ from loguru import logger
 from framework.dataset import SVQADataset
 from framework.simulation import SimulationRunner, SimulationInstance
 from framework.utils import FileIO, Funnel, ParallelWorker
+from svqa.causal_graph import CausalGraph
 
 from svqa import generate_questions as QuestionGeneratorScript
 
@@ -117,12 +118,15 @@ def regenerate_answers(original_variations_output_file_path,
         program = qa["program"]
 
         scene_structs = original_variations_output["original_video_output"]["scene_states"]
-        causal_graph = original_variations_output["original_video_output"]["causal_graph"]
+        causal_graph = CausalGraph(original_variations_output["original_video_output"]["causal_graph"])
+        start_scene_struct = [scene['scene'] for scene in scene_structs if scene['step'] == 0][0]
+        end_scene_struct = [scene['scene'] for scene in scene_structs if scene['step'] != 0][0]
+        scene_structs_array = [start_scene_struct, end_scene_struct]
 
         answer = None
         try:
             answer = QuestionGeneratorScript.answer_question_offline(variations_output,
-                                                                     scene_structs,
+                                                                     scene_structs_array,
                                                                      causal_graph,
                                                                      program, metadata)
         except Exception as e:

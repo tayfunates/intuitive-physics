@@ -250,6 +250,18 @@ def node_shallow_copy(node):
         new_node['side_inputs'] = node['side_inputs']
     return new_node
 
+def node_shallow_copy_with_value_inputs(node):
+    new_node = {
+        'type': node['type'],
+        'inputs': node['inputs'],
+    }
+    if 'side_inputs' in node:
+        new_node['side_inputs'] = node['side_inputs']
+    if 'value_inputs' in node:
+        if len(node['value_inputs'])>0:
+            new_node['side_inputs'] = node['value_inputs']
+    return new_node
+
 
 def other_heuristic(text, param_vals):
     """
@@ -297,7 +309,7 @@ def addSynonmysForStaticWords(text, synonyms):
 def answer_question_offline(variations_outputs, scene_structs, causal_graph, program, metadata, verbose=False):
 
     initial_state = {
-        'nodes': [node_shallow_copy(program[0])],
+        'nodes': [node_shallow_copy_with_value_inputs(program[0])],
         'vals': {},
         'input_map': {0: 0},
         'next_template_node': 1,
@@ -309,7 +321,7 @@ def answer_question_offline(variations_outputs, scene_structs, causal_graph, pro
 
         # Check to make sure the current state is valid
         q = {'nodes': state['nodes']}
-        outputs = qeng.answer_question(q, metadata, variations_outputs, scene_structs, causal_graph, all_outputs=True)
+        outputs = qeng.answer_question(q, metadata, variations_outputs, scene_structs, causal_graph, all_outputs=True, cache_outputs=False)
         answer = outputs[-1]
         if answer == '__INVALID__': continue
 
@@ -334,7 +346,7 @@ def answer_question_offline(variations_outputs, scene_structs, causal_graph, pro
         # Otherwise fetch the next node from the template
         # Make a shallow copy so cached _outputs don't leak ... this is very nasty
         next_node = program[state['next_template_node']]
-        next_node = node_shallow_copy(next_node)
+        next_node = node_shallow_copy_with_value_inputs(next_node)
 
         special_nodes = {
             'filter_unique', 'filter_count', 'filter_exist', 'filter',

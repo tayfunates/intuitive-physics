@@ -207,8 +207,8 @@ Other clevrer filters that are needed to be discussed.
 | 28. "Before **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
 | 29. "After **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
 | 30. "Before **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
-| 31. "After colliding with the **basket**, does the **Z** **C** **S** hit other objects?" | Descriptive |
-| 32. "Before colliding with the **basket**, does the **Z** **C** **S** hit other objects?" | Descriptive |
+| 31. "After colliding with the **basket**, does the **Z** **C** **S** hit any other objects?" | Descriptive |
+| 32. "Before colliding with the **basket**, does the **Z** **C** **S** hit any other objects?" | Descriptive |
 | 33. "Are there any collisions between objects after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
 | 34. "Are there any collisions between objects before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
 | 35. "Are there any collisions between objects after the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |

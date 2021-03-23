@@ -307,8 +307,8 @@
   },
   {
     "text": [
-      "Does the <Z2> <C2> <S2> hit the *basket*, if the <Z> <C> <S> is removed?",
-      "If the <Z> <C> <S> is removed, does the <Z2> <C2> <S2> hit the *basket*?"
+      "Does the <Z2> <C2> <S2> collide with the *basket*, if the <Z> <C> <S> is removed?",
+      "If the <Z> <C> <S> is removed, does the <Z2> <C2> <S2> collide with the *basket*?"
     ],
     "nodes": [
       {
@@ -640,8 +640,8 @@
   },
   {
     "text": [
-      "How many objects hit the *basket*, if the <Z> <C> <S> is removed?",
-      "If the <Z> <C> <S> is removed, how many objects hit the *basket*?"
+      "How many objects collide with the *basket*, if the <Z> <C> <S> is removed?",
+      "If the <Z> <C> <S> is removed, how many objects collide with the *basket*?"
     ],
     "nodes": [
       {
@@ -958,8 +958,8 @@
   },
   {
     "text": [
-      "Does the <Z> <C> <S> hit the *basket*, if any of the other objects are removed?",
-      "If any of the other objects are removed, does the <Z> <C> <S> hit the *basket*?"
+      "Does the <Z> <C> <S> collide with the *basket*, if any of the other objects are removed?",
+      "If any of the other objects are removed, does the <Z> <C> <S> collide with the *basket*?"
     ],
     "nodes": [
       {

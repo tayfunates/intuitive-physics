@@ -578,7 +578,7 @@
   },
     {
     "text": [
-      "How many <S>s hit the *basket*?"
+      "How many <S>s collide with the *basket*?"
     ],
     "nodes": [
       {
@@ -633,7 +633,7 @@
   },
   {
     "text": [
-      "How many <C> objects hit the *basket*?"
+      "How many <C> objects collide with the *basket*?"
     ],
     "nodes": [
       {
@@ -688,7 +688,7 @@
   },
   {
     "text": [
-      "How many <Z> objects hit the *basket*?"
+      "How many <Z> objects collide with the *basket*?"
     ],
     "nodes": [
       {
@@ -743,7 +743,7 @@
   },
   {
     "text": [
-      "How many objects hit the *basket*?"
+      "How many objects collide with the *basket*?"
     ],
     "nodes": [
       {
@@ -1301,7 +1301,7 @@
   },
   {
     "text": [
-      "How many objects hit the *basket* after the <Z> <C> <S> hits the *basket*?"
+      "How many objects collide with the *basket* after the <Z> <C> <S> hits the *basket*?"
     ],
     "nodes": [
       {
@@ -1436,7 +1436,7 @@
   },
   {
     "text": [
-      "How many objects hit the *basket* before the <Z> <C> <S> hits the *basket*?"
+      "How many objects collide with the *basket* before the <Z> <C> <S> hits the *basket*?"
     ],
     "nodes": [
       {
@@ -2007,7 +2007,7 @@
   },
     {
     "text": [
-      "After *entering* the *basket*, does the <Z> <C> <S> hit with other objects?"
+      "After *entering* the *basket*, does the <Z> <C> <S> collide with other objects?"
     ],
       "nodes": [
         {
@@ -2118,7 +2118,7 @@
   },
   {
     "text": [
-      "Before *entering* the *basket*, does the <Z> <C> <S> hit with other objects?"
+      "Before *entering* the *basket*, does the <Z> <C> <S> collide with other objects?"
     ],
       "nodes": [
         {
@@ -2229,7 +2229,7 @@
   },
   {
     "text": [
-      "After *falling to* the *ground*, does the <Z> <C> <S> hit other objects?"
+      "After *falling to* the *ground*, does the <Z> <C> <S> collide with other objects?"
     ],
       "nodes": [
         {
@@ -2340,7 +2340,7 @@
   },
   {
     "text": [
-      "Before *falling to* the *ground*, does the <Z> <C> <S> hit other objects?"
+      "Before *falling to* the *ground*, does the <Z> <C> <S> collide with other objects?"
     ],
       "nodes": [
         {

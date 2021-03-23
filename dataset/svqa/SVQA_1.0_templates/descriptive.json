@@ -2451,7 +2451,7 @@
   },
   {
     "text": [
-      "After colliding with the *basket*, does the <Z> <C> <S> hit other objects?"
+      "After colliding with the *basket*, does the <Z> <C> <S> hit any other objects?"
     ],
       "nodes": [
         {
@@ -2562,7 +2562,7 @@
   },
   {
     "text": [
-      "Before colliding with the *basket*, does the <Z> <C> <S> hit other objects?"
+      "Before colliding with the *basket*, does the <Z> <C> <S> hit any other objects?"
     ],
       "nodes": [
         {

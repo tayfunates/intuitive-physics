@@ -730,8 +730,8 @@
   },
   {
     "text": [
-      "Does the <Z> <C> <S> *enter* the *basket*, if any other single one of the objects is removed?",
-      "If any other single one of the objects is removed, does the <Z> <C> <S> *enter* the *basket*?"
+      "Does the <Z> <C> <S> *enter* the *basket*, if any of the other objects are removed?",
+      "If any of the other objects are removed, does the <Z> <C> <S> *enter* the *basket*?"
     ],
     "nodes": [
       {
@@ -844,8 +844,8 @@
   },
   {
     "text": [
-      "Does the <Z> <C> <S> *fall to* the *ground*, if any other single one of the objects is removed?",
-      "If any other single one of the objects is removed, does the <Z> <C> <S> *fall to* the *ground*?"
+      "Does the <Z> <C> <S> *fall to* the *ground*, if any of the other objects are removed?",
+      "If any one of the other objects are removed, does the <Z> <C> <S> *fall to* the *ground*?"
     ],
     "nodes": [
       {
@@ -958,8 +958,8 @@
   },
   {
     "text": [
-      "Does the <Z> <C> <S> collide with the *basket*, if any other single one of the objects is removed?",
-      "If any other single one of the objects is removed, does the <Z> <C> <S> collide with the *basket*?"
+      "Does the <Z> <C> <S> collide with the *basket*, if any of the other objects are removed?",
+      "If any of the other objects are removed, does the <Z> <C> <S> collide with the *basket*?"
     ],
     "nodes": [
       {

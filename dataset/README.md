@@ -107,9 +107,9 @@ Internal tagging information:
 "enter": "enter", "go into", "get into", "end up in", "fall into"</br>
 "entering": "entering", "going into", "getting into", "ending up in", "falling into"</br>
 "enters": "enters", "goes into", "gets into", "ends up in", "falls into"</br>
-"fall to": "fall to", "hit", "collide with"</br>
-"falling to": "falling to", "hitting", "colliding with"</br>
-"falls to": "falls to", "hits", "collides with"</br>
+"fall to": "fall to", "hit"</br>
+"falling to": "falling to", "hitting"</br>
+"falls to": "falls to", "hits"</br>
 
 ## Functional Modules
 

@@ -134,7 +134,8 @@
   ],
   "ground": [
     "ground",
-    "bottom"
+    "bottom",
+    "floor"
   ],
   "basket": [
     "basket",

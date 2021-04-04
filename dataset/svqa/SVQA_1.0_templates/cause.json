@@ -3,7 +3,9 @@
     "text": [
       "Does the <Z> <C> <S> *cause* the <Z2> <C2> <S2> to *fall to* the *ground*?",
       "Does the <Z> <C> <S> *cause* the collision between the <Z2> <C2> <S2> and the *ground*?",
-      "There is a <Z> <C> <S>, does it *cause* the <Z2> <C2> <S2> to *fall to* the *ground*?"
+      "There is a <Z> <C> <S>, does it *cause* the <Z2> <C2> <S2> to *fall to* the *ground*?",
+      "Does the <Z> <C> <S> lead to the collision between the <Z2> <C2> <S2> and the *ground*?",
+      "Does the <Z> <C> <S> lead to the <Z2> <C2> <S2> *falling to* the ground?"
     ],
     "nodes": [
       {

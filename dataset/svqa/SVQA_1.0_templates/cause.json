@@ -202,7 +202,8 @@
   {
     "text": [
       "Does the <Z> <C> <S> *cause* the <Z2> <C2> <S2> to *enter* the *basket*?",
-      "There is a <Z> <C> <S>, does it *cause* the <Z2> <C2> <S2> to *enter* the *basket*?"
+      "There is a <Z> <C> <S>, does it *cause* the <Z2> <C2> <S2> to *enter* the *basket*?",
+      "Does the <Z> <C> <S> lead to the <Z2> <C2> <S2> *entering* the *basket*?"
     ],
     "nodes": [
       {

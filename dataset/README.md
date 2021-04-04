@@ -92,7 +92,7 @@ Internal tagging information:
 "cube": "cube", "block"</br>
 "large": "large", "big"</br>
 "small": "small", "tiny"</br>
-"ground": "ground", "bottom", "floor"</br>
+"ground": "ground", "floor"</br>
 "basket": "basket", "container", "bucket"</br>
 
 #### Verb Synonyms

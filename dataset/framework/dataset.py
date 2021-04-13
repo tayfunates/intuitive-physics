@@ -640,6 +640,7 @@ class DatasetGenerationConfig:
         self.dataset_size = config_dict['dataset_size']
         self.dataset_metadata_file_path = config_dict['metadata_file_path']
         self.executable_path = str(Path(config_dict['executable_path']).resolve().as_posix())
+        self.executable_working_directory = str(Path(config_dict['executable_working_directory']).resolve().as_posix())
         self.output_folder_path = str(Path(config_dict['output_folder_path']).resolve().as_posix())
 
         self.split_ratios = config_dict['split_ratios']
@@ -708,7 +709,7 @@ class DatasetGenerator:
     def __init__(self, config: DatasetGenerationConfig):
         self.config = config
         self.__state_file_path = f"{config.output_folder_path}/dataset_generation_state"
-        self.__runner = SimulationRunner(self.config.executable_path)
+        self.__runner = SimulationRunner(self.config.executable_path, self.config.executable_working_directory)
         # To measure remaining and elapsed_time.
         self.__start_time = None
         self.__times = np.array([])

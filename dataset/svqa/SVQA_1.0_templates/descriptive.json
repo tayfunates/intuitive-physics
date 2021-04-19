@@ -1573,8 +1573,8 @@
     "text": [
       "What color is the object the <Z> <C> <S> first collides with?",
       "What color is the first object that collided with the <Z> <C> <S>?",
-      "What is the color of object the <Z> <C> <S> first collides with?",
-      "What is the color of first object that collided with the <Z> <C> <S>?"
+      "What is the color of the object the <Z> <C> <S> first collides with?",
+      "What is the color of the first object that collided with the <Z> <C> <S>?"
     ],
     "nodes": [
       {
@@ -1681,8 +1681,8 @@
     "text": [
       "What color is the object the <Z> <C> <S> last collides with?",
       "What color is the last object that collided with the <Z> <C> <S>?",
-      "What is the color of object the <Z> <C> <S> last collides with?",
-      "What is the color of last object that collided with the <Z> <C> <S>?"
+      "What is the color of the object the <Z> <C> <S> last collides with?",
+      "What is the color of the last object that collided with the <Z> <C> <S>?"
     ],
     "nodes": [
       {
@@ -1789,8 +1789,8 @@
     "text": [
       "What shape is the object the <Z> <C> <S> first collides with?",
       "What shape is the first object that collided with the <Z> <C> <S>?",
-      "What is the shape of object the <Z> <C> <S> first collides with?",
-      "What is the shape of first object that collided with the <Z> <C> <S>?"
+      "What is the shape of the object the <Z> <C> <S> first collides with?",
+      "What is the shape of the first object that collided with the <Z> <C> <S>?"
 
     ],
     "nodes": [
@@ -1899,8 +1899,8 @@
     "text": [
       "What shape is the object the <Z> <C> <S> last collides with?",
       "What shape is the last object that collided with the <Z> <C> <S>?",
-      "What is the shape of object the <Z> <C> <S> last collides with?",
-      "What is the shape of last object that collided with the <Z> <C> <S>?"
+      "What is the shape of the object the <Z> <C> <S> last collides with?",
+      "What is the shape of the last object that collided with the <Z> <C> <S>?"
 
     ],
     "nodes": [

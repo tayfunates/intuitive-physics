@@ -1,7 +1,7 @@
 [
     {
     "text": [
-      "Will the <Z2> <C2> <S2> *enter* the *basket*, if the <Z> <C> <S> is removed?",
+      "Will the <Z2> <C2> <S2> *enter* the *basket* if the <Z> <C> <S> is removed?",
       "If the <Z> <C> <S> is removed, will the <Z2> <C2> <S2> *enter* the *basket*?"
     ],
     "nodes": [
@@ -154,7 +154,7 @@
   },
   {
     "text": [
-      "Will the <Z2> <C2> <S2> *fall to* the *ground*, if the <Z> <C> <S> is removed?",
+      "Will the <Z2> <C2> <S2> *fall to* the *ground* if the <Z> <C> <S> is removed?",
       "If the <Z> <C> <S> is removed, will the <Z2> <C2> <S2> *fall to* the *ground*?"
     ],
     "nodes": [
@@ -307,7 +307,7 @@
   },
   {
     "text": [
-      "Will the <Z2> <C2> <S2> collide with the *basket*, if the <Z> <C> <S> is removed?",
+      "Will the <Z2> <C2> <S2> collide with the *basket* the <Z> <C> <S> is removed?",
       "If the <Z> <C> <S> is removed, will the <Z2> <C2> <S2> collide with the *basket*?"
     ],
     "nodes": [
@@ -460,7 +460,7 @@
   },
   {
     "text": [
-      "How many objects *enter* the *basket*, if the <Z> <C> <S> is removed?",
+      "How many objects *enter* the *basket* if the <Z> <C> <S> is removed?",
       "If the <Z> <C> <S> is removed, how many objects *enter* the *basket*?"
     ],
     "nodes": [
@@ -550,7 +550,7 @@
   },
   {
     "text": [
-      "How many objects *fall to* the *ground*, if the <Z> <C> <S> is removed?",
+      "How many objects *fall to* the *ground* if the <Z> <C> <S> is removed?",
       "If the <Z> <C> <S> is removed, how many objects *fall to* the *ground*?"
     ],
     "nodes": [
@@ -640,7 +640,7 @@
   },
   {
     "text": [
-      "How many objects collide with the *basket*, if the <Z> <C> <S> is removed?",
+      "How many objects collide with the *basket* if the <Z> <C> <S> is removed?",
       "If the <Z> <C> <S> is removed, how many objects collide with the *basket*?"
     ],
     "nodes": [
@@ -730,7 +730,7 @@
   },
   {
     "text": [
-      "Will the <Z> <C> <S> *enter* the *basket*, if any of the other objects are removed?",
+      "Will the <Z> <C> <S> *enter* the *basket* if any of the other objects are removed?",
       "If any of the other objects are removed, will the <Z> <C> <S> *enter* the *basket*?"
     ],
     "nodes": [
@@ -844,7 +844,7 @@
   },
   {
     "text": [
-      "Will the <Z> <C> <S> *fall to* the *ground*, if any of the other objects are removed?",
+      "Will the <Z> <C> <S> *fall to* the *ground* if any of the other objects are removed?",
       "If any one of the other objects are removed, will the <Z> <C> <S> *fall to* the *ground*?"
     ],
     "nodes": [
@@ -958,7 +958,7 @@
   },
   {
     "text": [
-      "Will the <Z> <C> <S> collide with the *basket*, if any of the other objects are removed?",
+      "Will the <Z> <C> <S> collide with the *basket* if any of the other objects are removed?",
       "If any of the other objects are removed, will the <Z> <C> <S> collide with the *basket*?"
     ],
     "nodes": [

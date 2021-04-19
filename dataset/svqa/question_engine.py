@@ -356,6 +356,14 @@ def filter_after_handler(variations_outputs, scene_structs, causal_graph, inputs
     assert len(inputs) == 2
     return [event for event in inputs[0] if event['step'] > inputs[1]['step']]
 
+def is_before_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 2
+    return inputs[0]['step'] < inputs[1]['step']
+
+def is_after_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
+    assert len(inputs) == 2
+    return inputs[0]['step'] > inputs[1]['step']
+
 def as_list_handler(variations_outputs, scene_structs, causal_graph, inputs, side_inputs):
     assert len(inputs) == 1
     return [inputs[0]]
@@ -421,6 +429,8 @@ execute_handlers = {
     'counterfact_events_list': counterfact_events_list_handler,
     'filter_before': filter_before_handler,
     'filter_after': filter_after_handler,
+    'is_before': is_before_handler,
+    'is_after': is_after_handler,
     'as_list': as_list_handler
 }
 

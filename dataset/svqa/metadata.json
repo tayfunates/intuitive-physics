@@ -615,6 +615,24 @@
       ],
       "output": "EventSet",
       "terminal": false
+    },
+    {
+      "name": "is_before",
+      "inputs": [
+        "Event",
+        "Event"
+      ],
+      "output": "Bool",
+      "terminal": true
+    },
+    {
+      "name": "is_after",
+      "inputs": [
+        "Event",
+        "Event"
+      ],
+      "output": "Bool",
+      "terminal": true
     }
   ]
 }

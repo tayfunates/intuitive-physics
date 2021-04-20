@@ -16,7 +16,7 @@ from imblearn.under_sampling import RandomUnderSampler
 from loguru import logger
 
 from framework.simulation import SimulationRunner, SimulationInstance
-from framework.utils import FileIO, Funnel, ParallelProcessor
+from framework.utils import FileIO, Funnel, MultithreadedProcessor
 
 
 class SVQADataset:
@@ -864,14 +864,14 @@ class DatasetGenerator:
                     jobs.append(DatasetGenerator.generate_video_and_questions_in_parallel)
                     args.append([self, instance_id, simulation_config])
 
-            parallel_processes = ParallelProcessor(jobs, args)
-            logger.info(f"Forking simulation processes into parallel")
-            parallel_processes.fork_processes()
-            logger.info(f"Starting parallel processes for simulations from {i} to {i + concurrent_process_count}")
-            parallel_processes.start_all()
-            logger.info(f"Waiting for parallel processes to finish")
-            parallel_processes.join_all()
-            logger.info(f"Joined all parallel processes into main thread")
+            concurrent_processes = MultithreadedProcessor(jobs, args)
+            logger.info(f"Forking simulation processes into threads")
+            concurrent_processes.fork_processes()
+            logger.info(f"Starting processes for simulations from {i} to {i + concurrent_process_count}")
+            concurrent_processes.start_all()
+            logger.info(f"Waiting for processes to finish")
+            concurrent_processes.join_all()
+            logger.info(f"Joined all concurrent processes into main thread")
 
             self.__update_clock((time.time() - t1) / concurrent_process_count, len(configs_to_run),
                                 i + concurrent_process_count)

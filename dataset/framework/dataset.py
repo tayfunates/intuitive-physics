@@ -1,3 +1,4 @@
+import copy
 import glob
 import json
 import os
@@ -763,37 +764,56 @@ class DatasetGenerator:
                     "minutes remaining".ljust(75, " "))
 
     def __generate_configs_to_run(self) -> List[Dict]:
-        configs_to_run = []
         if self.config.split_dataset:
+            configs_to_run = []
             # Train
-            for id in self.config.train_set_scene_ids:
-                config_for_id = next(config for config in self.config.simulation_configs if config["id"] == id)
-                train_configs = [config_for_id] * (int(self.config.dataset_size * self.config.train_set_ratio)
-                                                   // len(self.config.train_set_scene_ids))
+            for sid in self.config.train_set_scene_ids:
+                config_for_sid = next(config for config in self.config.simulation_configs if config["id"] == sid)
+                train_configs = [copy.deepcopy(config_for_sid)] * (
+                            int(self.config.dataset_size * self.config.train_set_ratio)
+                            // len(self.config.train_set_scene_ids))
                 for conf in train_configs:
                     conf["split"] = "train"
                 configs_to_run.extend(train_configs)
             # Validation
-            for id in self.config.validation_set_scene_ids:
-                config_for_id = next(config for config in self.config.simulation_configs if config["id"] == id)
-                validation_configs = [config_for_id] * (int(self.config.dataset_size * self.config.validation_set_ratio)
-                                                        // len(self.config.validation_set_scene_ids))
+            for sid in self.config.validation_set_scene_ids:
+                config_for_sid = next(config for config in self.config.simulation_configs if config["id"] == sid)
+                validation_configs = [copy.deepcopy(config_for_sid)] * (
+                        int(self.config.dataset_size * self.config.validation_set_ratio)
+                        // len(self.config.validation_set_scene_ids))
                 for conf in validation_configs:
                     conf["split"] = "validation"
                 configs_to_run.extend(validation_configs)
             # Test
-            for id in self.config.test_set_scene_ids:
-                config_for_id = next(config for config in self.config.simulation_configs if config["id"] == id)
-                test_configs = [config_for_id] * (int(self.config.dataset_size * self.config.test_set_ratio)
-                                                  // len(self.config.test_set_scene_ids))
+            for sid in self.config.test_set_scene_ids:
+                config_for_sid = next(config for config in self.config.simulation_configs if config["id"] == sid)
+                test_configs = [copy.deepcopy(config_for_sid)] * (
+                            int(self.config.dataset_size * self.config.test_set_ratio)
+                            // len(self.config.test_set_scene_ids))
                 for conf in test_configs:
                     conf["split"] = "test"
                 configs_to_run.extend(test_configs)
+
+            # Collate, sid: 1,2,3,4,5,1,2,3,4,5
+            sid_to_config = defaultdict(list)
+            for config in configs_to_run:
+                sid_to_config[config["id"]].append(config)
+
+            sids = sorted(list(set(sid_to_config.keys())))
+            collated = []
+            N = len(configs_to_run)
+            M = len(sids)
+            for i in range(N):
+                collated.append(sid_to_config[sids[i % M]].pop(0))
+
+            return collated
         else:
+            configs_to_run = []
             for simulation_config in self.config.simulation_configs:
                 configs_to_run.extend(
                     [simulation_config] * (self.config.dataset_size // len(self.config.simulation_configs)))
-        return configs_to_run
+
+            return configs_to_run
 
     def generate_video_and_questions(self, instance_id: int, simulation_config: dict):
         sid = simulation_config["id"]

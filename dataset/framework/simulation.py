@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from loguru import logger
+
 from framework.utils import FileIO
 from svqa.causal_graph import CausalGraph
 import svqa.generate_questions as QuestionGeneratorScript
@@ -99,7 +101,6 @@ class VariationRunner(object):
         controller["outputVideoPath"] = f"{name}_out.mpg"
         controller["outputJSONPath"] = f"{name}_out.json"
         controller["inputScenePath"] = f"{name}.json"
-        controller["noiseAmount"] = 0.0
 
         name = f"{name}_controller.json"
         with open(name, "w") as f:
@@ -198,6 +199,80 @@ class VariationRunner(object):
             json.dump(final_output_json, f)
 
 
+class Perturbator:
+    @staticmethod
+    def regenerate_answers(original_variations_output_file_path,
+                           perturbed_variations_output_path,
+                           original_questions_path,
+                           new_perturbed_qa_file_path,
+                           metadata_path):
+        variations_output = FileIO.read_json(perturbed_variations_output_path)
+        metadata = FileIO.read_json(metadata_path)
+
+        original_questions = FileIO.read_json(original_questions_path)
+
+        original_variations_output = FileIO.read_json(original_variations_output_file_path)
+
+        new_answers = {"info": original_questions["info"], "questions": []}
+
+        for qa in original_questions["questions"]:
+            program = qa["program"]
+
+            scene_structs = original_variations_output["original_video_output"]["scene_states"]
+            causal_graph = CausalGraph(original_variations_output["original_video_output"]["causal_graph"])
+            start_scene_struct = [scene['scene'] for scene in scene_structs if scene['step'] == 0][0]
+            end_scene_struct = [scene['scene'] for scene in scene_structs if scene['step'] != 0][0]
+            scene_structs_array = [start_scene_struct, end_scene_struct]
+
+            answer = None
+            try:
+                answer = QuestionGeneratorScript.answer_question_offline(variations_output,
+                                                                         scene_structs_array,
+                                                                         causal_graph,
+                                                                         program, metadata)
+            except Exception as e:
+                logger.error(f"Answer could not be generated: {str(e)}")
+
+            new_qa = copy.deepcopy(qa)
+
+            new_qa["answer"] = answer
+
+            new_answers["questions"].append(new_qa)
+
+        # Because of parallelization, we need to write to file, to not make things more complex with process-safety
+        FileIO.write_json(new_answers, new_perturbed_qa_file_path)
+
+    @staticmethod
+    def measure_similarity(questions_original, questions_perturbed):
+        correct = 0
+        found_count = 0
+
+        wrong_answers = []
+        correct_answers = []
+        not_found = []
+
+        for original in questions_original:
+            perturbed = None
+            for question in questions_perturbed:
+                if (original["question"] == question["question"]) and (
+                        str(original["video_index"]) == str(question["video_index"])):
+                    perturbed = question
+
+            if perturbed is None:
+                not_found.append(original)
+                continue
+            else:
+                found_count += 1
+                if str(original["answer"]) == str(perturbed["answer"]):
+                    correct += 1
+                    correct_answers.append(original)
+                else:
+                    wrong_answers.append({"original": original, "perturbed": perturbed})
+
+        data = {"correct": correct_answers, "wrong": wrong_answers, "not_found_in_perturbed_questions": not_found}
+        return data, len(questions_original), found_count, correct / found_count if found_count != 0 else 0
+
+
 class QuestionGenerator:
 
     def __init__(self,
@@ -213,11 +288,13 @@ class QuestionGenerator:
                                                                  '--metadata-file', metadata_file_path,
                                                                  '--synonyms-json', synonyms_file_path,
                                                                  '--template-dir', templates_dir,
-                                                                 '--instances-per-template', str(instances_per_template),
+                                                                 '--instances-per-template',
+                                                                 str(instances_per_template),
                                                                  '--restrict-template-count-per-video', False,
                                                                  '--print-stats', False,
                                                                  '--excluded-task-ids',
-                                                                 simulation_config["excluded_task_ids"] if simulation_config is not None else []])
+                                                                 simulation_config[
+                                                                     "excluded_task_ids"] if simulation_config is not None else []])
 
     def execute(self):
         QuestionGeneratorScript.main(self.__args)

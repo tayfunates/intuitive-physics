@@ -6,6 +6,7 @@ import time
 import traceback
 from collections import defaultdict
 from pathlib import Path
+from random import random
 from typing import List, Dict
 
 import numpy as np
@@ -16,7 +17,7 @@ from colour import Color
 from imblearn.under_sampling import RandomUnderSampler
 from loguru import logger
 
-from framework.simulation import SimulationRunner, SimulationInstance
+from framework.simulation import SimulationRunner, SimulationInstance, Perturbator
 from framework.utils import FileIO, Funnel, MultithreadedProcessor
 
 
@@ -677,6 +678,18 @@ class DatasetGenerationConfig:
             # Override default value
             self.should_generate_questions = not config_dict['do_not_generate_questions']
 
+        self.enable_perturbation: bool = False
+        self.perturbation_config = None
+        if 'perturbation_config' in config_dict:
+            self.enable_perturbation = True
+            self.perturbation_config = config_dict['perturbation_config']
+            if 'main_seed' not in self.perturbation_config:
+                self.perturbation_config['main_seed'] = None
+            if 'perturbations_per_simulation' not in self.perturbation_config:
+                self.perturbation_config['perturbations_per_simulation'] = 5
+            if 'amount' not in self.perturbation_config:
+                self.perturbation_config['amount'] = 0.0
+
 
 class DatasetGenerator:
     """
@@ -734,10 +747,11 @@ class DatasetGenerator:
     def __remove_state_file(self):
         os.remove(self.__state_file_path)
 
-    def dump_controller_file(self, instance_id: int, simulation_config: dict) -> str:
+    def dump_controller_file(self,
+                             instance_id: int,
+                             simulation_config: dict,
+                             controller_file_path: str):
         sid = simulation_config["id"]
-
-        controller_file_path = self.get_controller_path(sid, instance_id)
 
         with open(controller_file_path, 'w') as controller_file:
             json.dump(
@@ -756,7 +770,32 @@ class DatasetGenerator:
                 indent=2
             )
 
-        return controller_file_path
+    def dump_perturbation_controller_file(self,
+                                          pid: int,
+                                          instance_id: int,
+                                          simulation_config: dict,
+                                          perturbation_config: dict,
+                                          controller_file_path: str):
+        sid = simulation_config["id"]
+        seed = -1  # TODO.
+        with open(controller_file_path, 'w') as controller_file:
+            json.dump(
+                json.loads(
+                    f"""{{
+                            "simulationID": {sid},
+                            "offline": {str(self.config.offline).lower()},
+                            "outputVideoPath": "{self.get_perturbation_video_output_path(sid, instance_id, pid)}",
+                            "outputJSONPath": "{self.get_perturbation_bare_simulation_output_path(sid, instance_id, pid)}",
+                            "width":  {simulation_config['width']},
+                            "height": {simulation_config['height']},
+                            "inputScenePath":  "",
+                            "stepCount": {simulation_config['step_count']},
+                            "perturbationSeed": {seed},
+                            "noiseAmount": {perturbation_config['amount']}
+                        }}"""),
+                controller_file,
+                indent=2
+            )
 
     def __update_clock(self, diff, total_runs: int, current: int):
         times = np.append(self.__times, diff)
@@ -770,8 +809,8 @@ class DatasetGenerator:
             for sid in self.config.train_set_scene_ids:
                 config_for_sid = next(config for config in self.config.simulation_configs if config["id"] == sid)
                 train_configs = [copy.deepcopy(config_for_sid)] * (
-                            int(self.config.dataset_size * self.config.train_set_ratio)
-                            // len(self.config.train_set_scene_ids))
+                        int(self.config.dataset_size * self.config.train_set_ratio)
+                        // len(self.config.train_set_scene_ids))
                 for conf in train_configs:
                     conf["split"] = "train"
                 configs_to_run.extend(train_configs)
@@ -788,8 +827,8 @@ class DatasetGenerator:
             for sid in self.config.test_set_scene_ids:
                 config_for_sid = next(config for config in self.config.simulation_configs if config["id"] == sid)
                 test_configs = [copy.deepcopy(config_for_sid)] * (
-                            int(self.config.dataset_size * self.config.test_set_ratio)
-                            // len(self.config.test_set_scene_ids))
+                        int(self.config.dataset_size * self.config.test_set_ratio)
+                        // len(self.config.test_set_scene_ids))
                 for conf in test_configs:
                     conf["split"] = "test"
                 configs_to_run.extend(test_configs)
@@ -822,7 +861,10 @@ class DatasetGenerator:
 
         # Create controller file for current simulation instance.
         logger.info(f"{instance_id:06d}: Creating controller file")
-        controller_file_path = self.dump_controller_file(instance_id, simulation_config)
+
+        controller_file_path = self.get_controller_path(sid, instance_id)
+
+        self.dump_controller_file(instance_id, simulation_config, controller_file_path)
 
         variations_output_path = self.get_simulation_with_variations_output_path(sid, instance_id)
 
@@ -847,6 +889,62 @@ class DatasetGenerator:
             try:
                 logger.info(f"{instance_id:06d}: Generating questions and answers for the base simulation")
                 simulation.generate_questions(simulation_config)
+
+                # Perturbation
+                if self.config.enable_perturbation:
+                    orig_questions = FileIO.read_json(questions_file_path)
+                    FileIO.write_json(orig_questions,
+                                      self.get_original_questions_output_path(sid, instance_id))
+                    prev_questions_file_path = questions_file_path
+                    perturbation_config = self.config.perturbation_config
+                    for pid in range(perturbation_config["perturbations_per_simulation"]):
+                        perturbation_controller_file_path = self.get_perturbation_controller_path(sid, instance_id, pid)
+
+                        self.dump_perturbation_controller_file(pid, instance_id, simulation_config,
+                                                               perturbation_config, perturbation_controller_file_path)
+
+                        perturbed_with_variations_output_path = self.get_perturbation_with_variations_output_path(sid,
+                                                                                                                  instance_id,
+                                                                                                                  pid)
+
+                        perturbed_questions_file_path = self.get_perturbation_questions_output_path(sid,
+                                                                                                    instance_id,
+                                                                                                    pid)
+
+                        perturbation_instance = SimulationInstance(instance_id,
+                                                                   perturbation_controller_file_path,
+                                                                   perturbed_with_variations_output_path,
+                                                                   perturbed_questions_file_path,
+                                                                   self.__runner)
+
+                        logger.info(f"{instance_id:06d} perturbation {pid}: Running a perturbation of base simulation")
+                        perturbation_instance.run_simulation(self.get_perturbation_debug_output_path(sid, instance_id))
+                        logger.info(
+                            f"{instance_id:06d} perturbation {pid}: Running variations of the perturbation of base simulation")
+                        perturbation_instance.run_variations()
+                        logger.info(
+                            f"{instance_id:06d} perturbation {pid}: Regenerating questions and answers for the perturbed simulation")
+                        perturbation_instance.generate_questions(simulation_config)
+
+                        Perturbator.regenerate_answers(
+                            original_variations_output_file_path=variations_output_path,
+                            perturbed_variations_output_path=perturbed_with_variations_output_path,
+                            original_questions_path=prev_questions_file_path,
+                            new_perturbed_qa_file_path=perturbed_questions_file_path,
+                            metadata_path=self.config.dataset_metadata_file_path
+                        )
+
+                        questions_original = FileIO.read_json(prev_questions_file_path)
+                        questions_perturbed = FileIO.read_json(perturbed_questions_file_path)
+
+                        data, orig_size, found, ratio = Perturbator.measure_similarity(questions_original["questions"],
+                                                                                       questions_perturbed["questions"])
+                        logger.info(f"{instance_id:06d} perturbation {pid} match ratio: {found / orig_size}")
+                        logger.info(f"{instance_id:06d} perturbation {pid} correctness: {ratio}")
+                        prev_questions_file_path = perturbed_questions_file_path
+
+                        logger.info(f"{instance_id:06d}: Overriding previous questions")
+                        FileIO.write_json(FileIO.read_json(prev_questions_file_path), questions_file_path)
             except Exception as e:
                 traceback.print_exception(type(e), e, e.__traceback__)
                 logger.error(f"{instance_id:06d}: Error while generating questions")
@@ -919,8 +1017,8 @@ class DatasetGenerator:
             simulation_config = configs_to_run[instance_id]
             sid = simulation_config["id"]
 
-            questions_file_path = f"{self.config.output_folder_path}/intermediates/sid_{sid}/qa_{instance_id:06d}.json"
-            annotations_file_path = f"{self.config.output_folder_path}/intermediates/sid_{sid}/{instance_id:06d}.json"
+            questions_file_path = self.get_questions_output_path(sid, instance_id)
+            annotations_file_path = self.get_simulation_with_variations_output_path(sid, instance_id)
 
             try:
                 # Add them into dataset.json
@@ -928,7 +1026,7 @@ class DatasetGenerator:
                     with open(annotations_file_path, "r") as annotations_file:
                         simulation_instance = json.loads(f"""{{
                             "simulation_id": "{sid}",
-                            "video_path": "{self.config.output_folder_path}/videos/sid_{sid}/{instance_id:06d}.mpg",
+                            "video_path": "{self.get_video_output_path(sid, instance_id)}",
                             "questions": {json.dumps(json.load(questions_file))},
                             "annotations": {json.dumps(json.load(annotations_file))}
                          }}""")
@@ -965,14 +1063,21 @@ class DatasetGenerator:
             json.dump(dataset, f, indent=4)
 
         for sim in self.config.simulation_configs:
+            os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/controllers", exist_ok=True)
+            os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/simulations", exist_ok=True)
+            os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/perturbations", exist_ok=True)
+            os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/questions", exist_ok=True)
             os.makedirs(f"{self.config.output_folder_path}/intermediates/sid_{sim['id']}/debug", exist_ok=True)
             os.makedirs(f"{self.config.output_folder_path}/videos/sid_{sim['id']}", exist_ok=True)
 
     def get_controller_path(self, sid: int, instance_id: int):
-        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/controller_{instance_id:06d}.json"
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/controllers/controller_{instance_id:06d}.json"
 
     def get_questions_output_path(self, sid: int, instance_id: int):
-        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/qa_{instance_id:06d}.json"
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/questions/qa_{instance_id:06d}.json"
+
+    def get_original_questions_output_path(self, sid: int, instance_id: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/questions/qa_orig_{instance_id:06d}.json"
 
     def get_simulation_with_variations_output_path(self, sid: int, instance_id: int):
         return f"{self.config.output_folder_path}/intermediates/sid_{sid}/{instance_id:06d}.json"
@@ -981,10 +1086,28 @@ class DatasetGenerator:
         return f"{self.config.output_folder_path}/videos/sid_{sid}/{instance_id:06d}.mpg"
 
     def get_bare_simulation_output_path(self, sid: int, instance_id: int):
-        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/{instance_id:06d}.json"
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/simulations/{instance_id:06d}.json"
 
     def get_debug_output_path(self, sid: int, instance_id: int):
         return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/cl_debug_{instance_id:06d}.txt"
+
+    def get_perturbation_debug_output_path(self, sid: int, instance_id: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/cl_perturbation_debug_{instance_id:06d}.txt"
+
+    def get_perturbation_controller_path(self, sid: int, instance_id: int, pid: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/perturbations/p_controller_{instance_id:06d}_{pid}.json"
+
+    def get_perturbation_questions_output_path(self, sid: int, instance_id: int, pid: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/perturbations/p_qa_{instance_id:06d}_{pid}.json"
+
+    def get_perturbation_video_output_path(self, sid: int, instance_id: int, pid: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/perturbations/p_{instance_id:06d}_{pid}.mpg"
+
+    def get_perturbation_with_variations_output_path(self, sid: int, instance_id: int, pid: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/perturbations/p_{instance_id:06d}_{pid}_full.json"
+
+    def get_perturbation_bare_simulation_output_path(self, sid: int, instance_id: int, pid: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/perturbations/p_{instance_id:06d}_{pid}.json"
 
 
 class DatasetSplitter:

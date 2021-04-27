@@ -887,11 +887,11 @@ class DatasetGenerator:
             concurrent_processes = MultithreadedProcessor(jobs, args)
             logger.info(f"Forking simulation processes into threads")
             concurrent_processes.fork_processes()
-            logger.info(f"Starting processes for simulations from {i} to {i + concurrent_process_count}")
+            logger.info(f"Starting simulations from {i} to {i + concurrent_process_count}")
             concurrent_processes.start_all()
-            logger.info(f"Waiting for processes to finish")
+            logger.info(f"Waiting for simulations to finish")
             concurrent_processes.join_all()
-            logger.info(f"Joined all concurrent processes into main thread")
+            logger.info(f"Joined all threads into main thread")
 
             self.__update_clock((time.time() - t1) / concurrent_process_count, len(configs_to_run),
                                 i + concurrent_process_count)

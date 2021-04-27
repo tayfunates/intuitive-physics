@@ -8,6 +8,7 @@ import numpy as np
 import ujson
 
 from multiprocessing import Process
+from threading import Thread
 from typing import List
 
 from loguru import logger
@@ -156,6 +157,86 @@ class ParallelWorker(object):
     def __update_clock(self, diff, total_runs: int, current: int):
         times = np.append(self.__times, diff)
         logger.info(f"Approximately {round((np.mean(times) * (total_runs - current - 1)) / 60, 2)} minutes remaining")
+
+
+
+class MultithreadedProcessor(object):
+    """
+    To process the functions in parallel
+    """
+
+    def __init__(self, jobs: list, args: list):
+        """
+        """
+        self.jobs = jobs
+        self.args = args
+        self.threads: List[Thread] = []
+
+    def fork_processes(self):
+        """
+        Creates the process objects for given function delegates
+        """
+        for i in range(len(self.jobs)):
+            job = self.jobs[i]
+            job_args = self.args[i]
+            t = Thread(target=job, args=job_args)
+            self.threads.append(t)
+
+    def start_all(self):
+        """
+        Starts the functions process all together.
+        """
+        for t in self.threads:
+            t.start()
+
+    def join_all(self):
+        """
+        Waits until all the functions executed.
+        """
+        for t in self.threads:
+            t.join()
+
+
+class MultithreadedWorker(object):
+
+    def __init__(self, jobs: list, args: list, concurrent_process_count: int):
+        self.jobs = jobs
+        self.args = args
+        self.concurrent_process_count = concurrent_process_count
+        self.__times = np.array([])
+
+    def execute_all(self):
+        job_count = len(self.jobs)
+        full_iterations = job_count // self.concurrent_process_count
+
+        for i in range(full_iterations + 1):
+            if i >= job_count: continue
+
+            t1 = time.time()
+
+            start_index = i * self.concurrent_process_count
+            end_index = min(start_index + self.concurrent_process_count, job_count)
+
+            multithreaded_processor = MultithreadedProcessor(self.jobs[start_index:end_index],
+                                                   self.args[start_index:end_index])
+
+            logger.info(f"Forking threads for [{start_index}-{end_index - 1}]")
+            multithreaded_processor.fork_processes()
+
+            logger.info(f"Executing threads concurrently")
+            multithreaded_processor.start_all()
+
+            logger.info(f"Waiting for all concurrent threads to finish")
+            multithreaded_processor.join_all()
+
+            self.__update_clock((time.time() - t1) / self.concurrent_process_count,
+                                job_count,
+                                i + self.concurrent_process_count)
+
+    def __update_clock(self, diff, total_runs: int, current: int):
+        times = np.append(self.__times, diff)
+        logger.info(f"Approximately {round((np.mean(times) * (total_runs - current - 1)) / 60, 2)} minutes remaining")
+
 
 
 def job(index):

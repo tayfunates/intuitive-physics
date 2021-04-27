@@ -895,7 +895,6 @@ class DatasetGenerator:
                     orig_questions = FileIO.read_json(questions_file_path)
                     FileIO.write_json(orig_questions,
                                       self.get_original_questions_output_path(sid, instance_id))
-                    prev_questions_file_path = questions_file_path
                     perturbation_config = self.config.perturbation_config
                     for pid in range(perturbation_config["perturbations_per_simulation"]):
                         perturbation_controller_file_path = self.get_perturbation_controller_path(sid, instance_id, pid)
@@ -929,22 +928,24 @@ class DatasetGenerator:
                         Perturbator.regenerate_answers(
                             original_variations_output_file_path=variations_output_path,
                             perturbed_variations_output_path=perturbed_with_variations_output_path,
-                            original_questions_path=prev_questions_file_path,
+                            original_questions_path=questions_file_path,
                             new_perturbed_qa_file_path=perturbed_questions_file_path,
                             metadata_path=self.config.dataset_metadata_file_path
                         )
 
-                        questions_original = FileIO.read_json(prev_questions_file_path)
+                        questions_original = FileIO.read_json(questions_file_path)
                         questions_perturbed = FileIO.read_json(perturbed_questions_file_path)
 
                         data, orig_size, found, ratio = Perturbator.measure_similarity(questions_original["questions"],
                                                                                        questions_perturbed["questions"])
                         logger.info(f"{instance_id:06d} perturbation {pid} match ratio: {found / orig_size}")
                         logger.info(f"{instance_id:06d} perturbation {pid} correctness: {ratio}")
-                        prev_questions_file_path = perturbed_questions_file_path
+
+                        correct_questions = FileIO.read_json(questions_file_path)
+                        correct_questions["questions"] = data["correct"]
 
                         logger.info(f"{instance_id:06d}: Overriding previous questions")
-                        FileIO.write_json(FileIO.read_json(prev_questions_file_path), questions_file_path)
+                        FileIO.write_json(correct_questions, questions_file_path)
             except Exception as e:
                 traceback.print_exception(type(e), e, e.__traceback__)
                 logger.error(f"{instance_id:06d}: Error while generating questions")

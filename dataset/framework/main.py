@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 from loguru import logger
 
@@ -9,7 +10,7 @@ from framework.utils import FileIO
 if __name__ == '__main__':
 
     # Enqueue is because of multiprocessing.
-    logger.add("out/dataset_generation.log", enqueue=True)
+    logger.add(f"out/dataset_generation_{datetime.now().strftime('%m%d%Y_%H%M')}.log", enqueue=True)
 
     craft_dataset_generation_pipeline = Pipeline([
         DatasetGenerationStage(),

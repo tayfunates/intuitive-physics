@@ -645,7 +645,7 @@ class DatasetGenerationConfig:
         self.executable_working_directory = str(Path(config_dict['executable_working_directory']).resolve().as_posix())
         self.output_folder_path = str(Path(config_dict['output_folder_path']).resolve().as_posix())
 
-        self.split_ratios = config_dict['split_ratios']
+        self.split_ratios = config_dict['split_ratios'] if 'split_ratios' in config_dict else None
         self.split_dataset = self.split_ratios is not None
         if self.split_dataset:
             self.test_set_ratio = self.split_ratios['test']

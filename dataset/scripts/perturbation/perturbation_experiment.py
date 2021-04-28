@@ -13,7 +13,7 @@ from svqa.causal_graph import CausalGraph
 
 from svqa import generate_questions as QuestionGeneratorScript
 
-NOISE_AMOUNT = 0.00
+NOISE_AMOUNT = 0.02
 
 
 def run_simulation_instance(output_json_path, controller_file_path, scene_id: int, id: int):
@@ -163,7 +163,7 @@ def start_experiment(dataset: SVQADataset):
     # Perturbation of videos
     original_questions = []
     outputs = []
-    for video_sid in video_sid_set[:10]:  # Test with only 10 videos for now
+    for video_sid in video_sid_set:  # Test with only 10 videos for now
         video_index = video_sid[0]
         simulation_id = video_sid[1]
         original_variations_output_file_path = f"{dataset.intermediates_folder_path}/sid_{simulation_id}/{video_index:06d}.json"
@@ -179,8 +179,8 @@ def start_experiment(dataset: SVQADataset):
     parallel_worker = ParallelWorker(simulation_jobs, simulation_args, 4)
     parallel_worker.execute_all()
 
-    question_gen_jobs = []
-    question_gen_args = []
+    question_ask_jobs = []
+    question_ask_args = []
 
     # Regenerate answers for perturbed simulations
     qa_outputs = []
@@ -191,13 +191,13 @@ def start_experiment(dataset: SVQADataset):
         original_questions_file_path = output[3]
         original_variations_output_file_path = output[4]
         new_perturbed_qa_file_path = f"./perturbed_outputs/qa_{video_index:06d}.json"
-        question_gen_jobs.append(regenerate_answers)
-        question_gen_args.append(
+        question_ask_jobs.append(regenerate_answers)
+        question_ask_args.append(
             [original_variations_output_file_path, new_variations_output_file_path, original_questions_file_path, new_perturbed_qa_file_path, simulation_id, video_index])
         qa_outputs.append((video_index, simulation_id, new_perturbed_qa_file_path))
 
-    logger.info(f"Generating questions for perturbed simulations")
-    parallel_worker = ParallelWorker(question_gen_jobs, question_gen_args, 8)
+    logger.info(f"Asking questions for perturbed simulations")
+    parallel_worker = ParallelWorker(question_ask_jobs, question_ask_args, 8)
     parallel_worker.execute_all()
 
     questions_perturbed = []
@@ -216,7 +216,7 @@ def start_experiment(dataset: SVQADataset):
     logger.info(f"Match ratio: {found / orig_size}")
     logger.info(f"Correctness: {ratio}")
     logger.info(f"Dumping analysis data...")
-    FileIO.write_json(data, "analysis_data.json")
+    FileIO.write_json(data, f"analysis_data_{datetime.now().strftime('%m%d%Y_%H%M')}.json")
 
 
 if __name__ == '__main__':

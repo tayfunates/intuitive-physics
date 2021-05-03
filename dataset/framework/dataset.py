@@ -266,34 +266,40 @@ class DatasetUtils:
     def dataset_as_list(dataset_json, metadata) -> list:
         questions = []
         for qa_json in dataset_json:
-            question_list = qa_json["questions"]["questions"]
-            simulation_id = qa_json["simulation_id"]
-            for question_obj in question_list:
-                template_filename = question_obj["template_filename"]
-                answer = str(question_obj["answer"])
-                question = question_obj["question"]
-                video_file_path = question_obj["video_filename"]
-                video_index = question_obj["video_index"]
-                question_index = question_obj["question_index"]
-                question_family_index = question_obj["question_family_index"]
+            questions.extend(DatasetUtils.convert_to_minimal_version(qa_json, metadata))
 
-                answer_type = ("Boolean" if answer in ["False", "True"]
-                               else "Shape" if answer in metadata["types"]["Shape"]
-                else "Color" if answer in metadata["types"]["Color"]
-                else "Size" if answer in metadata["types"]["Size"]
-                else "Count")
+        return questions
 
-                questions.append({"question": question,
-                                  "answer": answer,
-                                  "answer_type": answer_type,
-                                  "template_filename": template_filename,
-                                  "video_file_path": video_file_path,
-                                  "video_index": video_index,
-                                  "question_index": question_index,
-                                  "question_family_index": question_family_index,
-                                  "template_id": f"{os.path.splitext(template_filename)[0]}_{question_family_index}",
-                                  "simulation_id": simulation_id})
+    @staticmethod
+    def convert_to_minimal_version(qa_json, metadata):
+        questions = []
+        question_list = qa_json["questions"]["questions"]
+        simulation_id = qa_json["simulation_id"]
+        for question_obj in question_list:
+            template_filename = question_obj["template_filename"]
+            answer = str(question_obj["answer"])
+            question = question_obj["question"]
+            video_file_path = question_obj["video_filename"]
+            video_index = question_obj["video_index"]
+            question_index = question_obj["question_index"]
+            question_family_index = question_obj["question_family_index"]
 
+            answer_type = ("Boolean" if answer in ["False", "True"]
+                           else "Shape" if answer in metadata["types"]["Shape"]
+            else "Color" if answer in metadata["types"]["Color"]
+            else "Size" if answer in metadata["types"]["Size"]
+            else "Count")
+
+            questions.append({"question": question,
+                              "answer": answer,
+                              "answer_type": answer_type,
+                              "template_filename": template_filename,
+                              "video_file_path": video_file_path,
+                              "video_index": video_index,
+                              "question_index": question_index,
+                              "question_family_index": question_family_index,
+                              "template_id": f"{os.path.splitext(template_filename)[0]}_{question_family_index}",
+                              "simulation_id": simulation_id})
         return questions
 
 
@@ -761,13 +767,12 @@ class DatasetGenerator:
                             "offline": {str(self.config.offline).lower()},
                             "outputVideoPath": "{self.get_video_output_path(sid, instance_id)}",
                             "outputJSONPath": "{self.get_bare_simulation_output_path(sid, instance_id)}",
-                            "width":  {simulation_config['width']},
+                            "width": {simulation_config['width']},
                             "height": {simulation_config['height']},
                             "inputScenePath":  "",
                             "stepCount": {simulation_config['step_count']}
                         }}"""),
-                controller_file,
-                indent=2
+                controller_file
             )
 
     def dump_perturbation_controller_file(self,
@@ -786,15 +791,14 @@ class DatasetGenerator:
                             "offline": {str(self.config.offline).lower()},
                             "outputVideoPath": "{self.get_perturbation_video_output_path(sid, instance_id, pid)}",
                             "outputJSONPath": "{self.get_perturbation_bare_simulation_output_path(sid, instance_id, pid)}",
-                            "width":  {simulation_config['width']},
+                            "width": {simulation_config['width']},
                             "height": {simulation_config['height']},
                             "inputScenePath":  "",
                             "stepCount": {simulation_config['step_count']},
                             "perturbationSeed": {seed},
                             "noiseAmount": {perturbation_config['amount']}
                         }}"""),
-                controller_file,
-                indent=2
+                controller_file
             )
 
     def __update_clock(self, diff, total_runs: int, current: int):
@@ -1009,51 +1013,59 @@ class DatasetGenerator:
         # TODO: Verify the integrity of dataset
 
     def __dump_dataset(self):
-        dataset = json.loads("[]")
-
-        configs_to_run = self.__generate_configs_to_run()
-
-        logger.info(f"Inflating dataset JSON object in memory...")
-        for instance_id in range(len(configs_to_run)):
-            simulation_config = configs_to_run[instance_id]
-            sid = simulation_config["id"]
-
-            questions_file_path = self.get_questions_output_path(sid, instance_id)
-            annotations_file_path = self.get_simulation_with_variations_output_path(sid, instance_id)
-
-            try:
-                # Add them into dataset.json
-                with open(questions_file_path, "r") as questions_file:
-                    with open(annotations_file_path, "r") as annotations_file:
-                        simulation_instance = json.loads(f"""{{
-                            "simulation_id": "{sid}",
-                            "video_path": "{self.get_video_output_path(sid, instance_id)}",
-                            "questions": {json.dumps(json.load(questions_file))},
-                            "annotations": {json.dumps(json.load(annotations_file))}
-                         }}""")
-                        if self.config.split_dataset:
-                            simulation_instance["split"] = simulation_config["split"]
-                            simulation_instance["questions"]["info"]["split"] = simulation_config["split"]
-                            for question_obj in simulation_instance["questions"]["questions"]:
-                                question_obj["split"] = simulation_config["split"]
-                        dataset.append(simulation_instance)
-            except FileNotFoundError:
-                logger.warning(f"{instance_id:06d}: Questions file cannot be found")
-                continue
-
-        logger.info(f"Converting absolute paths to relative paths based on current working directory...")
-        dataset = DatasetUtils.relativize_paths(dataset, self.config.output_folder_path)
-
-        logger.info(f"Dumping dataset, this may take a while...")
+        metadata = FileIO.read_json(self.config.dataset_metadata_file_path)
         with open(f"{self.config.output_folder_path}/dataset.json", "w") as dataset_file:
-            json.dump(dataset, dataset_file)
+            with open(f"{self.config.output_folder_path}/dataset_minimal.json", "w") as minimal_dataset_file:
+                dataset_file.write("[")
+                minimal_dataset_file.write("[")
+
+                configs_to_run = self.__generate_configs_to_run()
+
+                logger.info(f"Incrementally writing to dataset JSON file and its minimal version...")
+                logger.info(f"Converting absolute paths to relative paths "
+                            f"along the way, based on current working directory...")
+                for instance_id in range(len(configs_to_run)):
+                    simulation_config = configs_to_run[instance_id]
+                    sid = simulation_config["id"]
+
+                    questions_file_path = self.get_questions_output_path(sid, instance_id)
+
+                    try:
+                        # Add them into dataset.json
+                        with open(questions_file_path, "r") as questions_file:
+                            simulation_instance = json.loads(f"""{{
+                                        "simulation_id": "{sid}",
+                                        "video_path": "{self.get_video_output_path(sid, instance_id)}",
+                                        "questions": {json.dumps(json.load(questions_file))}
+                                     }}""")
+                            if self.config.split_dataset:
+                                simulation_instance["split"] = simulation_config["split"]
+                                simulation_instance["questions"]["info"]["split"] = simulation_config["split"]
+                                for question_obj in simulation_instance["questions"]["questions"]:
+                                    question_obj["split"] = simulation_config["split"]
+                            if instance_id % 10 == 0:
+                                logger.info(f"Writing: {instance_id}/{len(configs_to_run)}")
+                            simulation_instance = \
+                                DatasetUtils.relativize_paths([simulation_instance],
+                                                              self.config.output_folder_path)[0]
+                            dataset_file.write(json.dumps(simulation_instance))
+                            minimal_qa = DatasetUtils.convert_to_minimal_version(simulation_instance, metadata)
+                            for i, question_obj in enumerate(minimal_qa):
+                                minimal_dataset_file.write(json.dumps(question_obj))
+                                if instance_id == len(configs_to_run) - 1 and i == len(minimal_qa) - 1:
+                                    pass
+                                else:
+                                    minimal_dataset_file.write(",")
+                            if instance_id != len(configs_to_run) - 1:
+                                dataset_file.write(",")
+                            else:
+                                dataset_file.write("]")
+                                minimal_dataset_file.write("]")
+                    except FileNotFoundError:
+                        logger.warning(f"{instance_id:06d}: Questions file cannot be found")
+                        continue
 
         logger.info(f"Successfully written to: {self.config.output_folder_path}")
-
-        logger.info(f"Dumping minimal version of the dataset for easier debugging.")
-        with open(f"{self.config.output_folder_path}/dataset_minimal.json", "w") as minimal_dataset_file:
-            json.dump(DatasetUtils.dataset_as_list(dataset, FileIO.read_json(self.config.dataset_metadata_file_path)),
-                      minimal_dataset_file, indent=2)
 
     def make_directories(self):
         os.makedirs(self.config.output_folder_path, exist_ok=True)

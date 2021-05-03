@@ -793,7 +793,7 @@ class DatasetGenerator:
                             "outputJSONPath": "{self.get_perturbation_bare_simulation_output_path(sid, instance_id, pid)}",
                             "width": {simulation_config['width']},
                             "height": {simulation_config['height']},
-                            "inputScenePath":  "",
+                            "inputScenePath": "{self.get_bare_simulation_output_path(sid, instance_id)}",
                             "stepCount": {simulation_config['step_count']},
                             "perturbationSeed": {seed},
                             "noiseAmount": {perturbation_config['amount']}

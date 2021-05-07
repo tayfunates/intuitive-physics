@@ -9,13 +9,13 @@ import numpy as np
 from deepdiff import DeepDiff
 from loguru import logger
 
-from framework.dataset import DatasetStatistics, SVQADataset, DatasetUtils, DatasetGenerationConfig
+from framework.dataset import DatasetStatistics, CRAFTDataset, DatasetUtils, DatasetGenerationConfig
 from framework.simulation import SimulationInstance, SimulationRunner
 from framework.utils import Funnel, FileIO
 
 
 class DatasetUnderSampler:
-    def __init__(self, dataset: SVQADataset, output_file_path):
+    def __init__(self, dataset: CRAFTDataset, output_file_path):
         self.__dataset_copy = copy.deepcopy(dataset)
         self.questions = self.__dataset_copy.questions
         self.output_file_path = output_file_path
@@ -109,7 +109,7 @@ class DatasetUnderSampler:
     def dump(self):
         with open(self.output_file_path, "w") as out_file:
             out_file.write(json.dumps(
-                SVQADataset.convert_to_original_dataset_json(self.__dataset_copy.dataset_json, self.questions)))
+                CRAFTDataset.convert_to_original_dataset_json(self.__dataset_copy.dataset_json, self.questions)))
             out_file.close()
         return
 

@@ -21,7 +21,7 @@ from framework.simulation import SimulationRunner, SimulationInstance, Perturbat
 from framework.utils import FileIO, Funnel, MultithreadedProcessor
 
 
-class SVQADataset:
+class CRAFTDataset:
 
     def __init__(self, dataset_folder_path: str, metadata: dict):
         self.dataset_folder_path = dataset_folder_path \
@@ -305,7 +305,7 @@ class DatasetUtils:
 
 class DatasetStatistics:
 
-    def __init__(self, dataset: SVQADataset):
+    def __init__(self, dataset: CRAFTDataset):
         self.dataset = dataset
         self.answer_freq_per_tid_and_sid = None
         self.answer_freq_per_sid = None
@@ -1104,8 +1104,8 @@ class DatasetGenerator:
     def get_debug_output_path(self, sid: int, instance_id: int):
         return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/cl_debug_{instance_id:06d}.txt"
 
-    def get_perturbation_debug_output_path(self, sid: int, instance_id: int):
-        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/cl_perturbation_debug_{instance_id:06d}.txt"
+    def get_perturbation_debug_output_path(self, sid: int, instance_id: int, pid: int):
+        return f"{self.config.output_folder_path}/intermediates/sid_{sid}/debug/cl_perturbation_debug_{instance_id:06d}_{pid}.txt"
 
     def get_perturbation_controller_path(self, sid: int, instance_id: int, pid: int):
         return f"{self.config.output_folder_path}/intermediates/sid_{sid}/perturbations/p_controller_{instance_id:06d}_{pid}.json"

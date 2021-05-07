@@ -5,7 +5,7 @@ from typing import List
 from loguru import logger
 
 from framework.balance import DatasetInspector, DatasetBalancer, DatasetUnderSampler
-from framework.dataset import DatasetGenerationConfig, DatasetGenerator, SVQADataset, DatasetStatistics
+from framework.dataset import DatasetGenerationConfig, DatasetGenerator, CRAFTDataset, DatasetStatistics
 from framework.utils import FileIO
 
 
@@ -69,7 +69,7 @@ class DatasetGenerationStage(Stage):
         dataset_generator = DatasetGenerator(config)
         dataset_generator.execute()
         dataset_folder_path = dataset_generator.config.output_folder_path
-        self.__dataset = SVQADataset(dataset_folder_path, FileIO.read_json(config.dataset_metadata_file_path))
+        self.__dataset = CRAFTDataset(dataset_folder_path, FileIO.read_json(config.dataset_metadata_file_path))
 
     def get_output(self):
         return self.__dataset
@@ -81,7 +81,7 @@ class DatasetStatisticsGenerationStage(Stage):
         super().__init__()
         self.__dataset_statistics = None
 
-    def process(self, dataset: SVQADataset):
+    def process(self, dataset: CRAFTDataset):
         self.__dataset_statistics = DatasetStatistics(dataset)
         self.__dataset_statistics.generate_all_stats()
 
@@ -113,7 +113,7 @@ class PreBalancingPostProcessStage(Stage):
         super().__init__(name="Pre-Balancing Post-Process Stage")
         self.__dataset_obj = None
 
-    def process(self, dataset_obj: SVQADataset):
+    def process(self, dataset_obj: CRAFTDataset):
         logger.info("Initiating post process stage before balancing...")
 
         self.__dataset_obj = dataset_obj
@@ -153,7 +153,7 @@ class BalancingStage(Stage):
     def __init__(self):
         super().__init__(name="Balancing Stage")
 
-    def process(self, dataset_obj: SVQADataset):
+    def process(self, dataset_obj: CRAFTDataset):
         logger.info("Initiating dataset balancing stage...")
 
         dataset_obj.generate_statistics(output_folder=f"{dataset_obj.dataset_folder_path}/stats/imbalanced")
@@ -163,7 +163,7 @@ class BalancingStage(Stage):
         DatasetUnderSampler(dataset_obj, balanced_dataset_output_path) \
             .balance_answers_within_each_template_and_simulation_ids() \
             .dump()
-        balanced_dataset = SVQADataset(balanced_dataset_output_path, dataset_obj.metadata)
+        balanced_dataset = CRAFTDataset(balanced_dataset_output_path, dataset_obj.metadata)
 
         balanced_dataset.generate_statistics(output_folder=f"{dataset_obj.dataset_folder_path}/stats/balanced")
 

@@ -7,7 +7,7 @@ import sys
 from glob import glob
 from pathlib import Path
 
-from framework.dataset import SVQADataset
+from framework.dataset import CRAFTDataset
 import vlc
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QFrame, QListWidget, QLineEdit, QPushButton, QLabel
@@ -107,7 +107,7 @@ class Ui(QtWidgets.QMainWindow):
             state_file.write(self.path)
 
         global g_dataset
-        g_dataset = SVQADataset(self.path, FileIO.read_json("../svqa/metadata.json"))
+        g_dataset = CRAFTDataset(self.path, FileIO.read_json("../svqa/metadata.json"))
         logger.info(f"Dataset at {self.path} loaded...")
         self.populate_lists()
 

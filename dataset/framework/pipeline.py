@@ -303,3 +303,64 @@ class DatasetSplitStage(Stage):
 
     def get_output(self):
         return self.__dataset_obj
+
+
+class FullDatasetWriteStage(Stage):
+
+    def __init__(self, output_file_name):
+        super().__init__(name="Full Dataset Write Stage", )
+        self.__dataset_obj: CRAFTDataset = None
+        self.output_file_name = output_file_name
+
+    def process(self, dataset_obj: CRAFTDataset):
+        logger.info("Write full dataset...")
+
+        self.__dataset_obj = dataset_obj
+
+        with open(f"{self.__dataset_obj.dataset_folder_path}/{self.output_file_name}", "w") as full_dataset_file:
+            full_dataset_file.write("[")
+            instance_ids = sorted(list(dataset_obj.video_index_to_questions_map.keys()))
+            i = 0
+            for instance_id in instance_ids:
+                question_list = dataset_obj.video_index_to_questions_map[instance_id]
+                sid = int(question_list[0]["simulation_id"])
+
+                questions_file_path = self.__dataset_obj.get_questions_output_path(sid, instance_id)
+
+                try:
+                    # Add them into dataset.json
+                    with open(questions_file_path, "r") as questions_file:
+                        qa_json = json.load(questions_file)
+
+                        filtered_questions = []
+                        for q in qa_json["questions"]:
+                            ok_questions = self.__dataset_obj.get_questions_for_video(q["video_index"])
+                            for ok_q in ok_questions:
+                                if ok_q["question_index"] == q["question_index"]:
+                                    filtered_questions.append(q)
+                                    break
+
+                        qa_json["questions"][:] = filtered_questions
+
+                        simulation_instance = json.loads(f"""{{
+                                    "simulation_id": "{sid}",
+                                    "video_path": "{self.__dataset_obj.get_video_output_path(sid, instance_id)}",
+                                    "questions": {json.dumps(qa_json)}
+                                 }}""")
+                        if instance_id % 10 == 0:
+                            logger.info(f"Writing: {instance_id}/{len(instance_ids)}")
+                        simulation_instance = \
+                            DatasetUtils.relativize_paths([simulation_instance],
+                                                          self.__dataset_obj.dataset_folder_path)[0]
+                        full_dataset_file.write(json.dumps(simulation_instance))
+                        if i != len(instance_ids) - 1:
+                            full_dataset_file.write(",")
+                        else:
+                            full_dataset_file.write("]")
+                except FileNotFoundError:
+                    logger.warning(f"{instance_id:06d}: Questions file cannot be found")
+                i += 1
+
+    def get_output(self):
+        return self.__dataset_obj
+

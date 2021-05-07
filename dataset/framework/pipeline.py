@@ -1,10 +1,11 @@
+import json
 import time
 from abc import ABC, abstractmethod
 from typing import List
 
 from loguru import logger
 
-from framework.balance import DatasetInspector, DatasetBalancer, DatasetUnderSampler
+from framework.balance import DatasetInspector, DatasetUnderSampler
 from framework.dataset import DatasetGenerationConfig, DatasetGenerator, CRAFTDataset, DatasetStatistics
 from framework.utils import FileIO
 
@@ -111,7 +112,7 @@ class PreBalancingPostProcessStage(Stage):
 
     def __init__(self):
         super().__init__(name="Pre-Balancing Post-Process Stage")
-        self.__dataset_obj = None
+        self.__dataset_obj: CRAFTDataset = None
 
     def process(self, dataset_obj: CRAFTDataset):
         logger.info("Initiating post process stage before balancing...")
@@ -119,12 +120,14 @@ class PreBalancingPostProcessStage(Stage):
         self.__dataset_obj = dataset_obj
 
         # Preprocess Before Balancing 1: Do not ask shape if only one shape is present in the scene.
-        for simulation_instance in dataset_obj.dataset_json:
-            annotations = simulation_instance["annotations"]
+        for instance_id in range(len(dataset_obj.video_index_to_questions_map.keys())):
+            question_list = dataset_obj.video_index_to_questions_map[instance_id]
+            sid = int(question_list[0]["simulation_id"])
+
+            annotations = FileIO.read_json(dataset_obj.get_simulation_with_variations_output_path(sid, instance_id))
             objects_in_scene = annotations["original_video_output"]["scene_states"][0]["scene"]["objects"]
             dynamic_objects = [object for object in objects_in_scene if object["bodyType"] == 2]
 
-            question_list = simulation_instance["questions"]["questions"]
             new_questions_list = []
             for question in question_list:
                 answer_type = dataset_obj.get_answer_type_for_answer(question["answer"])
@@ -132,17 +135,39 @@ class PreBalancingPostProcessStage(Stage):
                     if len(set([f"{object['shape']}" for object in dynamic_objects])) <= 1:
                         # Remove the question that asks shape
                         logger.info(f"Question asks shape even though there's only 1 "
-                                    f"shape present in the scene. Removing...")
-                        logger.info(f"Removed question: {str(question)}")
+                                    f"shape present in the scene. Removing {question['video_index']}/{question['question_index']}")
                         continue
                 new_questions_list.append(question)
 
-            simulation_instance["questions"]["questions"][:] = new_questions_list
+            question_list[:] = new_questions_list
 
         # Continue preprocessing before balancing here
 
+        self.__rewrite_dataset()
+
+    def __rewrite_dataset(self):
+        with open(f"{self.__dataset_obj.dataset_folder_path}/dataset_minimal.json", "w") as minimal_dataset_file:
+            minimal_dataset_file.write("[")
+
+            logger.info(f"Rewriting preprocessed minimal dataset...")
+            N = len(self.__dataset_obj.video_index_to_questions_map.keys())
+            for instance_id in range(N):
+                question_list = self.__dataset_obj.video_index_to_questions_map[instance_id]
+
+                for i, question in enumerate(question_list):
+                    minimal_dataset_file.write(json.dumps(question))
+                    if instance_id == N - 1 and i == len(question_list) - 1:
+                        pass
+                    else:
+                        minimal_dataset_file.write(",")
+
+            minimal_dataset_file.write("]")
+
+            logger.info(f"Successfully rewritten to: {self.__dataset_obj.dataset_folder_path}")
+
     def cleanup(self):
-        self.__dataset_obj.prepare_auxiliaries()
+        logger.info(f"Re-reading preprocessed minimal dataset...")
+        self.__dataset_obj = CRAFTDataset(self.__dataset_obj.dataset_folder_path, self.__dataset_obj.metadata)
 
     def get_output(self):
         return self.__dataset_obj

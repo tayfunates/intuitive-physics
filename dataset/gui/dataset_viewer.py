@@ -88,7 +88,7 @@ class Ui(QtWidgets.QMainWindow):
 
     def populate_lists(self):
         self.lw_videos.clear()
-        self.lw_videos.addItems([f"{key:06d} - SID: {g_dataset.video_index_to_question_object_map[key][0]['simulation_id']}" for key in g_dataset.video_index_to_question_object_map.keys()])
+        self.lw_videos.addItems([f"{key:06d} - SID: {g_dataset.video_index_to_questions_map[key][0]['simulation_id']}" for key in g_dataset.video_index_to_questions_map.keys()])
         self.lw_videos.itemClicked.connect(self.video_item_clicked)
 
 

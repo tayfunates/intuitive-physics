@@ -1,12 +1,14 @@
 import json
 import time
 from abc import ABC, abstractmethod
+from collections import defaultdict
+from random import Random
 from typing import List
 
 from loguru import logger
 
 from framework.balance import DatasetInspector, DatasetUnderSampler
-from framework.dataset import DatasetGenerationConfig, DatasetGenerator, CRAFTDataset, DatasetStatistics
+from framework.dataset import DatasetGenerationConfig, DatasetGenerator, CRAFTDataset, DatasetStatistics, DatasetUtils
 from framework.utils import FileIO
 
 
@@ -121,6 +123,7 @@ class PreBalancingPostProcessStage(Stage):
 
         # Preprocess Before Balancing 1: Do not ask shape if only one shape is present in the scene.
         for instance_id in range(len(dataset_obj.video_index_to_questions_map.keys())):
+            # Getting instance_id from range is dangerous, if len - 1 is less than max_video_index
             question_list = dataset_obj.video_index_to_questions_map[instance_id]
             sid = int(question_list[0]["simulation_id"])
 
@@ -197,3 +200,106 @@ class BalancingStage(Stage):
 
     def get_output(self):
         pass
+
+
+class DatasetSplitStage(Stage):
+
+    def __init__(self, config):
+        super().__init__(name="Dataset Split Stage", )
+        self.__dataset_obj: CRAFTDataset = None
+        self.config = config
+
+    def process(self, dataset_obj: CRAFTDataset):
+        logger.info("Initiating dataset splitting stage...")
+        rnd = Random(10435)
+
+        self.__dataset_obj = dataset_obj
+
+        splits = defaultdict(list)
+        vi_qi_to_split = {}
+
+        if self.config == "hard":
+            split_indices = {
+                "test": (16, 20),
+                "validation": (12, 16),
+                "train": (0, 12)
+            }
+
+            chosen = {"test": [], "validation": [], "train": []}
+
+            sids = [2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+            rnd.shuffle(sids)
+
+            chosen["train"] = sids[split_indices["train"][0]:split_indices["train"][1]]
+            chosen["validation"] = sids[split_indices["validation"][0]:split_indices["validation"][1]]
+            chosen["test"] = sids[split_indices["test"][0]:split_indices["test"][1]]
+
+            counterparts = {1: 18, 3: 16, 4: 17}
+
+            for key in counterparts:
+                if counterparts[key] not in chosen["train"]:
+                    chosen["train"].insert(split_indices["train"][0], key)
+                elif counterparts[key] not in chosen["validation"]:
+                    chosen["validation"].insert(split_indices["validation"][0], key)
+                elif counterparts[key] not in chosen["test"]:
+                    chosen["test"].insert(split_indices["test"][0], key)
+
+            counts = defaultdict(int)
+            for question in dataset_obj.questions:
+                if int(question["simulation_id"]) in chosen["train"]:
+                    counts["train"] += 1
+                if int(question["simulation_id"]) in chosen["validation"]:
+                    counts["validation"] += 1
+                if int(question["simulation_id"]) in chosen["test"]:
+                    counts["test"] += 1
+
+            sid_to_split = {}
+            for split, sids in chosen.items():
+                for sid in sids:
+                    sid_to_split[sid] = split
+
+            for question in dataset_obj.questions:
+                sid = int(question["simulation_id"])
+                splits[sid_to_split[sid]].append({
+                    "video_index": question["video_index"],
+                    "question_index": question["question_index"]
+                })
+                vi_qi_to_split[(question["video_index"], question["question_index"])] = sid_to_split[sid]
+
+        elif self.config == "easy":
+
+            idxs = list(range(len(self.__dataset_obj.questions)))
+            N = len(idxs)
+            test_count = int(N * 0.2)
+            val_count = int(N * 0.2)
+            train_count = int(N * 0.6)
+            train_count += N - test_count - val_count - train_count
+            rnd.shuffle(idxs)
+
+            train = idxs[:train_count]
+            val = idxs[train_count:train_count + val_count]
+            test = idxs[train_count + val_count:N]
+
+            for i in train:
+                question = self.__dataset_obj.questions[i]
+                splits["train"].append({
+                    "video_index": question["video_index"],
+                    "question_index": question["question_index"]
+                })
+            for i in val:
+                question = self.__dataset_obj.questions[i]
+                splits["validation"].append({
+                    "video_index": question["video_index"],
+                    "question_index": question["question_index"]
+                })
+            for i in test:
+                question = self.__dataset_obj.questions[i]
+                splits["test"].append({
+                    "video_index": question["video_index"],
+                    "question_index": question["question_index"]
+                })
+
+        FileIO.write_json(dict(splits), f"{dataset_obj.dataset_folder_path}/split_info_{self.config}.json")
+
+    def get_output(self):
+        return self.__dataset_obj

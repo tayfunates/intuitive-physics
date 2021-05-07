@@ -1060,8 +1060,7 @@ class DatasetGenerator:
                         if instance_id % 10 == 0:
                             logger.info(f"Writing: {instance_id}/{len(configs_to_run)}")
                         simulation_instance = \
-                            DatasetUtils.relativize_paths([simulation_instance],
-                                                          self.config.output_folder_path)[0]
+                            DatasetUtils.relativize_paths([simulation_instance], self.config.output_folder_path)[0]
                         # dataset_file.write(json.dumps(simulation_instance))
                         minimal_qa = DatasetUtils.convert_to_minimal_version(simulation_instance, metadata)
                         for i, question_obj in enumerate(minimal_qa):
@@ -1135,9 +1134,3 @@ class DatasetGenerator:
     def get_perturbation_bare_simulation_output_path(self, sid: int, instance_id: int, pid: int):
         return f"{self.config.output_folder_path}/intermediates/sid_{sid}/perturbations/p_{instance_id:06d}_{pid}.json"
 
-
-class DatasetSplitter:
-
-    def __init__(self, config: DatasetGenerationConfig):
-        # TODO
-        pass

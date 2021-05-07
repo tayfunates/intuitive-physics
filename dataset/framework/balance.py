@@ -107,15 +107,27 @@ class DatasetUnderSampler:
         return self.questions
 
     def dump(self):
-        with open(self.output_file_path, "w") as out_file:
-            out_file.write(json.dumps(
-                CRAFTDataset.convert_to_original_dataset_json(self.__dataset_copy.dataset_json, self.questions)))
-            out_file.close()
-        return
+        with open(self.output_file_path, "w") as minimal_balanced_dataset_file:
+            minimal_balanced_dataset_file.write("[")
+            N = len(self.questions)
+            for i, question in enumerate(self.questions):
+                minimal_balanced_dataset_file.write(json.dumps(question))
+                if i != N - 1:
+                    minimal_balanced_dataset_file.write(",")
 
-    def dump_as_list(self):
-        FileIO.write_json(self.questions, self.output_file_path)
+            minimal_balanced_dataset_file.write("]")
+
+            logger.info(f"Balanced version successfully written to: {self.output_file_path}")
         return
+        # with open(self.output_file_path, "w") as out_file:
+        #     out_file.write(json.dumps(
+        #         CRAFTDataset.convert_to_original_dataset_json(self.__dataset_copy.dataset_json, self.questions)))
+        #     out_file.close()
+        # return
+
+    # def dump_as_list(self):
+    #     FileIO.write_json(self.questions, self.output_file_path)
+    #     return
 
 
 class DatasetInspector:

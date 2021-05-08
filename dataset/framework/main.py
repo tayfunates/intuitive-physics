@@ -3,19 +3,23 @@ from datetime import datetime
 
 from loguru import logger
 
-from framework.dataset import DatasetGenerationConfig, DatasetGenerator
-from framework.pipeline import Pipeline, DatasetGenerationStage, BalancingStage, PreBalancingPostProcessStage
+from framework.dataset import DatasetGenerationConfig, CRAFTDataset
+from framework.pipeline import Pipeline, DatasetSplitStage, FullDatasetWriteStage, AnnotationsFileCollector, \
+    DatasetGenerationStage, PreBalancingPostProcessStage, BalancingStage
 from framework.utils import FileIO
 
 if __name__ == '__main__':
-
     # Enqueue is because of multiprocessing.
     logger.add(f"out/dataset_generation_{datetime.now().strftime('%m%d%Y_%H%M')}.log", enqueue=True)
 
     craft_dataset_generation_pipeline = Pipeline([
         DatasetGenerationStage(),
         PreBalancingPostProcessStage(),
-        BalancingStage()
+        BalancingStage(),
+        DatasetSplitStage("hard"),
+        DatasetSplitStage("random"),
+        FullDatasetWriteStage("dataset_full.json"),
+        AnnotationsFileCollector("annotations.json")
     ])
     logger.info("Dataset generation pipeline object initiated")
 

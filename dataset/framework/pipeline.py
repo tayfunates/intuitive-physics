@@ -219,30 +219,31 @@ class DatasetSplitStage(Stage):
         vi_qi_to_split = {}
 
         if self.config == "hard":
-            split_indices = {
-                "test": (16, 20),
-                "validation": (12, 16),
-                "train": (0, 12)
-            }
-
-            chosen = {"test": [], "validation": [], "train": []}
-
-            sids = [2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-            rnd.shuffle(sids)
-
-            chosen["train"] = sids[split_indices["train"][0]:split_indices["train"][1]]
-            chosen["validation"] = sids[split_indices["validation"][0]:split_indices["validation"][1]]
-            chosen["test"] = sids[split_indices["test"][0]:split_indices["test"][1]]
+            split_sizes = {"train": 12, "validation": 4, "test": 4}
 
             counterparts = {1: 18, 3: 16, 4: 17}
 
-            for key in counterparts:
-                if counterparts[key] not in chosen["train"]:
-                    chosen["train"].insert(split_indices["train"][0], key)
-                elif counterparts[key] not in chosen["validation"]:
-                    chosen["validation"].insert(split_indices["validation"][0], key)
-                elif counterparts[key] not in chosen["test"]:
-                    chosen["test"].insert(split_indices["test"][0], key)
+            sids = list(range(1, 21))
+
+            chosen = {"test": [], "validation": [], "train": []}
+
+            # Bogo method. The best. I've spend a lot of time until I reached this ultimate conclusion.
+            while True:
+                rnd.shuffle(sids)
+                chosen["train"] = sids[:split_sizes["train"]]
+                chosen["validation"] = sids[split_sizes["train"]:split_sizes["train"] + split_sizes["validation"]]
+                chosen["test"] = sids[split_sizes["train"] + split_sizes["validation"]:sum(split_sizes.values())]
+
+                ok = True
+                for split, ss in chosen.items():
+                    for s in ss:
+                        if s in counterparts and counterparts[s] in ss:
+                            ok = False
+                            break
+                        if not ok:
+                            break
+                if ok:
+                    break
 
             counts = defaultdict(int)
             for question in dataset_obj.questions:
@@ -252,6 +253,10 @@ class DatasetSplitStage(Stage):
                     counts["validation"] += 1
                 if int(question["simulation_id"]) in chosen["test"]:
                     counts["test"] += 1
+
+            logger.info(f"Splits: {json.dumps(chosen)}")
+
+            logger.info(f"Number of questions for each split: {json.dumps(dict(counts))}")
 
             sid_to_split = {}
             for split, sids in chosen.items():
@@ -266,7 +271,7 @@ class DatasetSplitStage(Stage):
                 })
                 vi_qi_to_split[(question["video_index"], question["question_index"])] = sid_to_split[sid]
 
-        elif self.config == "easy":
+        elif self.config == "random":
 
             idxs = list(range(len(self.__dataset_obj.questions)))
             N = len(idxs)
@@ -364,3 +369,62 @@ class FullDatasetWriteStage(Stage):
     def get_output(self):
         return self.__dataset_obj
 
+
+class AnnotationsFileCollector(Stage):
+    def __init__(self, output_file_name):
+        super().__init__(name="Annotations File Collector Stage")
+        self.__dataset_obj: CRAFTDataset = None
+        self.output_file_name = output_file_name
+
+    def process(self, dataset_obj: CRAFTDataset):
+        logger.info("Collecting annotations...")
+        self.__dataset_obj = dataset_obj
+        with open(f"{dataset_obj.dataset_folder_path}/{self.output_file_name}", "w") as annotations_file:
+            annotations_file.write("{")
+            instance_ids = sorted(list(dataset_obj.video_index_to_questions_map.keys()))
+            for i, instance_id in enumerate(instance_ids):
+                sid = int(dataset_obj.video_index_to_questions_map[instance_id][0]["simulation_id"])
+                annotations_file_path = dataset_obj.get_simulation_with_variations_output_path(sid, instance_id)
+                with open(annotations_file_path) as this_annotations_file:
+                    annotations_file.write(f"""
+                            "{instance_id:06d}": {json.dumps(json.load(this_annotations_file))}
+                    """)
+                    if i != len(instance_ids) -1 :
+                        annotations_file.write(",")
+                    if i % 10 == 0:
+                        logger.info(f"Collecting annotations: {i}/{len(instance_ids)}")
+            annotations_file.write("}")
+
+    def get_output(self):
+        return self.__dataset_obj
+
+
+if __name__ == '__main__':
+    rnd = Random(10435)
+    split_sizes = {"train": 12, "validation": 4, "test": 4}
+
+    counterparts = {1: 18, 3: 16, 4: 17}
+
+    sids = list(range(1, 21))
+
+    chosen = {"test": [], "validation": [], "train": []}
+
+    # Bogo method. The best. I've spend a lot of time until I reached this ultimate conclusion.
+    while True:
+        rnd.shuffle(sids)
+        chosen["train"] = sids[:split_sizes["train"]]
+        chosen["validation"] = sids[split_sizes["train"]:split_sizes["train"] + split_sizes["validation"]]
+        chosen["test"] = sids[split_sizes["train"] + split_sizes["validation"]:sum(split_sizes.values())]
+
+        ok = True
+        for split, ss in chosen.items():
+            for s in ss:
+                if s in counterparts and counterparts[s] in ss:
+                    ok = False
+                    break
+                if not ok:
+                    break
+        if ok:
+            break
+
+    print(json.dumps(chosen))

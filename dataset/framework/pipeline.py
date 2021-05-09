@@ -389,7 +389,7 @@ class AnnotationsFileCollector(Stage):
                     annotations_file.write(f"""
                             "{instance_id:06d}": {json.dumps(json.load(this_annotations_file))}
                     """)
-                    if i != len(instance_ids) -1 :
+                    if i != len(instance_ids) - 1:
                         annotations_file.write(",")
                     if i % 10 == 0:
                         logger.info(f"Collecting annotations: {i}/{len(instance_ids)}")
@@ -399,32 +399,21 @@ class AnnotationsFileCollector(Stage):
         return self.__dataset_obj
 
 
-if __name__ == '__main__':
-    rnd = Random(10435)
-    split_sizes = {"train": 12, "validation": 4, "test": 4}
+class CleanupStage(Stage):
+    def __init__(self):
+        super().__init__(name="Cleanup Stage")
+        self.__dataset_obj: CRAFTDataset = None
 
-    counterparts = {1: 18, 3: 16, 4: 17}
+    def process(self, dataset_obj: CRAFTDataset):
+        self.__dataset_obj = dataset_obj
+        videos_with_no_questions = []
+        ground = list(range(0, 10000))
+        for idx in ground:
+            if idx not in dataset_obj.video_index_to_questions_map:
+                videos_with_no_questions.append(idx)
 
-    sids = list(range(1, 21))
+        with open(f"{dataset_obj.dataset_folder_path}/videos_with_no_questions.json", "w") as vwnq_file:
+            json.dump(videos_with_no_questions, vwnq_file)
 
-    chosen = {"test": [], "validation": [], "train": []}
-
-    # Bogo method. The best. I've spend a lot of time until I reached this ultimate conclusion.
-    while True:
-        rnd.shuffle(sids)
-        chosen["train"] = sids[:split_sizes["train"]]
-        chosen["validation"] = sids[split_sizes["train"]:split_sizes["train"] + split_sizes["validation"]]
-        chosen["test"] = sids[split_sizes["train"] + split_sizes["validation"]:sum(split_sizes.values())]
-
-        ok = True
-        for split, ss in chosen.items():
-            for s in ss:
-                if s in counterparts and counterparts[s] in ss:
-                    ok = False
-                    break
-                if not ok:
-                    break
-        if ok:
-            break
-
-    print(json.dumps(chosen))
+    def get_output(self):
+        return self.__dataset_obj

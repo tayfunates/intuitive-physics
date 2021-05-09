@@ -21,34 +21,56 @@ from framework.utils import FileIO, Funnel, MultithreadedProcessor
 
 class CRAFTDataset:
 
-    def __init__(self, dataset_folder_path: str, metadata: dict):
+    def __init__(self, dataset_folder_path: str, metadata: dict, load_immediately=True):
         self.dataset_folder_path = dataset_folder_path \
             if os.path.isdir(dataset_folder_path) \
             else Path(dataset_folder_path).parent.as_posix()
 
         self.metadata = metadata
 
-        self.dataset_minimal_json = FileIO.read_json(f"{dataset_folder_path}/dataset_minimal.json"
-                                                     if os.path.isdir(dataset_folder_path)
-                                                     else dataset_folder_path)
-
-        # self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset.json"
-        #                                      if os.path.isdir(dataset_folder_path)
-        #                                      else dataset_folder_path)
+        self.dataset_minimal_json = None
+        if load_immediately:
+            self.load()
 
         self.questions = self.dataset_minimal_json
         self.questions_dataframe = None
         self.max_video_index = None
         self.video_index_to_questions_map = None
-        self.prepare_auxiliaries()
+        self.sid_vi_q_map = None
+        self.vi_sid_map = None
+        if load_immediately:
+            self.prepare_auxiliaries()
+
+    def load(self):
+        self.dataset_minimal_json = FileIO.read_json(f"{self.dataset_folder_path}/dataset_minimal.json"
+                                                     if os.path.isdir(self.dataset_folder_path)
+                                                     else self.dataset_folder_path)
+        # self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset.json"
+        #                                      if os.path.isdir(dataset_folder_path)
+        #                                      else dataset_folder_path)
 
     def prepare_auxiliaries(self):
         # self.questions = self.get_all_questions_as_list()
         self.questions_dataframe = pd.DataFrame(self.questions)
         self.max_video_index = None
         self.video_index_to_questions_map = defaultdict(list)
+        self.vi_sid_map = {}
         for question in self.questions:
             self.video_index_to_questions_map[question["video_index"]].append(question)
+            self.vi_sid_map[question["video_index"]] = int(question["simulation_id"])
+
+
+    def build_sid_vi_q_map(self):
+        self.sid_vi_q_map = {}
+        for question in self.questions:
+            sid = int(question["simulation_id"])
+            vi = question["video_index"]
+            if sid not in self.sid_vi_q_map:
+                self.sid_vi_q_map[sid] = {}
+            if vi not in self.sid_vi_q_map[sid]:
+                self.sid_vi_q_map[sid][vi] = []
+            self.sid_vi_q_map[sid][vi].append(question)
+
 
     def get_questions_for_video(self, video_index: int) -> List[Dict]:
         return self.video_index_to_questions_map[video_index]

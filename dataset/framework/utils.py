@@ -13,6 +13,8 @@ from typing import List
 
 from loguru import logger
 
+from shutil import copyfile
+
 
 class DictUtils:
 
@@ -58,6 +60,10 @@ class FileIO:
         with open(file_path, "w") as f:
             ujson.dump(json_obj, f, escape_forward_slashes=False)
             f.close()
+
+    @staticmethod
+    def copy(from_path, to_path):
+        copyfile(from_path, to_path)
 
     @staticmethod
     def delete_files(folder_path, *wildcards):

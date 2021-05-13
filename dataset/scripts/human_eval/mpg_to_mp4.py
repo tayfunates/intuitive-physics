@@ -1,5 +1,6 @@
 import glob
 import os
+import sys
 
 from converter import Converter
 
@@ -26,10 +27,10 @@ def convert_to_mp4(video_file_path, output_file_path):
 
 
 if __name__ == '__main__':
-    path = "human_eval_CRAFT_10K_balanced/"
+    path = "human_eval_CRAFT_10K_balanced"
 
     for part in range(1, 6):
-        for filepath in glob.iglob(f'{path}/part_{part}/*.mpg'):
+        for filepath in glob.iglob(f'{path}/videos/part_{part}/*.mpg'):
             id = filepath.split("/")[-1].split(".")[0]
             outfolder = f"{path}/videos_mp4/mp4_part_{part}"
             os.makedirs(outfolder, exist_ok=True)

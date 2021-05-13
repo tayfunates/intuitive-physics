@@ -173,7 +173,7 @@ def produce_snapshots_and_controllers(old_snapshots_folder: str, new_snapshots_f
     logger.info("Fragmenting controllers")
     write_new_controller_to_file(new_snapshots_folder, new_controllers_folder, screenshots_folder)
     logger.info("Running simulations")
-    run(new_controllers_folder, exec_path)
+    run(new_controllers_folder, exec_path, "../../../simulation/2d/SVQA-Box2D/Testbed")
 
 
 from PIL import Image
@@ -252,7 +252,7 @@ def combine(screenshots_folder):
         else:
             j = 1
     m1.show()
-    m1.save(f"./{screenshots_folder}_combined.png")
+    m1.save(f"{screenshots_folder}_combined.png")
 
 
 def object_segmentation(video_index: int):
@@ -272,7 +272,9 @@ def object_segmentation(video_index: int):
     exec_path = Path("../../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").absolute().as_posix()
     working_directory = Path("../../../simulation/2d/SVQA-Box2D/Testbed").absolute().as_posix()
 
-    simulation_id = int(str(video_index)[3]) + 1
+    input_scene_json = FileIO.read_json(input_scene_path)
+    video_fn = input_scene_json["original_video_output"]["video_filename"]
+    simulation_id = int(video_fn.split("/")[-2].split("_")[-1])
     cj = json.loads(
         f"""{{
                     "simulationID": {simulation_id},

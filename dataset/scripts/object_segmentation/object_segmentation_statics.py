@@ -126,7 +126,7 @@ if __name__ == '__main__':
     # Specify a folder
     # Make sure exec_path and number_of_scene are correct
 
-    output_folder = "C:/Users/cagatay/OneDrive/Desktop/"
+    output_folder = "./outputs/"
     exec_path = Path("../../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").absolute().as_posix()
     number_of_scene = 20
 

@@ -5,8 +5,6 @@ from PIL import Image
 from pathlib import Path
 
 
-
-
 def get_controller_json_for_statics(min_mean_max_random: str, simulation_id: int, screenshot_output_folder: str):
     return json.loads(
         f"""{{
@@ -52,8 +50,6 @@ def create_and_save_all_jsons_for_statics(num_of_scenes, screenshot_output_folde
     return res
 
 
-
-
 def run_simulation(exec_path: str, controller_json_path: str):
     subprocess.call(f"{exec_path} {controller_json_path}", shell=True, universal_newlines=True)
 
@@ -66,39 +62,78 @@ def run(controller_base_path: str, exe_path: str):
         run_simulation(exe_path, full_controller_path)
 
 
-exec_path = Path("../../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").absolute().as_posix()
-
-#create_and_save_all_jsons_for_statics(20,"C:/Users/cagatay/OneDrive/Desktop/static_ss","C:/Users/cagatay/OneDrive/Desktop/new_jsons")
-#run("C:/Users/cagatay/OneDrive/Desktop/new_jsons/", exec_path)
-
-
-def read_img_and_make_transparent(image_path):
-    img = Image.open(image_path).convert("RGBA")
-    data = img.getdata()
-    new_data = []
-    for item in data:
+def make_transparent(img):
+    datas = img.getdata()
+    newData = []
+    for item in datas:
         if item[0] == 255 and item[1] == 255 and item[2] == 255:
-            new_data.append((255, 255, 255, 0))
+            newData.append((255, 255, 255, 0))
         else:
-            new_data.append(item)
-    img.putdata(new_data)
+            newData.append(item)
+
+    img.putdata(newData)
     return img
 
 
-def combine_statics(result_path, img1_path, img2_path, img3_path):
-    all_images = [read_img_and_make_transparent(img1_path),
-                  read_img_and_make_transparent(img2_path),
-                  read_img_and_make_transparent(img3_path)]
+def get_transparent_image(image_path):
+    return make_transparent(Image.open(image_path).convert("RGBA"))
+
+
+def combine_statics(result_path, min_img_path, mean_img_path, max_img_path):
+    all_images = [get_transparent_image(mean_img_path),
+                  get_transparent_image(min_img_path),
+                  get_transparent_image(max_img_path)]
     m1 = all_images[0]
     i = 1
     for img in all_images[1:]:
         alpha = 120
         img.putalpha(alpha)
-        img = read_img_and_make_transparent(img)
+        img = make_transparent(img)
         m1.paste(img, (0, 0), img)
         i += 1
     m1.save(result_path)
 
 
-d = "C:/Users/cagatay/OneDrive/Desktop/"
-# combine_statics(d + "result.png", d+"/static_ss/1.png", d+"/static_ss/2.png", d+"/static_ss/3.png")
+
+def combine_statics_from_folder(imgs_folder: str, scene_count: int):
+    os.makedirs(imgs_folder+"/static_ss", exist_ok=True)
+    os.makedirs(imgs_folder+"static_ss/results", exist_ok=True)
+    for sid in range(1, scene_count + 1):
+        result_img_name = f'{imgs_folder}/static_ss/results/sid_{sid}_statics_combined.png'
+        min_name = f'{imgs_folder}/static_ss/sid_{sid}_min.png'
+        mean_name = f'{imgs_folder}/static_ss/sid_{sid}_mean.png'
+        max_name = f'{imgs_folder}/static_ss/sid_{sid}_max.png'
+
+        combine_statics(result_img_name, min_name, mean_name, max_name)
+        print("CREATED:",result_img_name)
+
+
+def x():
+
+    exec_path = Path("../../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").absolute().as_posix()
+    output_folder = "C:/Users/cagatay/OneDrive/Desktop/"
+    os.makedirs(output_folder + "/static_ss", exist_ok=True)
+    os.makedirs(output_folder + "/new_jsons", exist_ok=True)
+    os.makedirs(output_folder + "/static_ss/results", exist_ok=True)
+
+
+    create_and_save_all_jsons_for_statics(20, output_folder+"static_ss", output_folder+"new_jsons")
+    run(output_folder+"new_jsons/", exec_path)
+    combine_statics_from_folder("C:/Users/cagatay/OneDrive/Desktop", 20)
+
+
+if __name__ == '__main__':
+    # Specify a folder
+    # Make sure exec_path and number_of_scene are correct
+
+    output_folder = "C:/Users/cagatay/OneDrive/Desktop/"
+    exec_path = Path("../../../simulation/2d/SVQA-Box2D/Build/bin/x86_64/Release/Testbed").absolute().as_posix()
+    number_of_scene = 20
+
+    os.makedirs(output_folder + "/static_ss", exist_ok=True)
+    os.makedirs(output_folder + "/new_jsons", exist_ok=True)
+    os.makedirs(output_folder + "/static_ss/results", exist_ok=True)
+
+    create_and_save_all_jsons_for_statics(number_of_scene, output_folder + "static_ss", output_folder + "new_jsons")
+    run(output_folder + "new_jsons/", exec_path)
+    combine_statics_from_folder(output_folder, number_of_scene)

@@ -1,0 +1,590 @@
+{
+  "causal_graph": {
+    "edges": [
+      {
+        "from": 2974014333232,
+        "to": []
+      }
+    ],
+    "nodes": [
+      {
+        "id": 2974014333232,
+        "objects": [],
+        "step": -1,
+        "type": "Start"
+      },
+      {
+        "id": 2972259955296,
+        "objects": [],
+        "step": 3,
+        "type": "End"
+      }
+    ],
+    "vis": "digraph d {\n2974014333232 [shape=\"Box\" label=<<TABLE BORDER=\"0\" CELLBORDER=\"0\" CELLSPACING=\"0\"><TR><TD ALIGN = \"center\" COLSPAN = \"2\"><FONT POINT-SIZE = \"24.0\" FACE = \"ambrosia\">Start:-1</FONT></TD></TR></TABLE>>]\n2972259955296 [shape=\"Box\" label=<<TABLE BORDER=\"0\" CELLBORDER=\"0\" CELLSPACING=\"0\"><TR><TD ALIGN = \"center\" COLSPAN = \"2\"><FONT POINT-SIZE = \"24.0\" FACE = \"ambrosia\">End:3</FONT></TD></TR></TABLE>>]\n2974014333232 -> { }\n}\n"
+  },
+  "scene_states": [
+    {
+      "scene": {
+        "directions": {
+          "above": [
+            0.0,
+            1.0
+          ],
+          "below": [
+            0.0,
+            -1.0
+          ],
+          "left": [
+            -1.0,
+            0.0
+          ],
+          "right": [
+            1.0,
+            0.0
+          ]
+        },
+        "objects": [
+          {
+            "2dCoords": [
+              0.0,
+              0.0
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "wall_l",
+            "size": "large",
+            "uniqueID": 7
+          },
+          {
+            "2dCoords": [
+              0.0,
+              0.0
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "wall_r",
+            "size": "large",
+            "uniqueID": 6
+          },
+          {
+            "2dCoords": [
+              0.0,
+              0.0
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "ground",
+            "size": "large",
+            "uniqueID": 5
+          },
+          {
+            "2dCoords": [
+              -0.0030088427010923624,
+              -1.2000000476837158
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "basket",
+            "size": "large",
+            "uniqueID": 4
+          },
+          {
+            "2dCoords": [
+              -12.856284141540527,
+              5.4383769035339355
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "platform",
+            "size": "large",
+            "uniqueID": 3
+          },
+          {
+            "2dCoords": [
+              12.139649391174316,
+              6.033453941345215
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "platform",
+            "size": "large",
+            "uniqueID": 2
+          },
+          {
+            "2dCoords": [
+              -18.0,
+              15.845346450805664
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 2.5132741928100586,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "platform",
+            "size": "large",
+            "uniqueID": 1
+          },
+          {
+            "2dCoords": [
+              -4.0,
+              25.0
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "static_ball",
+            "size": "large",
+            "uniqueID": 0
+          }
+        ]
+      },
+      "step": 0
+    },
+    {
+      "scene": {
+        "directions": {
+          "above": [
+            0.0,
+            1.0
+          ],
+          "below": [
+            0.0,
+            -1.0
+          ],
+          "left": [
+            -1.0,
+            0.0
+          ],
+          "right": [
+            1.0,
+            0.0
+          ]
+        },
+        "objects": [
+          {
+            "2dCoords": [
+              0.0,
+              0.0
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "wall_l",
+            "size": "large",
+            "uniqueID": 7
+          },
+          {
+            "2dCoords": [
+              0.0,
+              0.0
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "wall_r",
+            "size": "large",
+            "uniqueID": 6
+          },
+          {
+            "2dCoords": [
+              0.0,
+              0.0
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "ground",
+            "size": "large",
+            "uniqueID": 5
+          },
+          {
+            "2dCoords": [
+              -0.0030088427010923624,
+              -1.2000000476837158
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "basket",
+            "size": "large",
+            "uniqueID": 4
+          },
+          {
+            "2dCoords": [
+              -12.856284141540527,
+              5.4383769035339355
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "platform",
+            "size": "large",
+            "uniqueID": 3
+          },
+          {
+            "2dCoords": [
+              12.139649391174316,
+              6.033453941345215
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "platform",
+            "size": "large",
+            "uniqueID": 2
+          },
+          {
+            "2dCoords": [
+              -18.0,
+              15.845346450805664
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 2.5132741928100586,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "platform",
+            "size": "large",
+            "uniqueID": 1
+          },
+          {
+            "2dCoords": [
+              -4.0,
+              25.0
+            ],
+            "2dLinearVelocity": [
+              0.0,
+              0.0
+            ],
+            "active": true,
+            "allowSleep": true,
+            "angle": 0.0,
+            "angularDamping": 0.0,
+            "angularVelocity": 0.0,
+            "awake": true,
+            "bodyType": 0,
+            "bullet": false,
+            "color": "black",
+            "density": 50.0,
+            "fixedRotation": false,
+            "friction": 0.10000000149011612,
+            "gravityScale": 1.0,
+            "linearDamping": 0.0,
+            "massData-I": 0.0,
+            "massData-centerX": 0.0,
+            "massData-centerY": 0.0,
+            "massData-mass": 0.0,
+            "restitution": 0.20000000298023224,
+            "shape": "static_ball",
+            "size": "large",
+            "uniqueID": 0
+          }
+        ]
+      },
+      "step": 3
+    }
+  ],
+  "video_filename": "output.mpg"
+}

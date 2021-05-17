@@ -5,7 +5,7 @@ from loguru import logger
 
 from framework.dataset import DatasetGenerationConfig, CRAFTDataset
 from framework.pipeline import Pipeline, DatasetSplitStage, FullDatasetWriteStage, AnnotationsFileCollector, \
-    DatasetGenerationStage, PreBalancingPostProcessStage, BalancingStage
+    DatasetGenerationStage, PreBalancingPostProcessStage, BalancingStage, CleanupStage, PostProcessStage
 from framework.utils import FileIO
 
 if __name__ == '__main__':

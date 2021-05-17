@@ -153,13 +153,13 @@ class PreBalancingPostProcessStage(Stage):
             minimal_dataset_file.write("[")
 
             logger.info(f"Rewriting preprocessed minimal dataset...")
-            N = len(self.__dataset_obj.video_index_to_questions_map.keys())
-            for instance_id in range(N):
+            video_indices = sorted(self.__dataset_obj.video_index_to_questions_map.keys())
+            for i, instance_id in video_indices:
                 question_list = self.__dataset_obj.video_index_to_questions_map[instance_id]
 
-                for i, question in enumerate(question_list):
+                for j, question in enumerate(question_list):
                     minimal_dataset_file.write(json.dumps(question))
-                    if instance_id == N - 1 and i == len(question_list) - 1:
+                    if i == len(video_indices) - 1 and j == len(question_list) - 1:
                         pass
                     else:
                         minimal_dataset_file.write(",")
@@ -342,6 +342,7 @@ class FullDatasetWriteStage(Stage):
                             ok_questions = self.__dataset_obj.get_questions_for_video(q["video_index"])
                             for ok_q in ok_questions:
                                 if ok_q["question_index"] == q["question_index"]:
+                                    q["question"] = ok_q["question"] # If post-processed.
                                     filtered_questions.append(q)
                                     break
 
@@ -414,6 +415,61 @@ class CleanupStage(Stage):
 
         with open(f"{dataset_obj.dataset_folder_path}/videos_with_no_questions.json", "w") as vwnq_file:
             json.dump(videos_with_no_questions, vwnq_file)
+
+    def get_output(self):
+        return self.__dataset_obj
+
+
+class PostProcessStage(Stage):
+
+    def __init__(self):
+        super().__init__(name="Post-Process Stage")
+        self.__dataset_obj: CRAFTDataset = None
+
+    def process(self, dataset_obj: CRAFTDataset):
+        logger.info("Initiating post process stage...")
+
+        self.__dataset_obj = dataset_obj
+
+        for instance_id in dataset_obj.video_index_to_questions_map.keys():
+            question_list = dataset_obj.video_index_to_questions_map[instance_id]
+            sid = int(question_list[0]["simulation_id"])
+
+            for question in question_list:
+                if question["template_id"] == "counterfactual_2":
+                    question_text: str = question["question"]
+                    if question_text.startswith("Will"):
+                        question_text = question_text.replace("the basket the", "the basket if the")
+                        question_text = question_text.replace("the container the", "the container if the")
+                        question_text = question_text.replace("the bucket the", "the bucket if the")
+                        question["question"] = question_text
+            logger.info(f"Processed: {instance_id}/{len(dataset_obj.video_index_to_questions_map.keys())}")
+
+        self.__rewrite_dataset()
+
+    def __rewrite_dataset(self):
+        with open(f"{self.__dataset_obj.dataset_folder_path}/dataset_minimal.json", "w") as minimal_dataset_file:
+            minimal_dataset_file.write("[")
+
+            logger.info(f"Rewriting preprocessed minimal dataset...")
+            video_indices = sorted(self.__dataset_obj.video_index_to_questions_map.keys())
+            for i, instance_id in enumerate(video_indices):
+                question_list = self.__dataset_obj.video_index_to_questions_map[instance_id]
+
+                for j, question in enumerate(question_list):
+                    minimal_dataset_file.write(json.dumps(question))
+                    if i == len(video_indices) - 1 and j == len(question_list) - 1:
+                        pass
+                    else:
+                        minimal_dataset_file.write(",")
+
+            minimal_dataset_file.write("]")
+
+            logger.info(f"Successfully rewritten to: {self.__dataset_obj.dataset_folder_path}")
+
+    def cleanup(self):
+        logger.info(f"Re-reading post-processed minimal dataset...")
+        self.__dataset_obj = CRAFTDataset(self.__dataset_obj.dataset_folder_path, self.__dataset_obj.metadata)
 
     def get_output(self):
         return self.__dataset_obj

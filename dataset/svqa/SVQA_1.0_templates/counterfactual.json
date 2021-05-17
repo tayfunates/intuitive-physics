@@ -307,7 +307,7 @@
   },
   {
     "text": [
-      "Will the <Z2> <C2> <S2> collide with the *basket* the <Z> <C> <S> is removed?",
+      "Will the <Z2> <C2> <S2> collide with the *basket* if the <Z> <C> <S> is removed?",
       "If the <Z> <C> <S> is removed, will the <Z2> <C2> <S2> collide with the *basket*?"
     ],
     "nodes": [

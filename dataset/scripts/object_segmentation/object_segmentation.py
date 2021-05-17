@@ -273,7 +273,7 @@ def object_segmentation(video_index: int):
     working_directory = Path("../../../simulation/2d/SVQA-Box2D/Testbed").absolute().as_posix()
 
     input_scene_json = FileIO.read_json(input_scene_path)
-    video_fn = input_scene_json["original_video_output"]["video_filename"]
+    video_fn = input_scene_json["original_video_output"]["video_filename"] if "original_video_output" in input_scene_json else input_scene_json["video_filename"]
     simulation_id = int(video_fn.split("/")[-2].split("_")[-1])
     cj = json.loads(
         f"""{{

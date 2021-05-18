@@ -1,4 +1,5 @@
 import json
+import os
 import time
 from abc import ABC, abstractmethod
 from collections import defaultdict
@@ -178,18 +179,22 @@ class PreBalancingPostProcessStage(Stage):
 
 class BalancingStage(Stage):
 
-    def __init__(self):
+    def __init__(self, purge_single_answers=False):
+        """
+        :param purge_single_answers: Removes all questions if there are only one answer type for that pair.
+        """
         super().__init__(name="Balancing Stage")
+        self.purge = purge_single_answers
 
     def process(self, dataset_obj: CRAFTDataset):
         logger.info("Initiating dataset balancing stage...")
 
-        dataset_obj.generate_statistics(output_folder=f"{dataset_obj.dataset_folder_path}/stats/imbalanced")
+        # dataset_obj.generate_statistics(output_folder=f"{dataset_obj.dataset_folder_path}/stats/imbalanced")
 
         logger.info(f"Performing various under-sampling operations on dataset...")
         balanced_dataset_output_path = f"{dataset_obj.dataset_folder_path}/balanced_dataset.json"
         DatasetUnderSampler(dataset_obj, balanced_dataset_output_path) \
-            .balance_answers_within_each_template_and_simulation_ids() \
+            .balance_answers_within_each_template_and_simulation_ids(self.purge) \
             .dump()
         balanced_dataset = CRAFTDataset(balanced_dataset_output_path, dataset_obj.metadata)
 
@@ -273,36 +278,59 @@ class DatasetSplitStage(Stage):
 
         elif self.config == "random":
 
-            idxs = list(range(len(self.__dataset_obj.questions)))
-            N = len(idxs)
+            video_indices = sorted(self.__dataset_obj.video_index_to_questions_map.keys())
+            N = len(video_indices)
             test_count = int(N * 0.2)
             val_count = int(N * 0.2)
             train_count = int(N * 0.6)
             train_count += N - test_count - val_count - train_count
-            rnd.shuffle(idxs)
+            rnd.shuffle(video_indices)
 
-            train = idxs[:train_count]
-            val = idxs[train_count:train_count + val_count]
-            test = idxs[train_count + val_count:N]
+            train = video_indices[:train_count]
+            val = video_indices[train_count:train_count + val_count]
+            test = video_indices[train_count + val_count:N]
+            assert len(train) + len(val) + len(test) == N
 
-            for i in train:
-                question = self.__dataset_obj.questions[i]
-                splits["train"].append({
-                    "video_index": question["video_index"],
-                    "question_index": question["question_index"]
-                })
-            for i in val:
-                question = self.__dataset_obj.questions[i]
-                splits["validation"].append({
-                    "video_index": question["video_index"],
-                    "question_index": question["question_index"]
-                })
-            for i in test:
-                question = self.__dataset_obj.questions[i]
-                splits["test"].append({
-                    "video_index": question["video_index"],
-                    "question_index": question["question_index"]
-                })
+            for video_index in train:
+                questions = self.__dataset_obj.video_index_to_questions_map[video_index]
+                for question in questions:
+                    splits["train"].append({
+                        "video_index": question["video_index"],
+                        "question_index": question["question_index"]
+                    })
+            for video_index in val:
+                questions = self.__dataset_obj.video_index_to_questions_map[video_index]
+                for question in questions:
+                    splits["validation"].append({
+                        "video_index": question["video_index"],
+                        "question_index": question["question_index"]
+                    })
+            for video_index in test:
+                questions = self.__dataset_obj.video_index_to_questions_map[video_index]
+                for question in questions:
+                    splits["test"].append({
+                        "video_index": question["video_index"],
+                        "question_index": question["question_index"]
+                    })
+
+            split_to_vid = defaultdict(set)
+
+            for s in splits:
+                for pair in splits[s]:
+                    split_to_vid[s].add(pair["video_index"])
+
+            print(f"Stats for {self.config}:")
+            for s in split_to_vid:
+                print(s, len(split_to_vid[s]))
+
+            def diff(first, second):
+                return [item for item in first if item not in second]
+
+            dtrain = diff(train, split_to_vid["train"])
+            dval = diff(val, split_to_vid["validation"])
+            dtest = diff(test, split_to_vid["test"])
+
+            print(dtrain, dval, dtest)
 
         FileIO.write_json(dict(splits), f"{dataset_obj.dataset_folder_path}/split_info_{self.config}.json")
 
@@ -342,7 +370,7 @@ class FullDatasetWriteStage(Stage):
                             ok_questions = self.__dataset_obj.get_questions_for_video(q["video_index"])
                             for ok_q in ok_questions:
                                 if ok_q["question_index"] == q["question_index"]:
-                                    q["question"] = ok_q["question"] # If post-processed.
+                                    q["question"] = ok_q["question"]  # If post-processed.
                                     filtered_questions.append(q)
                                     break
 
@@ -433,7 +461,6 @@ class PostProcessStage(Stage):
 
         for instance_id in dataset_obj.video_index_to_questions_map.keys():
             question_list = dataset_obj.video_index_to_questions_map[instance_id]
-            sid = int(question_list[0]["simulation_id"])
 
             for question in question_list:
                 if question["template_id"] == "counterfactual_2":
@@ -443,6 +470,15 @@ class PostProcessStage(Stage):
                         question_text = question_text.replace("the container the", "the container if the")
                         question_text = question_text.replace("the bucket the", "the bucket if the")
                         question["question"] = question_text
+                if question["template_id"] in ["prevent_0", "prevent_1", "prevent_2"]:
+                    question_text: str = question["question"]
+                    if question_text.startswith("Is"):
+                        question_text = question_text.replace("is prevented by", "prevented by")
+                        question_text = question_text.replace("is kept by", "kept by")
+                        question_text = question_text.replace("is held by", "held by")
+                        question_text = question_text.replace("is blocked by", "blocked by")
+                        question["question"] = question_text
+
             logger.info(f"Processed: {instance_id}/{len(dataset_obj.video_index_to_questions_map.keys())}")
 
         self.__rewrite_dataset()
@@ -470,6 +506,38 @@ class PostProcessStage(Stage):
     def cleanup(self):
         logger.info(f"Re-reading post-processed minimal dataset...")
         self.__dataset_obj = CRAFTDataset(self.__dataset_obj.dataset_folder_path, self.__dataset_obj.metadata)
+
+    def get_output(self):
+        return self.__dataset_obj
+
+
+class CompilePerturbationlessDataset(Stage):
+
+    def __init__(self, output_folder_path: str):
+        super().__init__(name="Compile Perturbation-less Dataset Stage")
+        self.__dataset_obj: CRAFTDataset = None
+        self.output_folder_path = output_folder_path
+
+    def process(self, dataset_obj: CRAFTDataset):
+
+        self.__dataset_obj = dataset_obj
+
+        original_questions = []
+
+        instance_ids = sorted(list(dataset_obj.video_index_to_questions_map.keys()))
+        for i, instance_id in enumerate(instance_ids):
+            sid = int(dataset_obj.video_index_to_questions_map[instance_id][0]["simulation_id"])
+            original_qa_json = FileIO.read_json(self.__dataset_obj.get_original_questions_path(sid, instance_id))
+            for qa in original_qa_json["questions"]:
+                original_questions.append(dataset_obj.get_question_from_question_obj(qa, sid))
+
+            logger.info(f"Processed: {instance_id}/{len(instance_ids)}")
+
+        os.makedirs(self.output_folder_path, exist_ok=True)
+
+        FileIO.write_json(original_questions, f"{self.output_folder_path}/dataset_minimal.json")
+
+        self.__dataset_obj = CRAFTDataset(self.output_folder_path, self.__dataset_obj.metadata)
 
     def get_output(self):
         return self.__dataset_obj

@@ -22,11 +22,16 @@ from framework.utils import FileIO, Funnel, MultithreadedProcessor
 class CRAFTDataset:
 
     def __init__(self, dataset_folder_path: str, metadata: dict, load_immediately=True):
+
+        self.minimal_dataset_file_path = f"{dataset_folder_path}/dataset_minimal.json" \
+            if os.path.isdir(dataset_folder_path) \
+            else dataset_folder_path
+
         self.dataset_folder_path = dataset_folder_path \
             if os.path.isdir(dataset_folder_path) \
             else Path(dataset_folder_path).parent.as_posix()
 
-        self.metadata = metadata
+        self.metadata = metadata if isinstance(metadata, dict) else FileIO.read_json(metadata)
 
         self.dataset_minimal_json = None
         if load_immediately:
@@ -42,9 +47,7 @@ class CRAFTDataset:
             self.prepare_auxiliaries()
 
     def load(self):
-        self.dataset_minimal_json = FileIO.read_json(f"{self.dataset_folder_path}/dataset_minimal.json"
-                                                     if os.path.isdir(self.dataset_folder_path)
-                                                     else self.dataset_folder_path)
+        self.dataset_minimal_json = FileIO.read_json(self.minimal_dataset_file_path)
         # self.dataset_json = FileIO.read_json(f"{dataset_folder_path}/dataset.json"
         #                                      if os.path.isdir(dataset_folder_path)
         #                                      else dataset_folder_path)
@@ -86,6 +89,9 @@ class CRAFTDataset:
 
     def get_questions_output_path(self, sid: int, instance_id: int):
         return f"{self.dataset_folder_path}/intermediates/sid_{sid}/questions/qa_{instance_id:06d}.json"
+
+    def get_original_questions_path(self, sid: int, instance_id: int):
+        return f"{self.dataset_folder_path}/intermediates/sid_{sid}/questions/qa_orig_{instance_id:06d}.json"
 
     def get_simulation_with_variations_output_path(self, sid: int, instance_id: int):
         return f"{self.dataset_folder_path}/intermediates/sid_{sid}/{instance_id:06d}.json"
@@ -132,9 +138,9 @@ class CRAFTDataset:
     def get_answer_type_for_answer(self, answer: str) -> str:
         return ("Boolean" if answer in ["False", "True"]
                 else "Shape" if answer in self.metadata["types"]["Shape"]
-        else "Color" if answer in self.metadata["types"]["Color"]
-        else "Size" if answer in self.metadata["types"]["Size"]
-        else "Count")
+                else "Color" if answer in self.metadata["types"]["Color"]
+                else "Size" if answer in self.metadata["types"]["Size"]
+                else "Count")
 
     def get_unique_values(self, column: str) -> set:
         return set(self.questions_dataframe[column].to_list())
@@ -147,7 +153,7 @@ class CRAFTDataset:
         video_index = question_obj["video_index"]
         question_index = question_obj["question_index"]
         question_family_index = question_obj["question_family_index"]
-        split = question_obj["split"]
+        split = question_obj["split"] if "split" in question_obj else None
 
         return {"question": question,
                 "answer": answer,
@@ -163,7 +169,7 @@ class CRAFTDataset:
 
     def get_question_list_from_qa_json(self, qa_json):
         questions = []
-        question_list = qa_json["questions"]["questions"]
+        question_list = qa_json["questions"]
         simulation_id = qa_json["simulation_id"]
         for question_obj in question_list:
             questions.append(self.get_question_from_question_obj(question_obj, simulation_id))
@@ -228,10 +234,14 @@ class DatasetUtils:
         return m
 
     @staticmethod
-    def imblearn_random_undersampling(dataset: list, class_name, discard_strategy_fn=None):
+    def imblearn_random_undersampling(dataset: list, class_name, discard_strategy_fn=None, purge_single_answers=False):
         freq = defaultdict(int)
         for q in dataset:
             freq[q[class_name]] += 1
+
+        if purge_single_answers and len(freq.keys()) <= 1:
+            logger.info("Cannot balance set. Purging...")
+            return []
 
         if len(freq.keys()) <= 1:
             return dataset

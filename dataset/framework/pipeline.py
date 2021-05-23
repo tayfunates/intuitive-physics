@@ -155,7 +155,7 @@ class PreBalancingPostProcessStage(Stage):
 
             logger.info(f"Rewriting preprocessed minimal dataset...")
             video_indices = sorted(self.__dataset_obj.video_index_to_questions_map.keys())
-            for i, instance_id in video_indices:
+            for i, instance_id in enumerate(video_indices):
                 question_list = self.__dataset_obj.video_index_to_questions_map[instance_id]
 
                 for j, question in enumerate(question_list):

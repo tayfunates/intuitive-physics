@@ -43,6 +43,7 @@ class CRAFTDataset:
         self.video_index_to_questions_map = None
         self.sid_vi_q_map = None
         self.vi_sid_map = None
+        self.question_type_question_map = None
         if load_immediately:
             self.prepare_auxiliaries()
 
@@ -74,6 +75,14 @@ class CRAFTDataset:
                 self.sid_vi_q_map[sid][vi] = []
             self.sid_vi_q_map[sid][vi].append(question)
 
+    def build_question_type_question_map(self):
+        self.question_type_question_map = {}
+        for question in self.questions:
+            qtype = question["question_type"]
+            if qtype not in self.question_type_question_map:
+                self.question_type_question_map[qtype] = []
+            self.question_type_question_map[qtype].append(question)
+        return self.question_type_question_map
 
     def get_questions_for_video(self, video_index: int) -> List[Dict]:
         return self.video_index_to_questions_map[video_index]

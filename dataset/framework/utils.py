@@ -13,7 +13,7 @@ from typing import List
 
 from loguru import logger
 
-from shutil import copyfile
+from shutil import copyfile, move
 
 
 class DictUtils:
@@ -64,6 +64,10 @@ class FileIO:
     @staticmethod
     def copy(from_path, to_path):
         copyfile(from_path, to_path)
+
+    @staticmethod
+    def move(from_path, to_path):
+        os.rename(from_path, to_path)
 
     @staticmethod
     def delete_files(folder_path, *wildcards):

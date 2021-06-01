@@ -1,20 +1,4 @@
-# Simulated Visual Question Answering Dataset
-
-Includes general information about visual question answering dataset (Simulated Visual Question Answering, SVQA) that we have generated from our Box2D simulated environment. 
-
-Internal tagging information:
-
-[RED]: https://placehold.it/15/f03c15/000000?text=+
-[GREEN]: https://placehold.it/15/3cf015/000000?text=+
-[BLUE]: https://placehold.it/15/3c15f0/000000?text=+
-[PURPLE]: https://placehold.it/15/f015f0/000000?text=+
-[CYAN]: https://placehold.it/15/15f0f0/000000?text=+
-
-- ![RED] Shows properties that CLEVRER has and we do not consider yet.
-- ![GREEN] Shows questions or functional modules whose implementation has been completed in our backend.
-- ![BLUE] Shows questions or functional modules whose implementation has NOT been completed in our backend, but it can be completed without any design updates.
-- ![PURPLE] Shows questions or functional modules whose implementation has NOT been completed in our backend. Implementing such properties is not easy now, and needs discussing.
-- ![CYAN] Internal discussion tag.
+# CRAFT: A Benchmark for Causal Reasoning About Forces and inTeractions
 
 ## Objects
 
@@ -42,10 +26,11 @@ Internal tagging information:
 - Yellow
 - Black (Only static objects are black, and they cannot be covered by any other color.)
 
-### Static Objects
+### Static Scene Elements
 
 - Ramp
 - Platform
+- Button
 - Basket
 - Left Wall
 - Right Wall
@@ -69,8 +54,7 @@ Internal tagging information:
 - EventSet: A list of unique events
 - EventSetList: A list of EventSet
 - Color: A tag indicating the color of an object
-- Shape: A tag indicating the shape of an object
-- ![RED] Frame or Step: An integer representing when an event happened 
+- Shape: A tag indicating the shape of an object 
 - Integer: An integer type
 - Bool: A boolean type
 - BoolList: A list of Bool
@@ -113,61 +97,51 @@ Internal tagging information:
 
 ## Functional Modules
 
-| Name  | Description  | Input Types  | Output Types  | Implementation Status |
-|---|---|---|---|---|
-| SceneAtStart  | Returns all object properties at the start of the simulation  | None | ObjectSet | ![GREEN] |
-| SceneAtEnd | Returns all object properties at the end of the simulation | None  | ObjectSet  | ![GREEN]   |
-| StartSceneStep  | Returns 0  | None | Integer | ![GREEN] |
-| EndSceneStep  | Returns -1  | None | Integer | ![GREEN] |
-| Intersect  | Intersects two sets of objects | ObjectSet, ObjectSet | ObjectSet | ![GREEN]  |
-| IntersectList  | Intersects an object set with all object sets in a list of ObjectSet | ObjectSetList, ObjectSet | ObjectSetList | ![GREEN]  |
-| Events  | Returns all events between video start and end  | None  | EventSet  | ![GREEN]  |
-| StartEvent  | Returns start event  | None  | Event  | ![BLUE]  |
-| EndEvent  | Returns end event  | None  | Event  | ![BLUE]  |
-| FilterColor  | Returns objects from input list which has the color of input color  | ObjectSet, Color  | ObjectSet  | ![GREEN]  |
-| FilterShape  | Returns objects from input list which has the shape of input shape  | ObjectSet, Shape  | ObjectSet  | ![GREEN]  |
-| FilterCollision  | Returns collision events from the input list | EventSet | EventSet | ![GREEN]  |
-| FilterCollisionWithDynamics  | Returns collision events including only dynamic objects from the input list | EventSet | EventSet | ![GREEN]  |
-| FilterCollideGround | Returns collision events including the ground from the input list | EventSet | EventSet | ![GREEN]  |
-| FilterCollideGroundList | Returns list of collision event sets including the ground from a list of event sets | EventSetList | EventSetList | ![GREEN]  |
-| FilterCollideBasket | Returns collision events including the basket from the input list | EventSet | EventSet | ![GREEN]  |
-| FilterCollideBasketList | Returns list collision event sets including the basket from a list of event sets | EventSetList | EventSetList | ![GREEN]  |
-| FilterEnterContainer | Returns container end up events from the input list | EventSet | EventSet | ![GREEN]  |
-| FilterEnterContainerList | Returns list of container end up event sets from a list of event sets | EventSetList | EventSetList | ![GREEN]  |
-| FilterStartTouching  | Returns start touching events from the input list | EventSet | EventSet | ![BLUE]  |
-| FilterEndTouching  | Returns end touching events from the input list | EventSet | EventSet | ![BLUE]  |
-| FilterBefore  | Returns events from the input list that happened before input event  | EventSet, Event  | EventSet  | ![Green]  |
-| FilterAfter  | Returns events from the input list that happened after input event  | EventSet, Event  | EventSet  | ![GREEN]  |
-| IsBefore  | Returns whether the first event happened before the second event  | Event, Event  | Bool  | ![Green]  |
-| IsAfter  | Returns whether the first event happened after the second event  | Event, Event  | Bool  | ![GREEN]  |
-| FilterMoving  | Returns objects if they are moving at step specified by an Integer   | ObjectSet, Integer  | ObjectSet  | ![Green]  |
-| FilterStationary  | Returns objects if they are stationary at step specified by an Integer   | ObjectSet, Integer  | ObjectSet  | ![Green]  |
-| FilterFirst  | Returns the first event from the input list  | EventSet  | Event  | ![GREEN]  |
-| FilterLast  | Returns the last event from the input list  | EventSet  | Event  | ![GREEN]  |
-| FilterUnique  | Returns unique object from input list with possible side inputs Size, Color, Shape  | Objects, ObjectSideInputs | Object  | ![GREEN]  |
-| Unique  | Returns the single object from the input list, if list has more than one elements returns INVALID  | Objects | Object  | ![GREEN]  |
-| EventPartner (CE, STE, ETE) | Returns object from the object list of the input event which is not input object  | Event, Object  | Object  | ![GREEN]  |
-| QueryColor  | Returns the color of the input object  | Object  | Color  | ![GREEN]  |
-| QueryShape  | Returns the shape of the input object  | Object  | Shape  | ![GREEN]  |
-| Count  | Returns size of the input list  | ObjectSet, EventSet  | Integer  | ![GREEN] for ObjectSet ![BLUE] for EventSet |
-| Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  | ![GREEN] |
-| ExistList  | Applies Exist to each item in input list returning a list of Bool | ObjectSetList | BoolList  | ![GREEN] for ObjectSetList ![BLUE] for EventSetList |
-| AnyFalse  | Returns true if there is at least one false in a bool list | BoolList  | Bool | ![GREEN] |
-| AnyTrue  | Returns true if there is at least one true in a bool list | BoolList  | Bool | ![GREEN] |
-| FilterObjectsFromEvents  | Returns objects from events | EventSet  | ObjectSet  | ![Green]  |
-| FilterObjectsFromEventsList  | Returns list object sets from a list of event sets | EventSetList  | ObjectSetList  | ![Green]  |
-| GetCounterfactEvents  | Returns event list if a specific object is removed from the scene   | Object  | EventSet  | ![Green]  |
-| GetCounterfactEventsList  | Returns event list for all objects in an object set | ObjectSet  | EventSetList  | ![Green]  |
-| FilterDynamic  | Returns dynamic objects from an object set   | ObjectSet  | ObjectSet  | ![Green]  |
-| AsList  | Returns single elemen object set created with a specific object | Object | ObjectSet  | ![GREEN] |
-
-Other clevrer filters that are needed to be discussed.
-- ![RED]: FilterIn: Selects all incoming events of the input objects
-- ![RED]: FilterOut: Selects all exiting events of the input objects
+| Name  | Description  | Input Types  | Output Types  |
+|---|---|---|---|
+| SceneAtStart  | Returns all object properties at the start of the simulation  | None | ObjectSet |
+| SceneAtEnd | Returns all object properties at the end of the simulation | None  | ObjectSet |
+| StartSceneStep  | Returns 0  | None | Integer |
+| EndSceneStep  | Returns -1  | None | Integer |
+| Intersect  | Intersects two sets of objects | ObjectSet, ObjectSet | ObjectSet |
+| IntersectList  | Intersects an object set with all object sets in a list of ObjectSet | ObjectSetList, ObjectSet | ObjectSetList |
+| Events  | Returns all events between video start and end  | None  | EventSet  |
+| FilterColor  | Returns objects from input list which has the color of input color  | ObjectSet, Color  | ObjectSet  |
+| FilterShape  | Returns objects from input list which has the shape of input shape  | ObjectSet, Shape  | ObjectSet  |
+| FilterCollision  | Returns collision events from the input list | EventSet | EventSet |
+| FilterCollisionWithDynamics  | Returns collision events including only dynamic objects from the input list | EventSet | EventSet |
+| FilterCollideGround | Returns collision events including the ground from the input list | EventSet | EventSet |
+| FilterCollideGroundList | Returns list of collision event sets including the ground from a list of event sets | EventSetList | EventSetList |
+| FilterCollideBasket | Returns collision events including the basket from the input list | EventSet | EventSet |
+| FilterCollideBasketList | Returns list collision event sets including the basket from a list of event sets | EventSetList | EventSetList |
+| FilterEnterContainer | Returns container end up events from the input list | EventSet | EventSet |
+| FilterEnterContainerList | Returns list of container end up event sets from a list of event sets | EventSetList | EventSetList |
+| FilterBefore  | Returns events from the input list that happened before input event  | EventSet, Event  | EventSet  |
+| FilterAfter  | Returns events from the input list that happened after input event  | EventSet, Event  | EventSet  |
+| IsBefore  | Returns whether the first event happened before the second event  | Event, Event  | Bool  |
+| IsAfter  | Returns whether the first event happened after the second event  | Event, Event  | Bool  |
+| FilterMoving  | Returns objects if they are moving at step specified by an Integer   | ObjectSet, Integer  | ObjectSet  |
+| FilterStationary  | Returns objects if they are stationary at step specified by an Integer   | ObjectSet, Integer  | ObjectSet  |
+| FilterFirst  | Returns the first event from the input list  | EventSet  | Event  |
+| FilterLast  | Returns the last event from the input list  | EventSet  | Event  |
+| FilterUnique  | Returns unique object from input list with possible side inputs Size, Color, Shape  | Objects, ObjectSideInputs | Object  |
+| Unique  | Returns the single object from the input list, if list has more than one elements returns INVALID  | Objects | Object  |
+| EventPartner (CE, STE, ETE) | Returns object from the object list of the input event which is not input object  | Event, Object  | Object  |
+| QueryColor  | Returns the color of the input object  | Object  | Color  |
+| QueryShape  | Returns the shape of the input object  | Object  | Shape  |
+| Count  | Returns size of the input list  | ObjectSet, EventSet  | Integer  |
+| Exist  | Returns true if the input list is not empty  | ObjectSet, EventSet  | Bool  |
+| ExistList  | Applies Exist to each item in input list returning a list of Bool | ObjectSetList | BoolList  |
+| AnyFalse  | Returns true if there is at least one false in a bool list | BoolList  | Bool |
+| AnyTrue  | Returns true if there is at least one true in a bool list | BoolList  | Bool |
+| FilterObjectsFromEvents  | Returns objects from events | EventSet  | ObjectSet  |
+| FilterObjectsFromEventsList  | Returns list object sets from a list of event sets | EventSetList  | ObjectSetList  |
+| GetCounterfactEvents  | Returns event list if a specific object is removed from the scene   | Object  | EventSet  |
+| GetCounterfactEventsList  | Returns event list for all objects in an object set | ObjectSet  | EventSetList  |
+| FilterDynamic  | Returns dynamic objects from an object set   | ObjectSet  | ObjectSet  |
+| AsList  | Returns single elemen object set created with a specific object | Object | ObjectSet  |
 
 ## Questions
-
-![CYAN] Cevap çeşidine bir an önce karar vermek gerekiyor. CLEVR'dan farklı bir yol izleyeceksek (CLEVRER gibi mesela), şimdiden onunla uğraşmalıyız, soru yaratmadan önce.
 
 ### Structures Provided to Question Generation Engine
 
@@ -981,20 +955,4 @@ The answer to this question is true since big blue block is intended to enter th
 | SID=10, TID=prevent_1| SID=10, TID=prevent_2| SID=10, TID=prevent_3 | SID=10, TID=prevent_4|SID=10, TID=prevent_5 |
 |---|---|---|---|---|
 |![](/dataset/outputs/stats/Dataset_v230920/SID%3D10-TID%3Dprevent_1.png)|![](/dataset/outputs/stats/Dataset_v230920/SID%3D10-TID%3Dprevent_2.png)|![](/dataset/outputs/stats/Dataset_v230920/SID%3D10-TID%3Dprevent_3.png)|![](/dataset/outputs/stats/Dataset_v230920/SID%3D10-TID%3Dprevent_4.png)|![](/dataset/outputs/stats/Dataset_v230920/SID%3D10-TID%3Dprevent_5.png)|
-
-
-### Future Work
-
-- Currently, our programs of tasks depend on the end results of the simulations to be able to provide correct answers to the questions. As an example, consider the following prevent task, "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?". For the answer of this question to be "true", we check the end state of the object **Z2** **C2** **S2** to observe whether it falls to the ground or not. Our programs do not consider local temporal attemps of the object **Z** **C** **S** whether it is trying to prevent in a small time interval. Therefore, our questions do not integrate verbs like "impede", "interfere" or "restrain" instead of "prevent" in different tasks. Similarly, verbs like "help", "aid" or "facilitate" are not integrated instead of "enable".
-
-- We consider events of entering the basket, but our objects inside our simulations are not able get out of the basket. It would be interesting to create such scenes detecting the exit events.
-
-- There can be multiple patients in cause, enable, and prevent tasks, but there cannot be multiple affectors.
-
-- Properties such as object mass can be integrated using material textures.
-
-- Human performance evaluation.
-
-- Other answer types for counterfactual, cause, enable and prevent questions.
-
 

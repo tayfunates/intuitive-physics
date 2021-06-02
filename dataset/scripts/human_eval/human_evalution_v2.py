@@ -5,9 +5,17 @@ user_responses_csv = "data/may_21.csv"
 questions = FileIO.read_json("data/dataset_minimal.json")
 
 
+#{'Descriptive', 'Prevent', 'Counterfactual', 'Enable', 'Cause'}
+
+
+for i in questions:
+    print(i)
+
+
+
 def get_question_info(question_text: str, video_index: int):
     """
-    sample call: get_question_info("If any of the other objects are removed, will the small purple cube get into the bucket?",5690)
+    sample call: get_question_info("If any of ... get into the bucket?",5690)
 
     returns
     {

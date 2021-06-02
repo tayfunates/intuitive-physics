@@ -60,7 +60,7 @@ class DatasetUnderSampler:
         self.questions = questions
         return self
 
-    def balance_answers_within_each_template_and_simulation_ids(self):
+    def balance_answers_within_each_template_and_simulation_ids(self, purge_single_answers):
         questions = []
         sim_ids = self.get_unique_values("simulation_id")
         template_ids = self.get_unique_values("template_id")
@@ -70,7 +70,8 @@ class DatasetUnderSampler:
                     .filter(lambda x: x["template_id"] == template_id and x["simulation_id"] == sid) \
                     .get_result()
                 undersampled = DatasetUtils.imblearn_random_undersampling(questions_with_this_template_id, "answer",
-                                                                          discard_strategy_fn=DatasetUnderSampler.answer_discard_strategy)
+                                                                          discard_strategy_fn=DatasetUnderSampler.answer_discard_strategy,
+                                                                          purge_single_answers=purge_single_answers)
                 questions.extend(undersampled)
 
         self.questions = questions

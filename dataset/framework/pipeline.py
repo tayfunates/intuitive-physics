@@ -1,7 +1,10 @@
+import glob
 import json
+import os
 import time
 from abc import ABC, abstractmethod
 from collections import defaultdict
+from pathlib import Path
 from random import Random
 from typing import List
 
@@ -122,7 +125,7 @@ class PreBalancingPostProcessStage(Stage):
         self.__dataset_obj = dataset_obj
 
         # Preprocess Before Balancing 1: Do not ask shape if only one shape is present in the scene.
-        for instance_id in range(len(dataset_obj.video_index_to_questions_map.keys())):
+        for i, instance_id in enumerate(sorted(dataset_obj.video_index_to_questions_map.keys())):
             # Getting instance_id from range is dangerous, if len - 1 is less than max_video_index
             question_list = dataset_obj.video_index_to_questions_map[instance_id]
             sid = int(question_list[0]["simulation_id"])
@@ -140,9 +143,58 @@ class PreBalancingPostProcessStage(Stage):
                         logger.info(f"Question asks shape even though there's only 1 "
                                     f"shape present in the scene. Removing {question['video_index']}/{question['question_index']}")
                         continue
+
+                if "hexagon" in question["question"]:
+                    logger.info(f"Question asks about hexagons, which are not present in any of the videos. "
+                                f"Removing {question['video_index']}/{question['question_index']}")
+                    continue
+
+                # Remove questions regarding collisions with the basket
+                if question["template_id"] in [
+                    "cause_2",
+                    "cause_5",
+                    "counterfactual_2",
+                    "counterfactual_5",
+                    "counterfactual_8",
+                    "descriptive_12",
+                    "descriptive_13",
+                    "descriptive_14",
+                    "descriptive_15",
+                    "descriptive_20",
+                    "descriptive_21",
+                    "descriptive_30",
+                    "descriptive_31",
+                    "descriptive_36",
+                    "descriptive_37",
+                    "enable_2",
+                    "enable_5",
+                    "prevent_2",
+                    "prevent_5",
+                ]:
+                    continue
+
+                if question["template_id"] == "counterfactual_2":
+                    question_text: str = question["question"]
+                    if question_text.startswith("Will"):
+                        question_text = question_text.replace("the basket the", "the basket if the")
+                        question_text = question_text.replace("the container the", "the container if the")
+                        question_text = question_text.replace("the bucket the", "the bucket if the")
+                        question["question"] = question_text
+
+                if question["template_id"] in ["prevent_0", "prevent_1", "prevent_2"]:
+                    question_text: str = question["question"]
+                    if question_text.startswith("Is"):
+                        question_text = question_text.replace("is prevented by", "prevented by")
+                        question_text = question_text.replace("is kept by", "kept by")
+                        question_text = question_text.replace("is held by", "held by")
+                        question_text = question_text.replace("is blocked by", "blocked by")
+                        question["question"] = question_text
+
                 new_questions_list.append(question)
 
             question_list[:] = new_questions_list
+
+            logger.info(f"Processed: {i}/{len(dataset_obj.video_index_to_questions_map.keys())}")
 
         # Continue preprocessing before balancing here
 
@@ -154,7 +206,7 @@ class PreBalancingPostProcessStage(Stage):
 
             logger.info(f"Rewriting preprocessed minimal dataset...")
             video_indices = sorted(self.__dataset_obj.video_index_to_questions_map.keys())
-            for i, instance_id in video_indices:
+            for i, instance_id in enumerate(video_indices):
                 question_list = self.__dataset_obj.video_index_to_questions_map[instance_id]
 
                 for j, question in enumerate(question_list):
@@ -178,8 +230,13 @@ class PreBalancingPostProcessStage(Stage):
 
 class BalancingStage(Stage):
 
-    def __init__(self):
+    def __init__(self, purge_single_answers=False):
+        """
+        :param purge_single_answers: Removes all questions if there are only one answer type for that pair.
+        """
         super().__init__(name="Balancing Stage")
+        self.purge = purge_single_answers
+        self.balanced_dataset = None
 
     def process(self, dataset_obj: CRAFTDataset):
         logger.info("Initiating dataset balancing stage...")
@@ -189,17 +246,128 @@ class BalancingStage(Stage):
         logger.info(f"Performing various under-sampling operations on dataset...")
         balanced_dataset_output_path = f"{dataset_obj.dataset_folder_path}/balanced_dataset.json"
         DatasetUnderSampler(dataset_obj, balanced_dataset_output_path) \
-            .balance_answers_within_each_template_and_simulation_ids() \
+            .balance_answers_within_each_template_and_simulation_ids(self.purge) \
             .dump()
-        balanced_dataset = CRAFTDataset(balanced_dataset_output_path, dataset_obj.metadata)
+        logger.info(f"Copying imbalanced dataset to its file")
+        FileIO.copy(f"{dataset_obj.dataset_folder_path}/dataset_minimal.json",
+                    f"{dataset_obj.dataset_folder_path}/imbalanced_dataset.json")
+        logger.info(f"Copying balanced dataset to original file")
+        FileIO.copy(f"{dataset_obj.dataset_folder_path}/balanced_dataset.json",
+                    f"{dataset_obj.dataset_folder_path}/dataset_minimal.json")
 
-        balanced_dataset.generate_statistics(output_folder=f"{dataset_obj.dataset_folder_path}/stats/balanced")
+        self.balanced_dataset = CRAFTDataset(dataset_obj.dataset_folder_path, dataset_obj.metadata)
+
+        self.balanced_dataset.generate_statistics(output_folder=f"{dataset_obj.dataset_folder_path}/stats/balanced")
 
     def cleanup(self):
         pass
 
     def get_output(self):
-        pass
+        return self.balanced_dataset
+
+
+class ExportDatasetStatistics(Stage):
+    def __init__(self, output_folder_path):
+        super().__init__(name="Export Dataset Statistics Stage")
+        self.dataset_obj = None
+        self.output_folder_path = output_folder_path
+
+    def process(self, dataset_obj: CRAFTDataset):
+        self.dataset_obj = dataset_obj
+
+        self.dataset_obj.generate_statistics(f"{dataset_obj.dataset_folder_path}/{self.output_folder_path}")
+
+    def get_output(self):
+        return self.dataset_obj
+
+class DescriptiveBalanceStage(Stage):
+
+    def __init__(self):
+        super().__init__(name="Descriptive Balance Stage")
+        self.balanced_dataset = None
+
+    def __compute_dist(self, qtype_q):
+        N = len([q for qs in qtype_q.values() for q in qs])
+
+        qtype_dist = {}
+        qtype_len = {}
+
+        for qtype in qtype_q:
+            qtype_len[qtype] = len(qtype_q[qtype])
+            qtype_dist[qtype] = len(qtype_q[qtype]) / N
+
+        logger.info(f"Question type distribution: {str(qtype_dist)}")
+
+        logger.info(f"Number of questions by question type: {str(qtype_len)}")
+
+        return qtype_len, qtype_dist
+
+    def process(self, dataset_obj: CRAFTDataset):
+        logger.info("Balancing descriptive questions...")
+        rnd = Random(42)
+
+        qtype_q = dataset_obj.build_question_type_question_map()
+
+        qtype_len, qtype_dist = self.__compute_dist(qtype_q)
+
+        N_to_discard = round(qtype_len["Descriptive"] * 0.45)
+
+        logger.info(f"Discarding {N_to_discard} descriptive questions")
+
+        rnd.shuffle(qtype_q["Descriptive"])
+
+        while N_to_discard > 0:
+            q = qtype_q["Descriptive"].pop(0)
+            if len(dataset_obj.video_index_to_questions_map[q["video_index"]]) <= 1:
+                qtype_q["Descriptive"].append(q)
+                continue
+            N_to_discard -= 1
+
+        logger.info(f"{qtype_len['Descriptive'] - len(qtype_q['Descriptive'])} descriptive questions are discarded.")
+
+        balanced_questions = []
+        for qs in qtype_q.values():
+            balanced_questions.extend(qs)
+
+        logger.info(f"Sorting...")
+        balanced_questions.sort(key=lambda q: (q["video_index"], q["question_index"]))
+
+        dataset_obj.questions = balanced_questions
+
+        self.__compute_dist(dataset_obj.build_question_type_question_map())
+
+        self.balanced_dataset = dataset_obj
+        self.balanced_dataset.prepare_auxiliaries()
+
+        self.__write_dataset()
+
+    def __write_dataset(self):
+        with open(f"{self.balanced_dataset.dataset_folder_path}/dataset_minimal_descriptive_reduced.json",
+                  "w") as minimal_dataset_file:
+            minimal_dataset_file.write("[")
+
+            logger.info(f"Writing descriptive-reduced minimal dataset...")
+            video_indices = sorted(self.balanced_dataset.video_index_to_questions_map.keys())
+            for i, instance_id in enumerate(video_indices):
+                question_list = self.balanced_dataset.video_index_to_questions_map[instance_id]
+
+                for j, question in enumerate(question_list):
+                    minimal_dataset_file.write(json.dumps(question))
+                    if i == len(video_indices) - 1 and j == len(question_list) - 1:
+                        pass
+                    else:
+                        minimal_dataset_file.write(",")
+
+            minimal_dataset_file.write("]")
+
+            logger.info(f"Successfully written to: {self.balanced_dataset.dataset_folder_path}")
+
+    def cleanup(self):
+        self.balanced_dataset.generate_statistics(
+            output_folder=f"{self.balanced_dataset.dataset_folder_path}/stats/descriptive_reduced")
+
+    def get_output(self):
+        return self.balanced_dataset
 
 
 class DatasetSplitStage(Stage):
@@ -273,36 +441,53 @@ class DatasetSplitStage(Stage):
 
         elif self.config == "random":
 
-            idxs = list(range(len(self.__dataset_obj.questions)))
-            N = len(idxs)
+            video_indices = sorted(self.__dataset_obj.video_index_to_questions_map.keys())
+            N = len(video_indices)
             test_count = int(N * 0.2)
             val_count = int(N * 0.2)
             train_count = int(N * 0.6)
             train_count += N - test_count - val_count - train_count
-            rnd.shuffle(idxs)
+            rnd.shuffle(video_indices)
 
-            train = idxs[:train_count]
-            val = idxs[train_count:train_count + val_count]
-            test = idxs[train_count + val_count:N]
+            train = video_indices[:train_count]
+            val = video_indices[train_count:train_count + val_count]
+            test = video_indices[train_count + val_count:N]
+            assert len(train) + len(val) + len(test) == N
 
-            for i in train:
-                question = self.__dataset_obj.questions[i]
-                splits["train"].append({
-                    "video_index": question["video_index"],
-                    "question_index": question["question_index"]
-                })
-            for i in val:
-                question = self.__dataset_obj.questions[i]
-                splits["validation"].append({
-                    "video_index": question["video_index"],
-                    "question_index": question["question_index"]
-                })
-            for i in test:
-                question = self.__dataset_obj.questions[i]
-                splits["test"].append({
-                    "video_index": question["video_index"],
-                    "question_index": question["question_index"]
-                })
+            for video_index in train:
+                questions = self.__dataset_obj.video_index_to_questions_map[video_index]
+                for question in questions:
+                    splits["train"].append({
+                        "video_index": question["video_index"],
+                        "question_index": question["question_index"]
+                    })
+            for video_index in val:
+                questions = self.__dataset_obj.video_index_to_questions_map[video_index]
+                for question in questions:
+                    splits["validation"].append({
+                        "video_index": question["video_index"],
+                        "question_index": question["question_index"]
+                    })
+            for video_index in test:
+                questions = self.__dataset_obj.video_index_to_questions_map[video_index]
+                for question in questions:
+                    splits["test"].append({
+                        "video_index": question["video_index"],
+                        "question_index": question["question_index"]
+                    })
+
+            split_to_vid = defaultdict(set)
+
+            for s in splits:
+                for pair in splits[s]:
+                    split_to_vid[s].add(pair["video_index"])
+
+            print(f"Stats for {self.config}:")
+            for s in split_to_vid:
+                print(s, len(split_to_vid[s]))
+
+            logger.info(f"Number of questions for each split: {json.dumps({k: len(v) for k, v in splits.items()})}")
+
 
         FileIO.write_json(dict(splits), f"{dataset_obj.dataset_folder_path}/split_info_{self.config}.json")
 
@@ -342,7 +527,7 @@ class FullDatasetWriteStage(Stage):
                             ok_questions = self.__dataset_obj.get_questions_for_video(q["video_index"])
                             for ok_q in ok_questions:
                                 if ok_q["question_index"] == q["question_index"]:
-                                    q["question"] = ok_q["question"] # If post-processed.
+                                    q["question"] = ok_q["question"]  # If post-processed.
                                     filtered_questions.append(q)
                                     break
 
@@ -416,6 +601,14 @@ class CleanupStage(Stage):
         with open(f"{dataset_obj.dataset_folder_path}/videos_with_no_questions.json", "w") as vwnq_file:
             json.dump(videos_with_no_questions, vwnq_file)
 
+        os.makedirs(f"{dataset_obj.dataset_folder_path}/videos_with_no_questions", exist_ok=True)
+
+        for idx in videos_with_no_questions:
+            vid_path = glob.glob(f"{dataset_obj.dataset_folder_path}/videos/**/{idx:06d}.mpg")[0]
+            dest = vid_path.replace("videos", "videos_with_no_questions")
+            os.makedirs(Path(dest).parent.as_posix(), exist_ok=True)
+            FileIO.move(vid_path, dest)
+
     def get_output(self):
         return self.__dataset_obj
 
@@ -433,7 +626,6 @@ class PostProcessStage(Stage):
 
         for instance_id in dataset_obj.video_index_to_questions_map.keys():
             question_list = dataset_obj.video_index_to_questions_map[instance_id]
-            sid = int(question_list[0]["simulation_id"])
 
             for question in question_list:
                 if question["template_id"] == "counterfactual_2":
@@ -443,6 +635,15 @@ class PostProcessStage(Stage):
                         question_text = question_text.replace("the container the", "the container if the")
                         question_text = question_text.replace("the bucket the", "the bucket if the")
                         question["question"] = question_text
+                if question["template_id"] in ["prevent_0", "prevent_1", "prevent_2"]:
+                    question_text: str = question["question"]
+                    if question_text.startswith("Is"):
+                        question_text = question_text.replace("is prevented by", "prevented by")
+                        question_text = question_text.replace("is kept by", "kept by")
+                        question_text = question_text.replace("is held by", "held by")
+                        question_text = question_text.replace("is blocked by", "blocked by")
+                        question["question"] = question_text
+
             logger.info(f"Processed: {instance_id}/{len(dataset_obj.video_index_to_questions_map.keys())}")
 
         self.__rewrite_dataset()
@@ -470,6 +671,38 @@ class PostProcessStage(Stage):
     def cleanup(self):
         logger.info(f"Re-reading post-processed minimal dataset...")
         self.__dataset_obj = CRAFTDataset(self.__dataset_obj.dataset_folder_path, self.__dataset_obj.metadata)
+
+    def get_output(self):
+        return self.__dataset_obj
+
+
+class CompilePerturbationlessDataset(Stage):
+
+    def __init__(self, output_folder_path: str):
+        super().__init__(name="Compile Perturbation-less Dataset Stage")
+        self.__dataset_obj: CRAFTDataset = None
+        self.output_folder_path = output_folder_path
+
+    def process(self, dataset_obj: CRAFTDataset):
+
+        self.__dataset_obj = dataset_obj
+
+        original_questions = []
+
+        instance_ids = sorted(list(dataset_obj.video_index_to_questions_map.keys()))
+        for i, instance_id in enumerate(instance_ids):
+            sid = int(dataset_obj.video_index_to_questions_map[instance_id][0]["simulation_id"])
+            original_qa_json = FileIO.read_json(self.__dataset_obj.get_original_questions_path(sid, instance_id))
+            for qa in original_qa_json["questions"]:
+                original_questions.append(dataset_obj.get_question_from_question_obj(qa, sid))
+
+            logger.info(f"Processed: {instance_id}/{len(instance_ids)}")
+
+        os.makedirs(self.output_folder_path, exist_ok=True)
+
+        FileIO.write_json(original_questions, f"{self.output_folder_path}/dataset_minimal.json")
+
+        self.__dataset_obj = CRAFTDataset(self.output_folder_path, self.__dataset_obj.metadata)
 
     def get_output(self):
         return self.__dataset_obj

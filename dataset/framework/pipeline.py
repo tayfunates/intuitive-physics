@@ -282,9 +282,10 @@ class ExportDatasetStatistics(Stage):
 
 class DescriptiveBalanceStage(Stage):
 
-    def __init__(self):
+    def __init__(self, percentage):
         super().__init__(name="Descriptive Balance Stage")
         self.balanced_dataset = None
+        self.percentage = percentage
 
     def __compute_dist(self, qtype_q):
         N = len([q for qs in qtype_q.values() for q in qs])
@@ -310,7 +311,7 @@ class DescriptiveBalanceStage(Stage):
 
         qtype_len, qtype_dist = self.__compute_dist(qtype_q)
 
-        N_to_discard = round(qtype_len["Descriptive"] * 0.45)
+        N_to_discard = round(qtype_len["Descriptive"] * self.percentage)
 
         logger.info(f"Discarding {N_to_discard} descriptive questions")
 

@@ -78,6 +78,8 @@ class CRAFTDataset:
     def build_question_type_question_map(self):
         self.question_type_question_map = {}
         for question in self.questions:
+            if "question_type" not in question:
+                question["question_type"] = question["template_id"].split("_")[0].capitalize()
             qtype = question["question_type"]
             if qtype not in self.question_type_question_map:
                 self.question_type_question_map[qtype] = []

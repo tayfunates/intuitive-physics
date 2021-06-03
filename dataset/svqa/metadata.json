@@ -13,7 +13,6 @@
     "Shape": [
       "cube",
       "triangle",
-      "hexagon",
       "circle"
     ],
     "Color": [

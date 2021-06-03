@@ -6,7 +6,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from framework.dataset import SVQADataset
+from framework.dataset import CRAFTDataset
 from framework.simulation import SimulationRunner, SimulationInstance
 from framework.utils import FileIO, Funnel, ParallelWorker
 from svqa.causal_graph import CausalGraph
@@ -142,7 +142,7 @@ def regenerate_answers(original_variations_output_file_path,
     FileIO.write_json(new_answers, new_perturbed_qa_file_path)
 
 
-def start_experiment(dataset: SVQADataset):
+def start_experiment(dataset: CRAFTDataset):
     logger.info(f"Starting experiment with noise amount %{NOISE_AMOUNT * 100}")
 
     os.makedirs("./perturbed_outputs", exist_ok=True)
@@ -225,7 +225,7 @@ if __name__ == '__main__':
     metadata = FileIO.read_json("../../svqa/metadata.json")
 
     logger.info(f"Reading the dataset...")
-    dataset = SVQADataset("D:\Library\Research\datasets\Dataset_3000_230920cpy\dataset.json", metadata)
+    dataset = CRAFTDataset("D:\Library\Research\datasets\Dataset_3000_230920cpy\dataset.json", metadata)
 
     logger.info(f"{len(dataset.questions)} questions have been loaded into memory")
 

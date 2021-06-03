@@ -26,7 +26,8 @@ class DatasetUnderSampler:
     @staticmethod
     def answer_discard_strategy(class_name: str, val):
         if class_name == "answer":
-            return val in range(3, 11)
+            if val.isnumeric():
+                return int(val) in range(3, 11)
         return False
 
     def balance_answers_within_answer_types(self):

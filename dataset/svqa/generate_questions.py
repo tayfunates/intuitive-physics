@@ -966,7 +966,11 @@ def main(args):
                 print('that took ', toc - tic)
 
             output_name = os.path.splitext(os.path.basename(scene_fn))[0]
-            video_index = int(output_name[-6:])
+            video_index = 0
+            try:
+                video_index = int(output_name[-6:])
+            except:
+                pass
 
             scene_info = {}
             scene_info['video_filename'] = scene_fn

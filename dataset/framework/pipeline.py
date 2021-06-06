@@ -159,9 +159,10 @@ class PreBalancingPostProcessStage(Stage):
                     continue
 
                 # Postprocess Before Balancing 2: Remove questions regarding collisions with the basket
-                # to avoid ambiguity. Note that these are not yet removed from the metadata.json.
-                # Following can be removed from post processing once they are removed from the metadata.json
-                # and if the dataset is generated according to the updated metadata.json.
+                # to avoid ambiguity. Note that these are not yet removed from the  question template
+                # files in svqa/SVQA_1.0_templates. Following can be removed from post processing once
+                # they are removed from the question template files and if the dataset is generated
+                # according to the updated question templates.
                 if question["template_id"] in [
                     "cause_2",
                     "cause_5",
@@ -186,7 +187,8 @@ class PreBalancingPostProcessStage(Stage):
                     continue
 
                 # Postprocess Before Balancing 3: Correct typos in the question templates.
-                # These are also corrected in the metadata.json, so the following can be deleted.
+                # These are also corrected in the question template files in svqa/SVQA_1.0_templates,
+                # so the following can be deleted.
                 if question["template_id"] == "counterfactual_2":
                     question_text: str = question["question"]
                     if question_text.startswith("Will"):
@@ -650,8 +652,8 @@ class PostProcessStage(Stage):
             question_list = dataset_obj.video_index_to_questions_map[instance_id]
 
             for question in question_list:
-                # Correct typos in the question templates. These are also corrected in the metadata.json, so
-                # the following can be deleted.
+                # Correct typos in the question templates. These are also corrected in the question template
+                # files in svqa/SVQA_1.0_templates, so the following can be deleted.
                 if question["template_id"] == "counterfactual_2":
                     question_text: str = question["question"]
                     if question_text.startswith("Will"):

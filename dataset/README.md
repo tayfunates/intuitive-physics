@@ -169,38 +169,38 @@
 | 14. "How many **C** objects **fall to** the **ground**?" | Descriptive |
 | 15. "How many **Z** objects **fall to** the **ground**?" | Descriptive |
 | 16. "How many objects **fall to** the **ground**?" | Descriptive |
-| 21. "How many objects **enter** the **basket** after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
-| 22. "How many objects **enter** the **basket** before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
-| 23. "How many objects **fall to** the **ground** after the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
-| 24. "How many objects **fall to** the **ground** before the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
-| 27. "After **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
-| 28. "Before **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
-| 29. "After **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
-| 30. "Before **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
-| 33. "Are there any collisions between objects after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
-| 34. "Are there any collisions between objects before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
-| 35. "Are there any collisions between objects after the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
-| 36. "Are there any collisions between objects before the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
-| 39. "Does the **Z** **C** **S** **enter** the **basket** before the **Z2** **C2** **S2** does?" | Descriptive |
-| 40. "Does the **Z** **C** **S** **fall to** the **ground** before the **Z2** **C2** **S2** does?" | Descriptive |
-| 41. "Will the **Z2** **C2** **S2** **enter** the **basket** if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, will the **Z2** **C2** **S2** **enter** the **basket**?" | Counterfactual |
-| 42. "Will the **Z2** **C2** **S2** **fall to** the **ground** if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, will the **Z2** **C2** **S2** **fall to** the **ground**?" | Counterfactual |
-| 44. "How many objects **enter** the **basket** if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, how many objects **enter** the **basket**?" | Counterfactual |
-| 45. "How many objects **fall to** the **ground** if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, how many objects **fall to** the **ground**?" | Counterfactual |
-| 47. "Will the **Z** **C** **S** **enter** the **basket** if any of the other objects are removed?", "If any of the other objects are removed, will the **Z** **C** **S** **enter** the **basket**?" | Counterfactual |
-| 48. "Will the **Z** **C** **S** **fall to** the **ground** if any of the other objects are removed?", "If any of other the objects are removed, will the **Z** **C** **S** **fall to** the **ground**?" | Counterfactual |
-| 50. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to **fall to** the **ground**?" | Enable |
-| 51. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **enable** the **Z2** **C2** **S2** to **enter** the **basket**?" | Enable |
-| 53. "How many objects does the **Z** **C** **S** **enable** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **enables** to **fall to** the **ground**?" | Enable |
-| 54. "How many objects does the **Z** **C** **S** **enable** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **enables** to **enter** the **basket**?" | Enable |
-| 58. "Does the **Z** **C** **S** **cause** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **cause** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **cause** the **Z2** **C2** **S2** to **fall to** the **ground**?",       "Does the **Z** **C** **S** lead to the collision between the **Z2** **C2** **S2** and the **ground**?", "Does the **Z** **C** **S** lead to the **Z2** **C2** **S2** **falling to** the **ground**?" | Cause |
-| 57. "Does the **Z** **C** **S** **cause** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **cause** the **Z2** **C2** **S2** to **enter** the **basket**?", "Does the **Z** **C** **S** lead to the **Z2** **C2** **S2** **entering** the **basket**?" | Cause |
-| 59. "How many objects does the **Z** **C** **S** **cause** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **causes** to **fall to** the **ground**?" | Cause |
-| 60. "How many objects does the **Z** **C** **S** **cause** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **causes** to **enter** the **basket**?" | Cause |
-| 62. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?", "There is a **Z** **C** **S**, does it **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?", "Is the **Z2** **C2** **S2** is **prevented** by the **Z** **C** **S** from **falling to** the **ground**?" | Prevent |
-| 63. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?", "There is a **Z** **C** **S**, does it **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?", "Is the **Z2** **C2** **S2** is **prevented** by the **Z** **C** **S** from **entering** the **basket**?" | Prevent |
-| 65. "How many objects does the **Z** **C** **S** **prevent** from **falling to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **falling to** the **ground**?", "How many objects are **prevented** by the **Z** **C** **S** from **falling to** the **ground**?", "What is the number of objects that are **prevented** by the **Z** **C** **S** from **falling to** the **ground**?" | Prevent |
-| 66. "How many objects does the **Z** **C** **S** **prevent** from **entering** the **basket**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **entering** the **basket**?", "How many objects are **prevented** by the **Z** **C** **S** from **entering** the **basket**?", "What is the number of objects that are **prevented** by the **Z** **C** **S** from **entering** the **basket**?" | Prevent |
+| 17. "How many objects **enter** the **basket** after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
+| 18. "How many objects **enter** the **basket** before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
+| 19. "How many objects **fall to** the **ground** after the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
+| 20. "How many objects **fall to** the **ground** before the **Z** **C** **S** **falls** to the **ground**?" | Descriptive |
+| 21. "After **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 22. "Before **entering** the **basket**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 23. "After **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 24. "Before **falling to** the **ground**, does the **Z** **C** **S** collide with other objects?" | Descriptive |
+| 25. "Are there any collisions between objects after the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
+| 26. "Are there any collisions between objects before the **Z** **C** **S** **enters** the **basket**?" | Descriptive |
+| 27. "Are there any collisions between objects after the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
+| 28. "Are there any collisions between objects before the **Z** **C** **S** **falls to** the **ground**?" | Descriptive |
+| 29. "Does the **Z** **C** **S** **enter** the **basket** before the **Z2** **C2** **S2** does?" | Descriptive |
+| 30. "Does the **Z** **C** **S** **fall to** the **ground** before the **Z2** **C2** **S2** does?" | Descriptive |
+| 31. "Will the **Z2** **C2** **S2** **enter** the **basket** if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, will the **Z2** **C2** **S2** **enter** the **basket**?" | Counterfactual |
+| 32. "Will the **Z2** **C2** **S2** **fall to** the **ground** if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, will the **Z2** **C2** **S2** **fall to** the **ground**?" | Counterfactual |
+| 33. "How many objects **enter** the **basket** if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, how many objects **enter** the **basket**?" | Counterfactual |
+| 34. "How many objects **fall to** the **ground** if the **Z** **C** **S** is removed?", "If the **Z** **C** **S** is removed, how many objects **fall to** the **ground**?" | Counterfactual |
+| 35. "Will the **Z** **C** **S** **enter** the **basket** if any of the other objects are removed?", "If any of the other objects are removed, will the **Z** **C** **S** **enter** the **basket**?" | Counterfactual |
+| 36. "Will the **Z** **C** **S** **fall to** the **ground** if any of the other objects are removed?", "If any of other the objects are removed, will the **Z** **C** **S** **fall to** the **ground**?" | Counterfactual |
+| 37. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **enable** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **enable** **Z2** **C2** **S2** to **fall to** the **ground**?" | Enable |
+| 38. "Does the **Z** **C** **S** **enable** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **enable** the **Z2** **C2** **S2** to **enter** the **basket**?" | Enable |
+| 39. "How many objects does the **Z** **C** **S** **enable** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **enables** to **fall to** the **ground**?" | Enable |
+| 40. "How many objects does the **Z** **C** **S** **enable** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **enables** to **enter** the **basket**?" | Enable |
+| 41. "Does the **Z** **C** **S** **cause** the **Z2** **C2** **S2** to **fall to** the **ground**?", "Does the **Z** **C** **S** **cause** the collision between the **Z2** **C2** **S2** and the **ground**?", "There is a **Z** **C** **S**, does it **cause** the **Z2** **C2** **S2** to **fall to** the **ground**?",       "Does the **Z** **C** **S** lead to the collision between the **Z2** **C2** **S2** and the **ground**?", "Does the **Z** **C** **S** lead to the **Z2** **C2** **S2** **falling to** the **ground**?" | Cause |
+| 42. "Does the **Z** **C** **S** **cause** the **Z2** **C2** **S2** to **enter** the **basket**?", "There is a **Z** **C** **S**, does it **cause** the **Z2** **C2** **S2** to **enter** the **basket**?", "Does the **Z** **C** **S** lead to the **Z2** **C2** **S2** **entering** the **basket**?" | Cause |
+| 43. "How many objects does the **Z** **C** **S** **cause** to **fall to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **causes** to **fall to** the **ground**?" | Cause |
+| 44. "How many objects does the **Z** **C** **S** **cause** to **enter** the **basket**?", "What is the number of objects that the **Z** **C** **S** **causes** to **enter** the **basket**?" | Cause |
+| 45. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?", "There is a **Z** **C** **S**, does it **prevent** the **Z2** **C2** **S2** from **falling to** the **ground**?", "Is the **Z2** **C2** **S2** is **prevented** by the **Z** **C** **S** from **falling to** the **ground**?" | Prevent |
+| 46. "Does the **Z** **C** **S** **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?", "There is a **Z** **C** **S**, does it **prevent** the **Z2** **C2** **S2** from **entering** the **basket**?", "Is the **Z2** **C2** **S2** is **prevented** by the **Z** **C** **S** from **entering** the **basket**?" | Prevent |
+| 47. "How many objects does the **Z** **C** **S** **prevent** from **falling to** the **ground**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **falling to** the **ground**?", "How many objects are **prevented** by the **Z** **C** **S** from **falling to** the **ground**?", "What is the number of objects that are **prevented** by the **Z** **C** **S** from **falling to** the **ground**?" | Prevent |
+| 48. "How many objects does the **Z** **C** **S** **prevent** from **entering** the **basket**?", "What is the number of objects that the **Z** **C** **S** **prevents** from **entering** the **basket**?", "How many objects are **prevented** by the **Z** **C** **S** from **entering** the **basket**?", "What is the number of objects that are **prevented** by the **Z** **C** **S** from **entering** the **basket**?" | Prevent |
 
 ### Relationships between Enable, Cause and Prevent Tasks
 

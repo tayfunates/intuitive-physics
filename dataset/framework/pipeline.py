@@ -67,6 +67,16 @@ class Pipeline:
 class DatasetGenerationStage(Stage):
 
     def __init__(self):
+        """
+        Generates a CRAFT dataset according to the supplied configuration object.
+
+        Depending on the dataset size, this can take a long time and large disk space.
+        For instance, generating a dataset that consists of 10000 videos could take approximately 2 days and
+        ~170GB of disk space. Much of the disk space is occupied by the "intermediates" folder
+        in the root dataset folder (but it is not the part of the dataset itself),
+        which includes data about each simulation instance and their corresponding
+        variation & perturbation data along with the debug data.
+        """
         super().__init__(name="Dataset Generation Stage")
         self.__dataset = None
 
@@ -124,9 +134,7 @@ class PreBalancingPostProcessStage(Stage):
 
         self.__dataset_obj = dataset_obj
 
-        # Preprocess Before Balancing 1: Do not ask shape if only one shape is present in the scene.
         for i, instance_id in enumerate(sorted(dataset_obj.video_index_to_questions_map.keys())):
-            # Getting instance_id from range is dangerous, if len - 1 is less than max_video_index
             question_list = dataset_obj.video_index_to_questions_map[instance_id]
             sid = int(question_list[0]["simulation_id"])
 
@@ -136,10 +144,11 @@ class PreBalancingPostProcessStage(Stage):
 
             new_questions_list = []
             for question in question_list:
+                # Postprocess Before Balancing 1: Do not ask shape if only one shape is present in the scene.
                 answer_type = dataset_obj.get_answer_type_for_answer(question["answer"])
                 if answer_type == "Shape":
                     if len(set([f"{object['shape']}" for object in dynamic_objects])) <= 1:
-                        # Remove the question that asks shape
+                        # Remove the question that asks shape even though there's only one shape present
                         logger.info(f"Question asks shape even though there's only 1 "
                                     f"shape present in the scene. Removing {question['video_index']}/{question['question_index']}")
                         continue
@@ -149,7 +158,10 @@ class PreBalancingPostProcessStage(Stage):
                                 f"Removing {question['video_index']}/{question['question_index']}")
                     continue
 
-                # Remove questions regarding collisions with the basket
+                # Postprocess Before Balancing 2: Remove questions regarding collisions with the basket
+                # to avoid ambiguity. Note that these are not yet removed from the metadata.json.
+                # Following can be removed from post processing once they are removed from the metadata.json
+                # and if the dataset is generated according to the updated metadata.json.
                 if question["template_id"] in [
                     "cause_2",
                     "cause_5",
@@ -173,6 +185,8 @@ class PreBalancingPostProcessStage(Stage):
                 ]:
                     continue
 
+                # Postprocess Before Balancing 3: Correct typos in the question templates.
+                # These are also corrected in the metadata.json, so the following can be deleted.
                 if question["template_id"] == "counterfactual_2":
                     question_text: str = question["question"]
                     if question_text.startswith("Will"):
@@ -196,7 +210,7 @@ class PreBalancingPostProcessStage(Stage):
 
             logger.info(f"Processed: {i}/{len(dataset_obj.video_index_to_questions_map.keys())}")
 
-        # Continue preprocessing before balancing here
+        # Continue postprocessing before balancing here
 
         self.__rewrite_dataset()
 
@@ -232,7 +246,8 @@ class BalancingStage(Stage):
 
     def __init__(self, purge_single_answers=False):
         """
-        :param purge_single_answers: Removes all questions if there are only one answer type for that pair.
+        In this stage, questions in a tuple (template_id, simulation_id) are balanced according to the answers.
+        :param purge_single_answers: Removes all questions if there are only one answer for that pair.
         """
         super().__init__(name="Balancing Stage")
         self.purge = purge_single_answers
@@ -279,6 +294,7 @@ class ExportDatasetStatistics(Stage):
 
     def get_output(self):
         return self.dataset_obj
+
 
 class DescriptiveBalanceStage(Stage):
 
@@ -373,14 +389,15 @@ class DescriptiveBalanceStage(Stage):
 
 class DatasetSplitStage(Stage):
 
-    def __init__(self, config):
+    def __init__(self, config, seed=10435):
         super().__init__(name="Dataset Split Stage", )
         self.__dataset_obj: CRAFTDataset = None
         self.config = config
+        self.seed = seed
 
     def process(self, dataset_obj: CRAFTDataset):
         logger.info("Initiating dataset splitting stage...")
-        rnd = Random(10435)
+        rnd = Random(self.seed)
 
         self.__dataset_obj = dataset_obj
 
@@ -390,6 +407,7 @@ class DatasetSplitStage(Stage):
         if self.config == "hard":
             split_sizes = {"train": 12, "validation": 4, "test": 4}
 
+            # Similar scene types
             counterparts = {1: 18, 3: 16, 4: 17}
 
             sids = list(range(1, 21))
@@ -489,7 +507,6 @@ class DatasetSplitStage(Stage):
 
             logger.info(f"Number of questions for each split: {json.dumps({k: len(v) for k, v in splits.items()})}")
 
-
         FileIO.write_json(dict(splits), f"{dataset_obj.dataset_folder_path}/split_info_{self.config}.json")
 
     def get_output(self):
@@ -573,8 +590,11 @@ class AnnotationsFileCollector(Stage):
                 sid = int(dataset_obj.video_index_to_questions_map[instance_id][0]["simulation_id"])
                 annotations_file_path = dataset_obj.get_simulation_with_variations_output_path(sid, instance_id)
                 with open(annotations_file_path) as this_annotations_file:
+                    annotations = json.dumps(json.load(this_annotations_file))
+                    # Relativize paths
+                    annotations = annotations.replace(Path(dataset_obj.dataset_folder_path).resolve().as_posix(), ".")
                     annotations_file.write(f"""
-                            "{instance_id:06d}": {json.dumps(json.load(this_annotations_file))}
+                            "{instance_id:06d}": {annotations}
                     """)
                     if i != len(instance_ids) - 1:
                         annotations_file.write(",")
@@ -604,6 +624,7 @@ class CleanupStage(Stage):
 
         os.makedirs(f"{dataset_obj.dataset_folder_path}/videos_with_no_questions", exist_ok=True)
 
+        # Move videos without questions to a separate folder.
         for idx in videos_with_no_questions:
             vid_path = glob.glob(f"{dataset_obj.dataset_folder_path}/videos/**/{idx:06d}.mpg")[0]
             dest = vid_path.replace("videos", "videos_with_no_questions")
@@ -629,6 +650,8 @@ class PostProcessStage(Stage):
             question_list = dataset_obj.video_index_to_questions_map[instance_id]
 
             for question in question_list:
+                # Correct typos in the question templates. These are also corrected in the metadata.json, so
+                # the following can be deleted.
                 if question["template_id"] == "counterfactual_2":
                     question_text: str = question["question"]
                     if question_text.startswith("Will"):
@@ -677,10 +700,10 @@ class PostProcessStage(Stage):
         return self.__dataset_obj
 
 
-class CompilePerturbationlessDataset(Stage):
+class CollectUnperturbedDataset(Stage):
 
     def __init__(self, output_folder_path: str):
-        super().__init__(name="Compile Perturbation-less Dataset Stage")
+        super().__init__(name="Collect Unperturbed Dataset Stage")
         self.__dataset_obj: CRAFTDataset = None
         self.output_folder_path = output_folder_path
 

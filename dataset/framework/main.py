@@ -1,3 +1,4 @@
+import os
 import sys
 from datetime import datetime
 
@@ -5,21 +6,25 @@ from loguru import logger
 
 from framework.dataset import DatasetGenerationConfig, CRAFTDataset
 from framework.pipeline import Pipeline, DatasetSplitStage, FullDatasetWriteStage, AnnotationsFileCollector, \
-    DatasetGenerationStage, PreBalancingPostProcessStage, BalancingStage, CleanupStage, PostProcessStage
+    DatasetGenerationStage, PreBalancingPostProcessStage, BalancingStage, CleanupStage, PostProcessStage, \
+    CollectUnperturbedDataset, DescriptiveBalanceStage, ExportDatasetStatistics
 from framework.utils import FileIO
 
 if __name__ == '__main__':
-    # Enqueue is because of multiprocessing.
+
+    # For logging:
+    os.makedirs("./out", exist_ok=True)
     logger.add(f"out/dataset_generation_{datetime.now().strftime('%m%d%Y_%H%M')}.log", enqueue=True)
 
     craft_dataset_generation_pipeline = Pipeline([
         DatasetGenerationStage(),
         PreBalancingPostProcessStage(),
-        BalancingStage(),
+        BalancingStage(purge_single_answers=True),
         DatasetSplitStage("hard"),
         DatasetSplitStage("random"),
-        FullDatasetWriteStage("dataset_full.json"),
-        AnnotationsFileCollector("annotations.json")
+        FullDatasetWriteStage("dataset.json"),  # Full dataset includes "program"s for each question
+        AnnotationsFileCollector("annotations.json"),
+        CleanupStage(),
     ])
     logger.info("Dataset generation pipeline object initiated")
 

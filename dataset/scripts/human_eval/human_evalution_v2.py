@@ -2,6 +2,7 @@ import json
 
 import pandas as pd
 from framework.utils import FileIO
+import math
 
 user_responses_csv = "data/May '21 ML Human Evaluation_July 10, 2021_05.41.csv"
 questions = FileIO.read_json("data/dataset_minimal.json")
@@ -125,16 +126,28 @@ Q996 - Do you have trouble distinguishing colors?
 
 per_user = []
 
+participants = []
 
 for response in responses:
     prgs = response["Progress"]
     a = response["Q999"]
     response_id = response["ResponseId"]
+    ip = response["IPAddress"]
     age = response["Q998_1"] # How old are you?
     eng_level = response["Q997_4"] #If you evaluate your English reading comprehension, what would be your score approximately? (0 = beginner, 100 = advanced)
     color_blindness = response["Q996"] #Do you have trouble distinguishing colors?
     comment = response["Q994"] # We are glad to hear your opinions and suggestions about this study.
 
+    participant = {
+        "age": str(age),
+        "eng_level": str(eng_level),
+        "is_color_blind": str(color_blindness),
+        "comment": str(comment),
+        "response_id": response_id,
+        "ip": ip,
+        "qualtrics_progress": prgs,
+        "answers": []
+    }
 
     evaluation = {
         "default_questions" : {
@@ -157,6 +170,14 @@ for response in responses:
         user_answer = str(response[row]).lower()
         info = get_answer(qnum)
 
+        answer_obj = {
+            "question_number": qnum,
+            "participants_answer": str(user_answer),
+            "question_info": info,
+        }
+
+        participant["answers"].append(answer_obj)
+
         if user_answer == "nan":
             #evaluation["questions"]["question_count"] += 1
             continue
@@ -178,6 +199,10 @@ for response in responses:
 
     per_user.append(evaluation)
 
+    participants.append(participant)
+
+with open("participants.json", "w") as outfile:
+    json.dump(participants, outfile, indent=4)
 
 res = {"overview": {
             "total_individual_count" : 0,

@@ -56,9 +56,22 @@ class FileIO:
         return json_obj
 
     @staticmethod
+    def read_default_json(file_path):
+        with open(file_path, "rb") as f:
+            json_obj = json.load(f)
+            f.close()
+        return json_obj
+
+    @staticmethod
     def write_json(json_obj, file_path):
         with open(file_path, "w") as f:
             ujson.dump(json_obj, f, escape_forward_slashes=False)
+            f.close()
+
+    @staticmethod
+    def write_default_json(json_obj, file_path, indent=4):
+        with open(file_path, "w") as f:
+            json.dump(json_obj, f, indent=indent)
             f.close()
 
     @staticmethod

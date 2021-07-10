@@ -142,7 +142,7 @@ for response in responses:
             "age": age,
             "english_level": eng_level,
             "progress": prgs,
-            "color_blindness ": color_blindness
+            "color_blindness": color_blindness
         },
         "questions": {
             "question_count": 0,
@@ -158,6 +158,7 @@ for response in responses:
         info = get_answer(qnum)
 
         if user_answer == "nan":
+            #evaluation["questions"]["question_count"] += 1
             continue
 
         correct_answ = info["answer"].lower()
@@ -178,5 +179,55 @@ for response in responses:
     per_user.append(evaluation)
 
 
+res = {"overview": {
+            "total_individual_count" : 0,
+            "total_answered_question": 0,
+            "total_correct_answer": 0,
+            "total_wrong_answer": 0,
+            "correctness_rate(%)": 0,
+            "color_blindness_count" : 0,
+            "non_color_blindness_count": 0,
+            "num_of_question_answered_progress_under_75": 0,
+            "num_of_question_answered_progress_under_80": 0,
+            "num_of_question_answered_progress_under_85": 0,
+            "num_of_question_answered_progress_under_90": 0,
+
+},
+        "individual": []
+       }
 for i in per_user:
-    print(json.dumps(i, indent=4))
+    res["individual"].append(i)
+    #print(json.dumps(i, indent=4))
+
+
+
+for i in per_user:
+    default_q = i["default_questions"]
+    questions = i["questions"]
+
+    if (default_q["color_blindness"] == "Yes"):
+        res["overview"]["color_blindness_count"] += 1
+    else:
+        res["overview"]["non_color_blindness_count"] += 1
+
+    res["overview"]["total_individual_count"] += 1
+
+    if int(default_q["progress"]) < 75:
+        res["overview"]["num_of_question_answered_progress_under_75"] += questions["true"] + questions["false"]
+    if int(default_q["progress"]) < 80:
+        res["overview"]["num_of_question_answered_progress_under_80"] += questions["true"] + questions["false"]
+    if int(default_q["progress"]) < 85:
+        res["overview"]["num_of_question_answered_progress_under_85"] += questions["true"] + questions["false"]
+    if int(default_q["progress"]) < 90:
+        res["overview"]["num_of_question_answered_progress_under_90"] += questions["true"] + questions["false"]
+
+    res["overview"]["total_answered_question"] += questions["question_count"]
+    res["overview"]["total_correct_answer"] += questions["true"]
+    res["overview"]["total_wrong_answer"] += questions["false"]
+
+
+res["overview"]["correctness_rate(%)"] = float(format((res["overview"]["total_correct_answer"] / res["overview"]["total_answered_question"]), '.2f'))
+
+
+with open("evalution.json", "w") as outfile:
+    json.dump(res, outfile, indent=4)
